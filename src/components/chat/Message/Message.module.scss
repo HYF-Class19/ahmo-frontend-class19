@@ -1,0 +1,28 @@
+.message {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: #f1f0f0;
+    max-width: 80%;
+    width: 100%;
+    word-wrap: break-word;
+    color: black;
+    position: relative;
+  &.my {
+    background-color: lightblue;
+  }
+  .messageText {
+    margin-left: 0.5rem;
+    font-size: 1rem;
+  }
+  &Content {
+    .timeAgo {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      margin-left: 20px;
+    }
+  }
+}

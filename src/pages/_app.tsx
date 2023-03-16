@@ -3,7 +3,6 @@ import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import {Api} from "@/api";
 import {setUserData} from "@/store/slices/userSlice";
-import {useGetUserQuery} from "@/services/authService";
 
 function App({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />

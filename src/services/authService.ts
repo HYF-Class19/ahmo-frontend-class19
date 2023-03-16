@@ -1,9 +1,7 @@
-import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-import {parseCookies, setCookie, destroyCookie} from 'nookies';
-import {RootState} from "@/store";
-import {IUser, ResponseUser} from "@/models/IUser";
+import {setCookie} from 'nookies';
+import {ResponseUser} from "@/models/IUser";
+import {api} from "@/services/api";
 
-const BASE_URL = 'http://localhost:1337/api';
 
 interface RegisterUserRequest {
     username: string;
@@ -17,20 +15,6 @@ interface LoginUserRequest {
     password: string;
 }
 
-// Define a custom base query function to handle authentication tokens
-const baseQuery = fetchBaseQuery({
-    baseUrl: BASE_URL,
-    prepareHeaders: (headers) => {
-        const cookies = parseCookies();
-        const token = cookies.authToken;
-        if (token) {
-            headers.set('Authorization', `Bearer ${token}`);
-        }
-        headers.set('Content-Type', 'application/json');
-        return headers;
-    },
-});
-
 const setToken = (token: string) => {
     setCookie(null, 'authToken', token, {
         maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -38,10 +22,7 @@ const setToken = (token: string) => {
     });
 };
 
-export const authApi = createApi({
-    reducerPath: 'auth',
-    baseQuery,
-    tagTypes: ['Auth'],
+export const authApi = api.injectEndpoints({
     endpoints: (builder) => ({
         registerUser: builder.mutation<ResponseUser, RegisterUserRequest>({
             query: (body) => ({

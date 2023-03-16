@@ -1,0 +1,45 @@
+.chatBoxWrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.chatBoxTop {
+    padding: 20px;
+    background-color: lightgray;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 75vh;
+    overflow-y: scroll;
+}
+
+.chatBoxBottom {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.chatMessageInput {
+    width: 80%;
+    height: 90px;
+    padding: 10px;
+}
+
+.chatSubmitButton {
+    width: 70px;
+    height: 40px;
+    border: none;
+    background-color: teal;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+}

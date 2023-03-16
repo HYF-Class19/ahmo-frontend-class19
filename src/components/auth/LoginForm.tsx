@@ -6,10 +6,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { LoginFormSchema } from '@/utils/FormSchemas';
 import Link from "next/link";
 import {useRouter} from "next/router";
-import {setCookie} from "nookies";
-import { setUserData } from '@/store/slices/userSlice';
-import {useAppDispatch} from "@/hooks/useAppHooks";
-import {Api} from "@/api";
 import {useLoginUserMutation} from "@/services/authService";
 
 

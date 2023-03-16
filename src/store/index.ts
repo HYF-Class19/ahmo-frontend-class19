@@ -1,16 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import {userReducer} from "@/store/slices/userSlice";
-import {authApi} from "@/services/authService";
+import {api} from "@/services/api";
+import {chatReducer} from "@/store/slices/chatSlice";
 
 export function makeStore() {
     return configureStore({
         reducer: {
             user: userReducer,
-            [authApi.reducerPath]: authApi.reducer,
+            chat: chatReducer,
+            [api.reducerPath]: api.reducer,
         },
-        middleware: (getDefaultMiddleware) =>
-            getDefaultMiddleware().concat(authApi.middleware),
+        middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware)
     });
 }
 
