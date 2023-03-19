@@ -5,13 +5,14 @@ import Conversation from "@/components/chat/Conversation";
 import {getChatSnippet} from "@/utils/obj-helper";
 import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
 import {selectUserData} from "@/store/slices/userSlice";
+import {IChat} from "@/models/IChat";
 
 interface ChatTypeProps {
-    data: any,
+    chats: IChat[],
     type: 'group' | 'direct'
 }
 
-const ChatType: React.FC<ChatTypeProps> = ({data, type}) => {
+const ChatType: React.FC<ChatTypeProps> = ({chats, type}) => {
     const [open, setOpen] = React.useState(true);
     const userData = useAppSelector(selectUserData)
 
@@ -41,7 +42,7 @@ const ChatType: React.FC<ChatTypeProps> = ({data, type}) => {
                         mb: '2px',
                         color: 'primary',
                     }}
-                    secondary={getChatSnippet(data,userData!.id)}
+                    secondary={getChatSnippet(chats, userData!.id)}
                     secondaryTypographyProps={{
                         noWrap: true,
                         fontSize: 12,
@@ -60,7 +61,7 @@ const ChatType: React.FC<ChatTypeProps> = ({data, type}) => {
                 />
             </ListItemButton>
             {open &&
-                data.map((item: any) => <Conversation key={item.id} item={item} />
+                chats.map((chat: IChat) => <Conversation key={chat.id} chat={chat} />
                 )}
         </Box>
     );

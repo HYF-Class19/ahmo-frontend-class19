@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery, retry } from '@reduxjs/toolkit/query/react'
 import {HYDRATE} from "next-redux-wrapper";
 import {parseCookies} from "nookies";
 
-const BASE_URL = 'http://localhost:1337/api';
+const BASE_URL = 'http://localhost:4000';
 
 const baseQuery = fetchBaseQuery({
     baseUrl: BASE_URL,
@@ -17,15 +17,14 @@ const baseQuery = fetchBaseQuery({
     },
 });
 
-const baseQueryWithRetry = retry(baseQuery, { maxRetries: 6 })
 
 export const api = createApi({
-    baseQuery: baseQueryWithRetry,
+    baseQuery,
     extractRehydrationInfo(action, { reducerPath }) {
         if (action.type === HYDRATE) {
             return action.payload[reducerPath]
         }
     },
-    tagTypes: ['Auth', 'Chat'],
+    tagTypes: ['Auth', 'Chat', 'Message'],
     endpoints: () => ({}),
 })

@@ -1,18 +1,23 @@
 import {api} from "@/services/api";
+import {IChat} from "@/models/IChat";
 
 export const chatApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        fetchChats: builder.query<any, void>({
+        fetchChats: builder.query<IChat[], void>({
             query: () => ({
-                url: '/chats',
-                params: {
-                    populate: 'chat_members.user,messages.user'
-                }
+                url: '/chats/me',
             }),
+        }),
+        fetchChatWithMessages: builder.query<IChat, number>({
+            query: (id) => ({
+                url: `/chats/${id}`,
+            }),
+            providesTags: result => ['Message', 'Chat']
         })
     })
 })
 
 export const {
-    useFetchChatsQuery
+    useFetchChatsQuery,
+    useFetchChatWithMessagesQuery
 } = chatApi

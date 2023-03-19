@@ -1,12 +1,13 @@
 import { FormField } from '@/components/shared/FormField';
 import {Alert, Box, Button, Checkbox, FormControlLabel, Grid} from '@mui/material';
 import {yupResolver} from "@hookform/resolvers/yup";
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { LoginFormSchema } from '@/utils/FormSchemas';
 import Link from "next/link";
 import {useRouter} from "next/router";
 import {useLoginUserMutation} from "@/services/authService";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 
 
 interface FormProps {
@@ -15,21 +16,25 @@ interface FormProps {
 const Form: React.FC<FormProps> = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter()
-    const [loginUser, {}] = useLoginUserMutation()
+    const [loginUser, {isLoading, error}] = useLoginUserMutation()
 
     const form = useForm({
         mode: 'onChange',
         resolver: yupResolver(LoginFormSchema),
     });
 
+    useEffect(() => {
+        console.log("errormessage", error)
+    }, [error])
+
     const onSubmit = async (dto: any) => {
+        setErrorMessage('');
         try {
             await loginUser(dto).unwrap()
-            setErrorMessage('');
             router.push('/')
         } catch (err: any) {
             console.log(err)
-            setErrorMessage(err.response?.data?.message)
+            setErrorMessage(err?.data?.message)
         }
     }
 
@@ -38,8 +43,8 @@ const Form: React.FC<FormProps> = () => {
             <Box component="form" onSubmit={form.handleSubmit(onSubmit)} sx={{mt: 2}}>
                 <Grid item xs={12}>
                     <FormField
-                        label="Email or Username"
-                        name="identifier"
+                        label="Email"
+                        name="email"
                         type="text"
                     />
                 </Grid>
@@ -51,9 +56,9 @@ const Form: React.FC<FormProps> = () => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    {errorMessage && (
+                    {error  && (
                         <Alert severity="error" className="mb-20">
-                            {errorMessage}
+                            {error.data?.message || 'error'}
                         </Alert>
                     )}
                 </Grid>

@@ -8,17 +8,20 @@ import {
 import {KeyboardArrowDown} from "@mui/icons-material";
 import Conversation from "@/components/chat/Conversation";
 import ChatType from "@/components/chat/ChatType";
+import {IChat} from "@/models/IChat";
 
 interface ChatMenuProps {
-    data: any
+    chats: IChat[]
 }
 
-const ChatMenu: React.FC<ChatMenuProps> = ({data}) => {
+const ChatMenu: React.FC<ChatMenuProps> = ({chats}) => {
+
+    if(!chats || !chats.length) return (<div>no chat er...</div>)
 
     return (
         <div className={styles.menu}>
-            {['group', 'personal'].map((type: any, i) => (
-                <ChatType key={i} data={data.filter((item: any) => item.attributes.type === type)} type={type} />
+            {['group', 'direct'].map((type: any, i) => (
+                <ChatType key={i} chats={chats.filter((item: any) => item.type === type)} type={type} />
             ))}
         </div>
     );

@@ -1,27 +1,35 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {HYDRATE} from "next-redux-wrapper";
+import {IUser} from "@/models/IUser";
+import {IChat, IMember} from "@/models/IChat";
+import {IMessage} from "@/models/IMessage";
 
 interface chatState {
     activeChat: number | null;
-    messages: any[];
-    users: any[];
+    messages: IMessage[];
+    admin: IUser | null;
+    members: IMember[];
 }
 
 const initialState: chatState = {
     activeChat: null,
     messages: [],
-    users: []
+    admin: null,
+    members: []
 }
 export const chatSlice = createSlice({
     name: 'chat',
     initialState,
     reducers: {
-        setActiveChat: (state, action) => {
+        setActiveChat: (state, action: PayloadAction<IChat>) => {
             state.activeChat = action.payload.id
-            state.messages = action.payload.attributes.messages.data
-            state.users = action.payload.attributes.chat_members.data
+            state.members = action.payload.members
+            state.admin = action.payload.admin
         },
-        addMessage: (state, action) => {
+        loadMessages: (state, action: PayloadAction<IMessage[]>) => {
+            state.messages = action.payload
+        },
+        addMessage: (state, action: PayloadAction<IMessage>) => {
             state.messages.push(action.payload)
         },
     },
@@ -35,7 +43,7 @@ export const chatSlice = createSlice({
     },
 })
 
-export const {setActiveChat, addMessage} = chatSlice.actions
+export const {setActiveChat, addMessage, loadMessages} = chatSlice.actions
 
 export const selectActiveChat = (state: any) => state.chat
 

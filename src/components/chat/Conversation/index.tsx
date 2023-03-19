@@ -3,26 +3,26 @@ import {Avatar, ListItem, ListItemAvatar, ListItemText, Typography} from "@mui/m
 import {getLastMessage} from "@/utils/obj-helper";
 import {useAppDispatch} from "@/hooks/useAppHooks";
 import {setActiveChat} from "@/store/slices/chatSlice";
+import {IChat} from "@/models/IChat";
 
 interface ConversationProps {
-    item: any
+    chat: IChat
 }
 
-const Conversation: React.FC<ConversationProps> = ({item}) => {
+const Conversation: React.FC<ConversationProps> = ({chat}) => {
     const dispatch = useAppDispatch()
 
     const activateChat = () => {
-        console.log(item)
-        dispatch(setActiveChat(item))
+        dispatch(setActiveChat(chat))
     }
 
     return (
-        <ListItem onClick={activateChat} alignItems="flex-start">
+        <ListItem onClick={activateChat} style={{cursor: 'pointer'}} alignItems="flex-start">
             <ListItemAvatar>
-                <Avatar>{item.attributes.name.slice(0,1)}</Avatar>
+                <Avatar>{chat.name.slice(0,1)}</Avatar>
             </ListItemAvatar>
             <ListItemText
-                primary={item.attributes.name}
+                primary={chat.name}
                 secondary={
                     <React.Fragment>
                         <Typography
@@ -33,7 +33,7 @@ const Conversation: React.FC<ConversationProps> = ({item}) => {
                         >
                             to you
                         </Typography>
-                        {` — ${getLastMessage(item)}`}
+                        {` — ${chat.lastMessage ? chat.lastMessage.text : 'no messages'}`}
                     </React.Fragment>
                 }
             />

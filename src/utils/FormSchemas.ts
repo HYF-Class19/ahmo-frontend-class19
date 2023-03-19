@@ -1,9 +1,10 @@
 import * as yup from 'yup';
 
 export const LoginFormSchema = yup.object().shape({
-    identifier: yup
+    email: yup
         .string()
-        .required('Please, provide the email or username'),
+        .email('Wrong email')
+        .required('Please, provide the email'),
     password: yup
         .string()
         .min(6, 'Password at least 6 characters')
@@ -13,7 +14,6 @@ export const LoginFormSchema = yup.object().shape({
 export const RegisterSchema = yup
     .object()
     .shape({
-        username: yup.string().required('Please provide username'),
         email: yup
             .string()
             .email('Wrong email')

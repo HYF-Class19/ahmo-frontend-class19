@@ -11,6 +11,7 @@ import {setCookie} from "nookies";
 import {setUserData} from "@/store/slices/userSlice";
 import {useAppDispatch} from "@/hooks/useAppHooks";
 import {useRegisterUserMutation} from "@/services/authService";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 
 
 interface FormProps {
@@ -19,7 +20,7 @@ interface FormProps {
 const Form: React.FC<FormProps> = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter()
-    const [registerUser, {}] = useRegisterUserMutation()
+    const [registerUser, {error, isLoading}] = useRegisterUserMutation()
 
 
     const form = useForm({
@@ -31,24 +32,15 @@ const Form: React.FC<FormProps> = () => {
         try {
 
             await registerUser(dto).unwrap()
-            setErrorMessage('');
             router.push('/')
         } catch (err: any) {
             console.log(err)
-            setErrorMessage(err.response?.data?.message)
         }
     }
 
     return (
         <FormProvider {...form}>
             <Box component="form" onSubmit={form.handleSubmit(onSubmit)} sx={{mt: 2}}>
-                <Grid item xs={12}>
-                    <FormField
-                        label="Username"
-                        name="username"
-                        type="text"
-                    />
-                </Grid>
                 <Grid item xs={12}>
                     <FormField
                         name="fullName"
@@ -71,9 +63,9 @@ const Form: React.FC<FormProps> = () => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    {errorMessage && (
+                    {error && (
                         <Alert severity="error" className="mb-20">
-                            {errorMessage}
+                            {error?.data?.message}
                         </Alert>
                     )}
                 </Grid>

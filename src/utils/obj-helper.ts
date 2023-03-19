@@ -4,10 +4,10 @@ export const getLastMessage = (chat: any) => {
 }
 
 export const getChatSnippet = (chats: any, myId: number) => {
-    let snippet = chats.reduce((acc: string, curr: any, i: number) => i !== chats.length - 1 ? acc + getChatMember(myId, curr).attributes.user.data.attributes.username + ', ' : acc + getChatMember(myId, curr).attributes.user.data.attributes.username, '')
+    let snippet = chats.reduce((acc: any, chat: any, i: number) => acc + i === chats.length - 1 || chats.length === 1 ? chat.name : chat.name + ', ', '')
     return snippet
 }
 
-export const getChatMember = (myId: number, chat: any) => {
-    return chat.attributes.chat_members.data.find((member: any) => member.id !== myId)
+export const getChatMemberName = (chat: any, myId: number) => {
+    return chat.members.find((member: any) => member.user.id !== myId)!.user.fullName
 }

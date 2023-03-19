@@ -1,5 +1,5 @@
 import {setCookie} from 'nookies';
-import {ResponseUser} from "@/models/IUser";
+import {IUser, ResponseUser} from "@/models/IUser";
 import {api} from "@/services/api";
 
 
@@ -11,7 +11,7 @@ interface RegisterUserRequest {
 }
 
 interface LoginUserRequest {
-    identifier: string;
+    email: string;
     password: string;
 }
 
@@ -24,27 +24,25 @@ const setToken = (token: string) => {
 
 export const authApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        registerUser: builder.mutation<ResponseUser, RegisterUserRequest>({
+        registerUser: builder.mutation<IUser, RegisterUserRequest>({
             query: (body) => ({
-                url: '/auth/local/register',
+                url: '/auth/register',
                 method: 'POST',
                 body,
             }),
-            transformResponse: (response: ResponseUser) => {
-                const {jwt, user} = response;
-                setToken(jwt);
+            transformResponse: (response: IUser) => {
+                setToken(response.token);
                 return response;
             },
         }),
-        loginUser: builder.mutation<ResponseUser, LoginUserRequest>({
+        loginUser: builder.mutation<IUser, LoginUserRequest>({
             query: (body) => ({
-                url: '/auth/local',
+                url: '/auth/login',
                 method: 'POST',
                 body,
             }),
-            transformResponse: (response: ResponseUser) => {
-                const {jwt, user} = response;
-                setToken(jwt);
+            transformResponse: (response: IUser) => {
+                setToken(response.token);
                 return response;
             },
         }),
