@@ -51,7 +51,12 @@ export const authApi = api.injectEndpoints({
                 url: '/users/me',
             }),
         }),
+        searchUsers: builder.query<ResponseUser[], string>({
+            query: (search) => ({
+                url: `/users?query=${search}`,
+            })
+        })
     }),
 });
 
-export const {useLoginUserMutation, useRegisterUserMutation, useGetUserQuery} = authApi;
+export const {useLoginUserMutation, useRegisterUserMutation, useGetUserQuery, useSearchUsersQuery} = authApi;
