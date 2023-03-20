@@ -16,7 +16,7 @@ interface ChatMenuProps {
 
 const ChatMenu: React.FC<ChatMenuProps> = ({chats}) => {
 
-    if(!chats || !chats.length) return (<div>no chat er...</div>)
+    if(!chats) return (<div>no chat er...</div>)
 
     return (
         <div className={styles.menu}>

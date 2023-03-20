@@ -5,14 +5,18 @@ import {useSelector} from "react-redux";
 import {deleteUserData, selectUserData} from "@/store/slices/userSlice";
 import {useAppDispatch} from "@/hooks/useAppHooks";
 import {destroyCookie} from "nookies";
+import {useRouter} from "next/router";
 
 const Header = () => {
     const userData = useSelector(selectUserData);
     const dispatch = useAppDispatch();
+    const router = useRouter()
 
-    const logout = () => {
+    const logout = async () => {
+        await router.push('/auth/login')
         destroyCookie(null, 'authToken')
         dispatch(deleteUserData());
+
     }
 
     return (
@@ -36,7 +40,7 @@ const Header = () => {
                 ) : (
                     <ul>
                         <li>
-                            <Link href={'/home'}>Documentation</Link>
+                            <Link href={'/'}>Documentation</Link>
                         </li>
                         <li>
                             <Link href={'/auth/login'}>Login</Link>

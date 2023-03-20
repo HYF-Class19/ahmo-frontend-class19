@@ -9,6 +9,7 @@ import {ArrivingMessage, IMessage} from "@/models/IMessage";
 import {useMutateMessageMutation} from "@/services/messageService";
 import {io} from "socket.io-client";
 import {IMember} from "@/models/IChat";
+import {IUser} from "@/models/IUser";
 
 interface ChatBoxProps {
     currentChat?: number
@@ -17,27 +18,27 @@ interface ChatBoxProps {
 const ChatBox: React.FC<ChatBoxProps> = () => {
     const [message, setMessage] = useState<string>('')
     const [arrivalMessage, setArrivalMessage] = useState<ArrivingMessage>()
-
     const activeChat = useAppSelector(selectActiveChat)
     const userData = useAppSelector(selectUserData)
+    const [someoneTyping, setSomeoneTyping] = useState<{sender: IUser, chatId: number} | null>(null)
     const {data, error, isLoading} = useFetchChatWithMessagesQuery(activeChat.activeChat || 0)
-    const [mutateMessage, {}] = useMutateMessageMutation()
+    const [mutateMessage, {isLoading: sendLoading}] = useMutateMessageMutation()
     const dispatch = useAppDispatch()
 
     const socket = useRef<any>();
     const scrollRef = useRef<any>();
 
     useEffect(() => {
-        socket.current = io("ws://localhost:5000");
-        socket.current.on("getMessage", (data: ArrivingMessage) => {
-            setArrivalMessage({
-                id: data.id,
-                sender: data.sender,
-                chatId: data.chatId,
-                text:  data.text,
-                createdAt: data.createdAt,
-            });
-        });
+       socket.current = io("ws://localhost:5000");
+       socket.current.on("getMessage", (data: ArrivingMessage) => {
+           setArrivalMessage({
+               id: data.id,
+               sender: data.sender,
+               chatId: data.chatId,
+               text:  data.text,
+               createdAt: data.createdAt,
+           });
+       });
     }, []);
 
     useEffect(() => {
@@ -66,7 +67,6 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
 
             const receiverIds = activeChat.members.filter((member: IMember) => member.user.id !== userData.id)?.map((member: IMember) => member.user.id)
 
-
             // @ts-ignore
             const postedMessage = res.data
             if(postedMessage) {
@@ -85,10 +85,36 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [activeChat.messages]);
 
+    useEffect(() => {
+        socket.current.on('getTyping', (data: { sender: IUser, chatId: number }) => {
+            if(data.sender.id !== someoneTyping?.sender.id || data.chatId !== someoneTyping.chatId) {
+                setSomeoneTyping(data)
+            }
+        })
+        socket.current.on('getStopTyping', () => {
+            setSomeoneTyping(null)
+        })
+    }, []);
+
+    const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setMessage(e.target.value)
+    }
+
+    const onFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+        const receiverIds = activeChat.members.filter((member: IMember) => member.user.id !== userData?.id)?.map((member: IMember) => member.user.id)
+
+        socket.current.emit('typing', {sender: userData, chatId: activeChat.activeChat, receivers: receiverIds})
+    }
+
+    const onBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+        const receiverIds = activeChat.members.filter((member: IMember) => member.user.id !== userData?.id)?.map((member: IMember) => member.user.id)
+        socket.current.emit('stopTyping', {sender: userData, chatId: activeChat.activeChat, receivers: receiverIds})
+    }
 
     return (
         <div className={styles.chatBoxWrapper}>
-            {activeChat.id || userData ? (
+
+            {activeChat.activeChat && userData ? (
                 <>
                     <div className={styles.chatBoxTop}>
                         {isLoading && <div>loading...</div>}
@@ -97,10 +123,11 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
                                <Message key={message.id} isMy={message.sender.id === userData?.id} message={message}/>
                            </div>
                         ))}
+                        {someoneTyping && someoneTyping.chatId === activeChat.activeChat && <div>{someoneTyping?.sender?.fullName} is typing...</div>}
                     </div>
                     <div className={styles.chatBoxBottom}>
-                        <textarea className={styles.chatMessageInput} value={message} onChange={e => setMessage(e.target.value)} placeholder='write something...'></textarea>
-                        <button onClick={sendMessage} className={styles.chatSubmitButton}>Send</button>
+                        <textarea className={styles.chatMessageInput} onBlur={onBlur} value={message} onChange={onChange} onFocus={onFocus} placeholder='write something...'></textarea>
+                        <button disabled={sendLoading} onClick={sendMessage} className={styles.chatSubmitButton}>Send</button>
                     </div>
                 </>
             ) : (

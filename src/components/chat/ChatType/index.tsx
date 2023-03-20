@@ -60,9 +60,10 @@ const ChatType: React.FC<ChatTypeProps> = ({chats, type}) => {
                     }}
                 />
             </ListItemButton>
-            {open &&
-                chats.map((chat: IChat) => <Conversation key={chat.id} chat={chat} />
-                )}
+            {open ? chats.length > 0 ?
+                chats.map((chat: IChat) => <Conversation key={chat.id} chat={chat} />)
+                 : <div>You have no {type} chats, maybe create one?</div> : null
+            }
         </Box>
     );
 };

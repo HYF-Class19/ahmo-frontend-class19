@@ -20,6 +20,21 @@
     overflow-y: scroll;
 }
 
+.noConversation {
+    height: 90vh;
+    background-color: lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    h2 {
+        font-size: 64px;
+        text-transform: uppercase;
+        font-weight: 900;
+        max-width: 60vh;
+        color: #ccc;
+    }
+}
+
 .chatBoxBottom {
     margin-top: 5px;
     display: flex;
