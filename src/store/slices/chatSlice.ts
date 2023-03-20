@@ -3,6 +3,7 @@ import {HYDRATE} from "next-redux-wrapper";
 import {IUser} from "@/models/IUser";
 import {IChat, IMember} from "@/models/IChat";
 import {IMessage} from "@/models/IMessage";
+import {io} from "socket.io-client";
 
 interface chatState {
     activeChat: number | null;
@@ -15,7 +16,7 @@ const initialState: chatState = {
     activeChat: null,
     messages: [],
     admin: null,
-    members: []
+    members: [],
 }
 export const chatSlice = createSlice({
     name: 'chat',

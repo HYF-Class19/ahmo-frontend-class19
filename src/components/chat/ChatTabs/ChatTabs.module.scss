@@ -1,0 +1,23 @@
+.tabs {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 15%;
+  padding: 20px;
+  ul {
+    list-style: none;
+    li {
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      background-color: #F3FB8C;
+        border-radius: 5px;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.8;
+      }
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+}

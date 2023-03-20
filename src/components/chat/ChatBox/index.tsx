@@ -10,19 +10,19 @@ import {useMutateMessageMutation} from "@/services/messageService";
 import {io} from "socket.io-client";
 import {IMember} from "@/models/IChat";
 import {IUser} from "@/models/IUser";
+import ChatTextarea from "@/components/chat/ChatTextarea";
+import {getReceivers} from "@/utils/chatHelpers";
 
 interface ChatBoxProps {
     currentChat?: number
 }
 
 const ChatBox: React.FC<ChatBoxProps> = () => {
-    const [message, setMessage] = useState<string>('')
     const [arrivalMessage, setArrivalMessage] = useState<ArrivingMessage>()
     const activeChat = useAppSelector(selectActiveChat)
     const userData = useAppSelector(selectUserData)
     const [someoneTyping, setSomeoneTyping] = useState<{sender: IUser, chatId: number} | null>(null)
     const {data, error, isLoading} = useFetchChatWithMessagesQuery(activeChat.activeChat || 0)
-    const [mutateMessage, {isLoading: sendLoading}] = useMutateMessageMutation()
     const dispatch = useAppDispatch()
 
     const socket = useRef<any>();
@@ -53,33 +53,11 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
 
     useEffect(() => {
         if(arrivalMessage?.sender && activeChat) {
-            console.log(activeChat.members)
             if(arrivalMessage.chatId === activeChat.activeChat) {
                 dispatch(addMessage(arrivalMessage))
             }
         }
     }, [arrivalMessage, activeChat.activeChat]);
-
-    const sendMessage = async () => {
-        if(message.length > 0 && userData) {
-            const res = await mutateMessage({chatId: activeChat.activeChat, text: message})
-            setMessage('')
-
-            const receiverIds = activeChat.members.filter((member: IMember) => member.user.id !== userData.id)?.map((member: IMember) => member.user.id)
-
-            // @ts-ignore
-            const postedMessage = res.data
-            if(postedMessage) {
-                socket.current.emit('sendMessage', {
-                    id: postedMessage.id,
-                    sender: userData,
-                    receivers: receiverIds,
-                    chatId: activeChat.activeChat,
-                    text: message,
-                })
-            }
-        }
-    }
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -87,7 +65,7 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
 
     useEffect(() => {
         socket.current.on('getTyping', (data: { sender: IUser, chatId: number }) => {
-            if(data.sender.id !== someoneTyping?.sender.id || data.chatId !== someoneTyping.chatId) {
+            if(data.sender.id !== userData?.id) {
                 setSomeoneTyping(data)
             }
         })
@@ -95,21 +73,6 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
             setSomeoneTyping(null)
         })
     }, []);
-
-    const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setMessage(e.target.value)
-    }
-
-    const onFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-        const receiverIds = activeChat.members.filter((member: IMember) => member.user.id !== userData?.id)?.map((member: IMember) => member.user.id)
-
-        socket.current.emit('typing', {sender: userData, chatId: activeChat.activeChat, receivers: receiverIds})
-    }
-
-    const onBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-        const receiverIds = activeChat.members.filter((member: IMember) => member.user.id !== userData?.id)?.map((member: IMember) => member.user.id)
-        socket.current.emit('stopTyping', {sender: userData, chatId: activeChat.activeChat, receivers: receiverIds})
-    }
 
     return (
         <div className={styles.chatBoxWrapper}>
@@ -125,10 +88,7 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
                         ))}
                         {someoneTyping && someoneTyping.chatId === activeChat.activeChat && <div>{someoneTyping?.sender?.fullName} is typing...</div>}
                     </div>
-                    <div className={styles.chatBoxBottom}>
-                        <textarea className={styles.chatMessageInput} onBlur={onBlur} value={message} onChange={onChange} onFocus={onFocus} placeholder='write something...'></textarea>
-                        <button disabled={sendLoading} onClick={sendMessage} className={styles.chatSubmitButton}>Send</button>
-                    </div>
+                    <ChatTextarea activeChatId={activeChat.activeChat} socket={socket} receivers={getReceivers(activeChat.members, userData.id)} />
                 </>
             ) : (
                 <div className={styles.noConversation}>

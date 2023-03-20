@@ -13,11 +13,20 @@ export const chatApi = api.injectEndpoints({
                 url: `/chats/${id}`,
             }),
             providesTags: result => ['Message', 'Chat']
+        }),
+        createGroup: builder.mutation<IChat, {type: string, name: string, members: string }>({
+            query: (body) => ({
+                url: '/chats',
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: ['Chat'],
         })
     })
 })
 
 export const {
     useFetchChatsQuery,
-    useFetchChatWithMessagesQuery
+    useFetchChatWithMessagesQuery,
+    useCreateGroupMutation
 } = chatApi
