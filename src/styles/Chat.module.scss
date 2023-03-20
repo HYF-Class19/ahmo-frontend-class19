@@ -1,0 +1,10 @@
+.chat {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  &Menu {
+    width: 30%;
+    height: 100%;
+  }
+}
