@@ -6,7 +6,6 @@ export type IChat = {
     name: string;
     type: string;
     admin: IUser;
-
     members: IMember[];
     messages: IMessage[];
     lastMessage: IMessage | null;

@@ -25,6 +25,6 @@ export const api = createApi({
             return action.payload[reducerPath]
         }
     },
-    tagTypes: ['Auth', 'Chat', 'Message'],
+    tagTypes: ['Auth', 'Chat', 'Message', 'Game', 'Round', 'Move'],
     endpoints: () => ({}),
 })
