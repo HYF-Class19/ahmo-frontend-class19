@@ -11,13 +11,15 @@ import {useSearchUsersQuery} from "@/services/authService";
 import {useCreateGroupMutation} from "@/services/chatService";
 import {useAppSelector} from "@/hooks/useAppHooks";
 import {selectUserData} from "@/store/slices/userSlice";
+import {IChat} from "@/models/IChat";
 
 interface FormDialogProps {
     open: boolean;
     setOpen: Function;
+    setChats: Function;
 }
 
-const CreateChatDialog: React.FC<FormDialogProps> = ({open, setOpen}) => {
+const CreateChatDialog: React.FC<FormDialogProps> = ({open, setOpen, setChats}) => {
     const [activeStep, setActiveStep] = useState(0);
     const userData = useAppSelector(selectUserData)!
     const [name, setName] = useState<string>('');
@@ -30,11 +32,15 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({open, setOpen}) => {
         setOpen(false);
     }
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if(activeStep === 0) {
             setActiveStep(activeStep + 1)
         } else {
-            createGroup({type: "group", name, members: members.join(',')})
+            const res = await createGroup({type: "group", name, members: members.join(',')})
+            if(res) {
+                // @ts-ignore
+                setChats((prev: IChat) => ([...prev, res.data]))
+            }
             setOpen(false)
         }
     }

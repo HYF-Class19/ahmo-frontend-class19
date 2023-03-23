@@ -20,10 +20,6 @@ const GameBox = () => {
         }
     }, [game])
 
-    useEffect(() => {
-        console.log(selectedGame)
-    }, [selectedGame]);
-
 
     return (
         <div className={styles.chatBoxWrapper}>
@@ -37,13 +33,12 @@ const GameBox = () => {
                                 <div className={styles.chatBoxTopTitle}>
                                     {game.name}
                                 </div>
-                                <div className={styles.box}>
+                                <div style={{overflowY: 'auto'}} className={styles.box}>
                                     {game.rounds.map((round, index) => (
                                         <GameRound key={round.id} roundId={round.id} index={index} />
                                     ))}
                                 </div>
                             </>
-
                         )}
                      <GameTextField />
                  </div>

@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {useAppSelector} from "@/hooks/useAppHooks";
 import {selectUserData} from "@/store/slices/userSlice";
 import {useSearchUsersQuery} from "@/services/authService";
-import {useCreateGroupMutation} from "@/services/chatService";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -11,12 +10,14 @@ import styles from "@/components/chat/CreateChatDialog/CreateChatDialog.module.s
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import {useCreateGameMutation} from "@/services/gameService";
+import {IChat} from "@/models/IChat";
 
 interface CreateGameDialogProps {
     open: boolean;
     setOpen: Function;
+    setChats: Function;
 }
-const CreateGameDialog: React.FC<CreateGameDialogProps> = ({open, setOpen}) => {
+const CreateGameDialog: React.FC<CreateGameDialogProps> = ({open, setOpen, setChats}) => {
     const [activeStep, setActiveStep] = useState(0);
     const userData = useAppSelector(selectUserData)!
     const [name, setName] = useState<string>('');
@@ -34,7 +35,11 @@ const CreateGameDialog: React.FC<CreateGameDialogProps> = ({open, setOpen}) => {
         if(activeStep < 2) {
             setActiveStep(activeStep + 1)
         } else {
-            await createGame({members: [...members, userData.id].join(','), game, type: "game", name})
+            const res = await createGame({members: [...members, userData.id].join(','), game, type: "game", name})
+            if(res) {
+                // @ts-ignore
+                setChats((prev: IChat) => ([...prev, res.data]))
+            }
             setActiveStep(0)
             setOpen(false)
         }

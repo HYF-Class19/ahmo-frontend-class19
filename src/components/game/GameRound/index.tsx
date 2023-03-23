@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {IRound} from "@/models/IGame";
+import {IMove, IRound} from "@/models/IGame";
 import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
 import {selectUserData} from "@/store/slices/userSlice";
 import {useCreateRoundMutation, useGetRoundQuery} from "@/services/roundServive";
@@ -7,8 +7,8 @@ import {useCreateRoundMutation, useGetRoundQuery} from "@/services/roundServive"
 
 import styles from './GameRound.module.scss'
 import RoundMove from "@/components/game/RoundMove";
-import {selectActiveChat, selectActiveRound, selectMembers, setGameChat} from "@/store/slices/chatSlice";
-import {IMember} from "@/models/IChat";
+import {selectActiveRound, setRound} from "@/store/slices/roundSlice";
+import {selectMembers} from "@/store/slices/chatSlice";
 
 interface GameRoundProps {
     roundId: number;
@@ -17,9 +17,17 @@ interface GameRoundProps {
 const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
     const userData = useAppSelector(selectUserData)
     const {data: round, error, isLoading} = useGetRoundQuery(roundId)
-    const activeRound = useAppSelector(selectActiveRound)
-    const [createRound, {data}] = useCreateRoundMutation()
     const dispatch = useAppDispatch()
+    const members = useAppSelector(selectMembers)
+    const activeRound = useAppSelector(selectActiveRound)
+
+    useEffect(() => {
+        if(round) {
+            if(round.round_status === 'active') {
+                dispatch(setRound(round))
+            }
+        }
+    }, [round])
 
 
     return (
@@ -29,7 +37,8 @@ const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
             {round && userData && (
                 <>
                     <p>{round.riddler.fullName} should start the round</p>
-                    {userData.id === round.riddler.id ?
+                    {round.id !== activeRound?.id ?
+                        userData.id === round.riddler.id ?
                         round.round_data ? (
                         <div>
                             <h4>You named a word: {round.round_data}</h4>
@@ -48,10 +57,40 @@ const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
                                         <p>Your turn to guess a word</p>
                                     </div>
                             )
+                        ) : (
+                            userData.id === round.riddler.id ?
+                                activeRound.round_data ? (
+                                    <div>
+                                        <h4>You named a word: {activeRound.round_data}</h4>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <p>Opponent is waiting for your riddle</p>
+                                    </div>
+                                ) : (
+                                    !activeRound.round_data ? (
+                                        <div>
+                                            <p>We are waiting for your opponent's answer</p>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <p>Your turn to guess a word</p>
+                                        </div>
+                                    )
+                                )
                         )}
-                    {round.moves.map((move) => (
-                        <RoundMove move={move} key={move.id} />
-                    ))}
+                    { activeRound.round_winner || round.id !== activeRound?.id && (
+                        <p>winner: {members.find((m: any) => m.user.id === round.round_winner || m.user.id === activeRound.round_winner)?.user.fullName}</p>
+                    )}
+                    {round.id !== activeRound?.id ?
+                        round.moves.map((move) => (
+                         <RoundMove move={move} key={move.id} />
+                        ))
+                        :
+                        activeRound.moves.map((move: IMove) => (
+                            <RoundMove move={move} key={move.id} />
+                        ))
+                    }
                 </>
                 )}
         </div>

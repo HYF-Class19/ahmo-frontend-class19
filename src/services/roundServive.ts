@@ -37,7 +37,6 @@ export const roundService = api.injectEndpoints({
                 method: 'POST',
                 body: dto,
             }),
-            invalidatesTags: ['Round'],
 
         }),
     })

@@ -80,13 +80,15 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
             {activeChat.activeChat && userData ? (
                 <>
                     <div className={styles.chatBoxTop}>
-                        {isLoading && <div>loading...</div>}
-                        {data && activeChat.messages.map((message: IMessage) => (
-                           <div ref={scrollRef}>
-                               <Message key={message.id} isMy={message.sender.id === userData?.id} message={message}/>
-                           </div>
-                        ))}
-                        {someoneTyping && someoneTyping.chatId === activeChat.activeChat && <div>{someoneTyping?.sender?.fullName} is typing...</div>}
+                        <div style={{overflowY: 'auto'}}>
+                            {isLoading && <div>loading...</div>}
+                            {data && activeChat.messages.map((message: IMessage) => (
+                                <div ref={scrollRef}>
+                                    <Message key={message.id} isMy={message.sender.id === userData?.id} message={message}/>
+                                </div>
+                            ))}
+                            {someoneTyping && someoneTyping.chatId === activeChat.activeChat && <div>{someoneTyping?.sender?.fullName} is typing...</div>}
+                        </div>
                     </div>
                     <ChatTextarea activeChatId={activeChat.activeChat} socket={socket} receivers={getReceivers(activeChat.members, userData.id)} />
                 </>

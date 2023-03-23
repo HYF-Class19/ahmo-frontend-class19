@@ -41,11 +41,6 @@ export const chatSlice = createSlice({
             state.admin = action.payload.admin
             state.type = action.payload.type
             state.rounds = action.payload.rounds || []
-            // state.rounds?.forEach(round => {
-            //     if(round.moves) {
-            //         round.moves = round.moves || []
-            //     }
-            // })
             state.game = action.payload.game
         },
         loadMessages: (state, action: PayloadAction<IMessage[]>) => {
@@ -57,25 +52,6 @@ export const chatSlice = createSlice({
         addRound: (state, action: PayloadAction<any>) => {
             state.rounds.push(action.payload)
         },
-        updateRoundData: (state, action: PayloadAction<{round_data: string, id: number}>) => {
-            const round = state.rounds.find(round => round.id === action.payload.id)
-            if (round) {
-                round.round_data = action.payload.round_data
-            }
-        },
-        updateRoundStatus: (state, action: PayloadAction<{round_status: string, id: number, winner: number}>) => {
-            const round = state.rounds.find(round => round.id === action.payload.id)
-            if (round) {
-                round.round_status = action.payload.round_status
-                round.round_winner = action.payload.winner
-            }
-        },
-        addMove: (state, action: PayloadAction<IMove>) => {
-            // const round = state.rounds.find(round => round.id === action.payload.round.id)
-            // if (round) {
-            //     round.moves.push(action.payload)
-            // }
-        }
     },
     extraReducers: {
         [HYDRATE]: (state, action) => {
@@ -87,12 +63,9 @@ export const chatSlice = createSlice({
     },
 })
 
-export const {setActiveChat, addMessage, loadMessages, addMove, addRound, setGameChat, updateRoundStatus, updateRoundData} = chatSlice.actions
+export const {setActiveChat, addMessage, loadMessages, addRound, setGameChat} = chatSlice.actions
 
 export const selectActiveChat = (state: any) => state.chat
-
-export const selectActiveRound = (state: any) => state.chat.rounds?.find((round: IRound) => round.round_status === "active")
-
 export const selectMembers = (state: any) => state.chat.members
 
 export const chatReducer = chatSlice.reducer
