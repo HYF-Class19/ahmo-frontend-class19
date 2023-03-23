@@ -2,7 +2,7 @@ import React from 'react';
 import {Avatar, ListItem, ListItemAvatar, ListItemText, Typography} from "@mui/material";
 import {getLastMessage} from "@/utils/obj-helper";
 import {useAppDispatch} from "@/hooks/useAppHooks";
-import {setActiveChat} from "@/store/slices/chatSlice";
+import {setActiveChat, setGameChat} from "@/store/slices/chatSlice";
 import {IChat} from "@/models/IChat";
 
 interface ConversationProps {
@@ -13,7 +13,11 @@ const Conversation: React.FC<ConversationProps> = ({chat}) => {
     const dispatch = useAppDispatch()
 
     const activateChat = () => {
-        dispatch(setActiveChat(chat))
+        if(chat.type === 'game') {
+            dispatch(setGameChat(chat))
+        } else {
+            dispatch(setActiveChat(chat))
+        }
     }
 
     return (

@@ -1,0 +1,19 @@
+.moveBox {
+  display: flex;
+  width: 100%;
+  background-color: #cccccc;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  .my {
+    background-color: lightblue;
+  }
+  .message {
+    margin-left: 20px;
+    font-size: 20px;
+  }
+  .date {
+    align-self: flex-end;
+    justify-self: flex-end;
+  }
+}

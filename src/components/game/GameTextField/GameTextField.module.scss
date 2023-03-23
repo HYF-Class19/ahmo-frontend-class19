@@ -1,0 +1,24 @@
+.wrapper {
+  display: flex;
+  width: 100%;
+  .textfield {
+    display: flex;
+    width: 80%;
+    margin-right: 20px;
+    align-items: center;
+    justify-content: space-around;
+    textarea {
+      width: 500px;
+      margin-right: 10px;
+    }
+    select {
+      width: 30%;
+    }
+  }
+  .btnSection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+  }
+}

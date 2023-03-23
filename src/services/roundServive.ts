@@ -1,5 +1,5 @@
 import {api} from "@/services/api";
-import {IRound} from "@/models/IGame";
+import {IMove, IRound} from "@/models/IGame";
 
 export const roundService = api.injectEndpoints({
     endpoints: (build) => ({
@@ -31,12 +31,14 @@ export const roundService = api.injectEndpoints({
                 body: dto,
             }),
         }),
-        createMove: build.mutation({
+        createMove: build.mutation<IMove, any>({
             query: (dto: { move_data: string, move_type: string, roundId: number}) => ({
                 url: `moves`,
                 method: 'POST',
                 body: dto,
-            })
+            }),
+            invalidatesTags: ['Round'],
+
         }),
     })
 })

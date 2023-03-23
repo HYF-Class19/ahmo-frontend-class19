@@ -29,6 +29,7 @@ export type IMove = {
     round: IRound;
     player: IUser;
     createdAt: string;
+    isCorrect: boolean;
 }
 
 export type CreateChatDto = {

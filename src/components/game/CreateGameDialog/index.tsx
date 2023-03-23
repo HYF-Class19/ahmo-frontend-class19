@@ -22,7 +22,7 @@ const CreateGameDialog: React.FC<CreateGameDialogProps> = ({open, setOpen}) => {
     const [name, setName] = useState<string>('');
     const [game, setGame] = useState<string>('');
     const [query, setQuery] = useState<string>('')
-    const [members, setMembers] = useState<number[]>([userData.id]);
+    const [members, setMembers] = useState<number[]>([]);
     const {data, isLoading, error} = useSearchUsersQuery(query)
     const [createGame, {}] = useCreateGameMutation()
 
@@ -30,11 +30,12 @@ const CreateGameDialog: React.FC<CreateGameDialogProps> = ({open, setOpen}) => {
         setOpen(false);
     }
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if(activeStep < 2) {
             setActiveStep(activeStep + 1)
         } else {
-            createGame({members: members.join(','), game, type: "game", name})
+            await createGame({members: [...members, userData.id].join(','), game, type: "game", name})
+            setActiveStep(0)
             setOpen(false)
         }
     }
@@ -64,8 +65,8 @@ const CreateGameDialog: React.FC<CreateGameDialogProps> = ({open, setOpen}) => {
                 )},
                 {activeStep === 1 && (
                     <TextField
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        value={game}
+                        onChange={(e) => setGame(e.target.value)}
                         id="name"
                         label="Game Name"
                         multiline
