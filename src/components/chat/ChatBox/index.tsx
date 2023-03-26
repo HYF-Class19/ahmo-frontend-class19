@@ -14,10 +14,11 @@ import ChatTextarea from "@/components/chat/ChatTextarea";
 import {getReceivers} from "@/utils/chatHelpers";
 
 interface ChatBoxProps {
-    currentChat?: number
+    socket: any
 }
 
-const ChatBox: React.FC<ChatBoxProps> = () => {
+
+const ChatBox: React.FC<ChatBoxProps> = ({socket}) => {
     const [arrivalMessage, setArrivalMessage] = useState<ArrivingMessage>()
     const activeChat = useAppSelector(selectActiveChat)
     const userData = useAppSelector(selectUserData)
@@ -25,21 +26,20 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
     const {data, error, isLoading} = useFetchChatWithMessagesQuery(activeChat.activeChat || 0)
     const dispatch = useAppDispatch()
 
-    const socket = useRef<any>();
     const scrollRef = useRef<any>();
 
-    useEffect(() => {
-       socket.current = io("ws://localhost:5000");
-       socket.current.on("getMessage", (data: ArrivingMessage) => {
-           setArrivalMessage({
-               id: data.id,
-               sender: data.sender,
-               chatId: data.chatId,
-               text:  data.text,
-               createdAt: data.createdAt,
-           });
-       });
-    }, []);
+    // useEffect(() => {
+    //    socket.current = io("ws://localhost:5000");
+    //    socket.current.on("getMessage", (data: ArrivingMessage) => {
+    //        setArrivalMessage({
+    //            id: data.id,
+    //            sender: data.sender,
+    //            chatId: data.chatId,
+    //            text:  data.text,
+    //            createdAt: data.createdAt,
+    //        });
+    //    });
+    // }, []);
 
     useEffect(() => {
         if(data) {
@@ -47,9 +47,9 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
         }
     }, [data])
 
-    useEffect(() => {
-        socket.current.emit("addUser", userData)
-    }, [userData]);
+    // useEffect(() => {
+    //     socket.current.emit("addUser", userData)
+    // }, [userData]);
 
     useEffect(() => {
         if(arrivalMessage?.sender && activeChat) {
@@ -63,16 +63,16 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [activeChat.messages]);
 
-    useEffect(() => {
-        socket.current.on('getTyping', (data: { sender: IUser, chatId: number }) => {
-            if(data.sender.id !== userData?.id) {
-                setSomeoneTyping(data)
-            }
-        })
-        socket.current.on('getStopTyping', () => {
-            setSomeoneTyping(null)
-        })
-    }, []);
+    // useEffect(() => {
+    //     socket.current.on('getTyping', (data: { sender: IUser, chatId: number }) => {
+    //         if(data.sender.id !== userData?.id) {
+    //             setSomeoneTyping(data)
+    //         }
+    //     })
+    //     socket.current.on('getStopTyping', () => {
+    //         setSomeoneTyping(null)
+    //     })
+    // }, []);
 
     return (
         <div className={styles.chatBoxWrapper}>
@@ -80,13 +80,15 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
             {activeChat.activeChat && userData ? (
                 <>
                     <div className={styles.chatBoxTop}>
-                        {isLoading && <div>loading...</div>}
-                        {data && activeChat.messages.map((message: IMessage) => (
-                           <div ref={scrollRef}>
-                               <Message key={message.id} isMy={message.sender.id === userData?.id} message={message}/>
-                           </div>
-                        ))}
-                        {someoneTyping && someoneTyping.chatId === activeChat.activeChat && <div>{someoneTyping?.sender?.fullName} is typing...</div>}
+                        <div style={{overflowY: 'auto'}}>
+                            {isLoading && <div>loading...</div>}
+                            {data && activeChat.messages.map((message: IMessage) => (
+                                <div ref={scrollRef}>
+                                    <Message key={message.id} isMy={message.sender.id === userData?.id} message={message}/>
+                                </div>
+                            ))}
+                            {someoneTyping && someoneTyping.chatId === activeChat.activeChat && <div>{someoneTyping?.sender?.fullName} is typing...</div>}
+                        </div>
                     </div>
                     <ChatTextarea activeChatId={activeChat.activeChat} socket={socket} receivers={getReceivers(activeChat.members, userData.id)} />
                 </>
