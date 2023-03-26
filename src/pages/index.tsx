@@ -1,16 +1,7 @@
 import Head from 'next/head'
 import MainLayout from "@/layouts/MainLayout";
-import {useGetUserQuery} from "@/services/authService";
-import {useEffect} from "react";
 
 export default function Home() {
-    const {data, error, isLoading} = useGetUserQuery()
-
-    useEffect(() => {
-
-        console.log(data)
-    }, [data])
-
   return (
     <>
       <Head>

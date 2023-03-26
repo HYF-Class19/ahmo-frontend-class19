@@ -9,7 +9,7 @@ import {IChat} from "@/models/IChat";
 
 interface ChatTypeProps {
     chats: IChat[],
-    type: 'group' | 'direct'
+    type: 'group' | 'direct' | 'game'
 }
 
 const ChatType: React.FC<ChatTypeProps> = ({chats, type}) => {

@@ -1,23 +1,25 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from './ChatTabs.module.scss'
+import {useAppDispatch} from "@/hooks/useAppHooks";
 
 interface ChatTabsProps {
-    selectedType: number;
-    setSelectedType: (type: number) => void
+    selectedType: 'all' | 'game';
+    setSelectedType: (type: "game" | "all") => void
     setIsActive: (isActive: boolean) => void;
 }
 
 const ChatTabs: React.FC<ChatTabsProps> = ({setSelectedType, selectedType, setIsActive}) => {
+
     return (
         <div className={styles.tabs}>
             <ul>
-                <li>
+                <li onClick={() => setSelectedType('all')}>
                    All
                 </li>
-                <li>
+                <li onClick={() => setSelectedType('game')}>
                     Chat Games
                 </li>
-                <li onClick={() => setIsActive(true)}>Create Group</li>
+                <li onClick={() => setIsActive(true)}>Create {selectedType === 'all' ? 'Group' : "Game"}</li>
             </ul>
         </div>
     );

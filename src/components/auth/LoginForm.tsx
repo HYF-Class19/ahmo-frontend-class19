@@ -26,7 +26,8 @@ const Form: React.FC<FormProps> = () => {
     });
 
     useEffect(() => {
-        console.log("errormessage", error)
+        // @ts-ignore
+        setErrorMessage(error?.data?.message || '')
     }, [error])
 
     const onSubmit = async (dto: any) => {
@@ -60,7 +61,7 @@ const Form: React.FC<FormProps> = () => {
                 <Grid item xs={12}>
                     {error  && (
                         <Alert severity="error" className="mb-20">
-                            {error.data?.message || 'error'}
+                            {errorMessage}
                         </Alert>
                     )}
                 </Grid>
