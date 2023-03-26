@@ -2,6 +2,7 @@
 import { TextField } from '@mui/material';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
+import styles from "../auth/loginRegister.module.scss"
 
 interface FormFieldProps {
     name: string;
@@ -17,7 +18,7 @@ export const FormField: React.FC<FormFieldProps> = ({ name, label, type}) => {
             {...register(name)}
             name={name}
             margin={"normal"}
-            className="mb-20"
+            className={styles.hello}
             size="small"
             label={type !== 'date' ? label : ""}
             type={type}

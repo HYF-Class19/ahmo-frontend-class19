@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import styles from './Header.module.css';
+import styles from './Header.module.scss';
 import Link from "next/link";
 import {useSelector} from "react-redux";
 import {deleteUserData, selectUserData} from "@/store/slices/userSlice";

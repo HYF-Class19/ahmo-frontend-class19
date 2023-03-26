@@ -12,7 +12,8 @@ import {setUserData} from "@/store/slices/userSlice";
 import {useAppDispatch} from "@/hooks/useAppHooks";
 import {useRegisterUserMutation} from "@/services/authService";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
-
+/*Styles*/
+import styles from "./loginRegister.module.scss"
 
 interface FormProps {
 }
@@ -44,7 +45,7 @@ const Form: React.FC<FormProps> = () => {
                 <Grid item xs={12}>
                     <FormField
                         name="fullName"
-                        label="Full Name"
+                        label="User Name"
                         type="text"
                     />
                 </Grid>
@@ -60,6 +61,7 @@ const Form: React.FC<FormProps> = () => {
                         name="password"
                         label="Password"
                         type="password"
+
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -74,6 +76,7 @@ const Form: React.FC<FormProps> = () => {
                     label="Remember me"
                 />
                 <Button
+                    className={styles.button}
                     type="submit"
                     fullWidth
                     disabled={!form.formState.isValid || form.formState.isSubmitting}
@@ -82,10 +85,10 @@ const Form: React.FC<FormProps> = () => {
                 >
                     Sign In
                 </Button>
-                <Grid container>
+                <Grid container className='nMember'>
                     <Grid item>
                         <Link href="/auth/register">
-                            {"Don't have an account? Sign Up"}
+                            {"Not a member? Register now"}
                         </Link>
                     </Grid>
                 </Grid>

@@ -1,10 +1,9 @@
 import { wrapper } from '@/store';
-import '@/styles/globals.css'
+import '@/styles/globals.scss'
 import type { AppProps } from 'next/app'
 import {Api} from "@/api";
 import {setUserData} from "@/store/slices/userSlice";
 import {GetServerSideProps, GetServerSidePropsContext} from "next";
-
 function App({ Component, pageProps }: AppProps) {
 
   return (

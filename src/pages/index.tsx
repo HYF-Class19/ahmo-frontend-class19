@@ -14,5 +14,5 @@ export default function Home() {
         <h1>Initial</h1>
       </MainLayout>
     </>
-  )
+  ) 
 }
