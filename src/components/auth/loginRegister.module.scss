@@ -1,0 +1,27 @@
+$col1: #000000;
+$col2: #0E1014;
+$col3: #1A1E28;
+$col4: #F3FB8C;
+$col5: #5751D7;
+$col6: #B885F4;
+
+
+.hello{
+    background-color: $col4;
+}
+
+
+.button{
+    border-radius: 5px;
+    font-family: Arial;
+    color: $col4 !important;
+    font-size: 20px;
+    background: $col1 !important;
+    padding: 2px;
+    border: solid $col4 8px;
+    text-decoration: none;
+    &:hover {
+        background: #1A1E28 !important;
+        text-decoration: none;
+    }
+}

@@ -8,6 +8,8 @@ import Link from "next/link";
 import {useRouter} from "next/router";
 import {useLoginUserMutation} from "@/services/authService";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+/*Styles    className={styles.hello}*/
+import styles from "./loginRegister.module.scss"
 
 
 interface FormProps {
