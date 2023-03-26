@@ -24,5 +24,5 @@ export type RootState = ReturnType<RootStore['getState']>;
 export type AppDispatch = typeof store.dispatch;
 
 export const wrapper = createWrapper<RootStore>(makeStore, {
-    debug: true,
+    debug: false,
 });

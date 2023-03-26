@@ -29,6 +29,14 @@ const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
         }
     }, [round])
 
+    const isWaitingForOpponentRiddle = (round: IRound, userData: any) =>
+        !round.round_data && userData.id !== round.riddler.id;
+
+    const isWaitingForOpponentAnswer = (round: IRound, userData: any) =>
+        round.round_data && userData.id === round.riddler.id;
+
+    const isYourTurnToGuess = (round: IRound, userData: any) =>
+        round.round_data && userData.id !== round.riddler.id;
 
     return (
         <div className={styles.wrapper}>
@@ -36,12 +44,12 @@ const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
             {error && <div>Error</div>}
             {round && userData && (
                 <>
-                    <p>{round.riddler.fullName} should start the round</p>
+                    <p><span>{round.riddler.id === userData.id ? "you" : round.riddler.fullName}</span> is a riddler</p>
                     {round.id !== activeRound?.id ?
                         userData.id === round.riddler.id ?
                         round.round_data ? (
-                        <div>
-                            <h4>You named a word: {round.round_data}</h4>
+                        <div className={styles.riddle}>
+                            <h4>You named a word: <span>{round.round_data}</span></h4>
                         </div>
                     ) : (
                         <div>
@@ -79,9 +87,6 @@ const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
                                     )
                                 )
                         )}
-                    { activeRound.round_winner || round.id !== activeRound?.id && (
-                        <p>winner: {members.find((m: any) => m.user.id === round.round_winner || m.user.id === activeRound.round_winner)?.user.fullName}</p>
-                    )}
                     {round.id !== activeRound?.id ?
                         round.moves.map((move) => (
                          <RoundMove move={move} key={move.id} />
@@ -91,6 +96,9 @@ const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
                             <RoundMove move={move} key={move.id} />
                         ))
                     }
+                    {activeRound.round_winner || round.id !== activeRound?.id && (
+                        <p>winner: {members.find((m: any) => m.user.id === round.round_winner || m.user.id === activeRound.round_winner)?.user.fullName}</p>
+                    )}
                 </>
                 )}
         </div>

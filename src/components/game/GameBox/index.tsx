@@ -2,11 +2,12 @@ import React, {useEffect} from 'react';
 import {useGetGameQuery} from "@/services/gameService";
 import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
 import {selectActiveChat, setActiveChat, setGameChat} from "@/store/slices/chatSlice";
-import styles from "@/components/chat/ChatBox/ChatBox.module.scss";
+import styles from "./GameBox.module.scss";
 import {selectUserData} from "@/store/slices/userSlice";
 import GameRound from "@/components/game/GameRound";
 import GameTextField from "@/components/game/GameTextField";
 import {IGame} from "@/models/IGame";
+import GameHeader from "@/components/game/GameHeader";
 
 const GameBox = () => {
     const selectedGame = useAppSelector(selectActiveChat)
@@ -31,7 +32,7 @@ const GameBox = () => {
                         {game && (
                             <>
                                 <div className={styles.chatBoxTopTitle}>
-                                    {game.name}
+                                    <GameHeader />
                                 </div>
                                 <div style={{overflowY: 'auto'}} className={styles.box}>
                                     {game.rounds.map((round, index) => (
@@ -40,8 +41,8 @@ const GameBox = () => {
                                 </div>
                             </>
                         )}
-                     <GameTextField />
                  </div>
+                    <GameTextField />
                 </>
             ) : <h1>No chat available</h1>}
         </div>

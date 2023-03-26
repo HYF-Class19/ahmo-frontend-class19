@@ -1,5 +1,5 @@
-import {GetServerSidePropsContext, NextPageContext} from 'next';
-import Cookies, {parseCookies} from 'nookies';
+import { GetServerSidePropsContext } from 'next';
+import Cookies, { parseCookies } from 'nookies';
 import axios from 'axios';
 import { UserApi } from './user';
 
@@ -8,11 +8,11 @@ interface ApiReturnType {
 }
 
 export const Api = (
-    ctx?: NextPageContext | GetServerSidePropsContext
+    req?: GetServerSidePropsContext['req']
 ): ApiReturnType => {
-    const cookies = ctx ? Cookies.get(ctx) : parseCookies();
+    const cookies = req ? Cookies.get(req.cookies) : parseCookies();
     const token = cookies.authToken;
-    const headers = token ? {Authorization: 'Bearer ' + token} : {}
+    const headers = token ? { Authorization: 'Bearer ' + token } : {};
 
     const instance = axios.create({
         baseURL: 'http://localhost:4000/',
@@ -22,5 +22,4 @@ export const Api = (
     return {
         user: UserApi(instance),
     };
-
 };

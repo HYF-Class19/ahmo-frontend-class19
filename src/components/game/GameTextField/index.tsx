@@ -3,14 +3,14 @@ import styles from './GameTextField.module.scss'
 import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
 import {useCreateMoveMutation, useCreateRoundMutation, useUpdateRoundDataMutation} from "@/services/roundServive";
 import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
-import {selectActiveChat, selectMembers} from "@/store/slices/chatSlice";
+import {addScore, selectActiveChat, selectMembers} from "@/store/slices/chatSlice";
 import {addMove, addRoundData, selectActiveRound, setRound} from '@/store/slices/roundSlice'
 import {selectUserData} from "@/store/slices/userSlice";
 import {IMember} from "@/models/IChat";
 
 const GameTextField = () => {
     const [moveData, setMoveData] = useState<string>()
-    const [moveType, setMoveType] = useState<string>()
+    const [moveType, setMoveType] = useState<string>('question')
     const [roundData, setRoundData] = useState<string>()
     const [createMove] = useCreateMoveMutation()
     const userData = useAppSelector(selectUserData)
@@ -22,7 +22,7 @@ const GameTextField = () => {
     const dispatch = useAppDispatch()
 
     const sendResponse = async (answer?: string) => {
-        console.log(activeRound)
+        console.log(moveData, moveType, answer, activeRound)
         if ((answer || moveData) && (moveType || answer) && activeRound) {
             const result = await createMove({move_data: moveData || answer, move_type: moveType || 'answer', roundId: activeRound.id})
             console.log("yes")
@@ -31,6 +31,8 @@ const GameTextField = () => {
             if(move) {
                 dispatch(addMove(move))
                 if(move.correct) {
+                    dispatch(addScore({winner: move.player.id}))
+
                     const newRiddler = members.find((m: IMember) => m.user.id !== activeRound?.riddler?.id)
                     if(newRiddler) {
                         console.log(newRiddler)
@@ -69,13 +71,11 @@ const GameTextField = () => {
                     <Button onClick={() => sendResponse('no')}>No</Button>
                 </div>
                         : (
-                            <div>
+                            <>
                                 <TextField
                                     id="round_data"
-                                    label="Multiline"
-                                    multiline
-                                    rows={4}
-                                    placeholder={'place your move data here'}
+                                    label="Riddle"
+                                    placeholder={'place your riddle here'}
                                     value={roundData}
                                     onChange={(e) => setRoundData(e.target.value)}
                                     variant="standard"
@@ -83,15 +83,12 @@ const GameTextField = () => {
                                 <div className={styles.btnSection}>
                                     <Button onClick={updateWord} variant={'outlined'} color={'info'}>Send</Button>
                                 </div>
-                            </div>
+                            </>
                         )
             ) : (
                 <div className={styles.textfield}>
                     <TextField
-                        id="move_data"
-                        label="Multiline"
-                        multiline
-                        rows={4}
+                        label="Move data"
                         placeholder={'place your move data here'}
                         value={moveData}
                         onChange={(e) => setMoveData(e.target.value)}
@@ -101,9 +98,11 @@ const GameTextField = () => {
                         <InputLabel id="input-type">Type of propose</InputLabel>
                         <Select
                             id="input-type"
-                            value={moveType}
-                            onChange={(e) => setMoveType(e.target.value)}
+                            onChange={(e) => {
+                                setMoveType(e.target.value)}
+                            }
                             label="input type"
+                            defaultValue={'question'}
                         >
                             <MenuItem value={'question'}>Question</MenuItem>
                             <MenuItem value={'statement'}>Statement</MenuItem>

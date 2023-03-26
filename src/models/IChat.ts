@@ -20,4 +20,5 @@ export type IMember = {
     id: number;
     user: IUser;
     chat: IChat;
+    score: number;
 }
