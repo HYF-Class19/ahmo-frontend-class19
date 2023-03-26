@@ -3,15 +3,13 @@ import {NextPage} from "next";
 import MainLayout from "@/layouts/MainLayout";
 import ChatMenu from "@/components/chat/ChatMenu";
 import ChatBox from "@/components/chat/ChatBox";
-import styles from '../../styles/Chat.module.css'
+import styles from '../../styles/Chat.module.scss'
 import {useFetchChatsQuery} from "@/services/chatService";
 import ChatTabs from "@/components/chat/ChatTabs";
 import CreateChatDialog from "@/components/chat/CreateChatDialog";
 import CreateGameDialog from "@/components/game/CreateGameDialog";
 import GameBox from "@/components/game/GameBox";
 import {IChat} from "@/models/IChat";
-import {io} from "socket.io-client";
-import {ArrivingMessage} from "@/models/IMessage";
 
 const Chat: NextPage = () => {
     const [selectedType, setSelectedType] = useState<"game" | "all">("all")
