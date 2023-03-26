@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useGetGameQuery} from "@/services/gameService";
 import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
 import {selectActiveChat, setActiveChat, setGameChat} from "@/store/slices/chatSlice";
@@ -6,14 +6,35 @@ import styles from "./GameBox.module.scss";
 import {selectUserData} from "@/store/slices/userSlice";
 import GameRound from "@/components/game/GameRound";
 import GameTextField from "@/components/game/GameTextField";
-import {IGame} from "@/models/IGame";
+import {ArrivingMove, IGame} from "@/models/IGame";
 import GameHeader from "@/components/game/GameHeader";
+import {io} from "socket.io-client";
+import {ArrivingMessage} from "@/models/IMessage";
 
-const GameBox = () => {
+interface GameBoxProps {
+    socket: any
+}
+
+const GameBox: React.FC<GameBoxProps> = ({socket}) => {
+    const [arrivalMove, setArrivalMove] = useState<ArrivingMove>();
     const selectedGame = useAppSelector(selectActiveChat)
     const userData = useAppSelector(selectUserData)
     const {data: game, isLoading, error} = useGetGameQuery(selectedGame.activeChat || 0)
     const dispatch = useAppDispatch()
+
+    // useEffect(() => {
+    //     socket.current = io("ws://localhost:5000");
+    //     socket.current.on("getMove", (data: ArrivingMove) => {
+    //         setArrivalMove({
+    //             id: data.id,
+    //             player: data.player,
+    //             round: data.round,
+    //             move_data:  data.move_data,
+    //             move_type: data.move_type,
+    //             createdAt: data.createdAt,
+    //         });
+    //     });
+    // }, []);
 
     useEffect(() => {
         if(game) {

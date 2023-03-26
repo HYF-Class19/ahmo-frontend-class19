@@ -1,5 +1,5 @@
-import { GetServerSidePropsContext } from 'next';
-import Cookies, { parseCookies } from 'nookies';
+import { GetServerSidePropsContext, NextPageContext } from 'next';
+import { parseCookies } from 'nookies';
 import axios from 'axios';
 import { UserApi } from './user';
 
@@ -8,14 +8,14 @@ interface ApiReturnType {
 }
 
 export const Api = (
-    req?: GetServerSidePropsContext['req']
+    ctx?: NextPageContext | GetServerSidePropsContext
 ): ApiReturnType => {
-    const cookies = req ? Cookies.get(req.cookies) : parseCookies();
+    const cookies = parseCookies(ctx);
     const token = cookies.authToken;
     const headers = token ? { Authorization: 'Bearer ' + token } : {};
 
     const instance = axios.create({
-        baseURL: 'http://localhost:4000/',
+        baseURL: 'https://ahmo-api.up.railway.app/',
         headers,
     });
 

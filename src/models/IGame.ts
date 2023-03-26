@@ -32,6 +32,15 @@ export type IMove = {
     isCorrect: boolean;
 }
 
+export type ArrivingMove = {
+    id: number;
+    move_data: string;
+    move_type: string;
+    round: number;
+    player: IUser;
+    createdAt: Date;
+}
+
 export type CreateChatDto = {
     name: string;
     type: string;

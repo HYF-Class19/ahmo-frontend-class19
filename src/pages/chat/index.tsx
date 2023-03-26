@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {NextPage} from "next";
 import MainLayout from "@/layouts/MainLayout";
 import ChatMenu from "@/components/chat/ChatMenu";
@@ -10,12 +10,19 @@ import CreateChatDialog from "@/components/chat/CreateChatDialog";
 import CreateGameDialog from "@/components/game/CreateGameDialog";
 import GameBox from "@/components/game/GameBox";
 import {IChat} from "@/models/IChat";
+import {io} from "socket.io-client";
+import {ArrivingMessage} from "@/models/IMessage";
 
 const Chat: NextPage = () => {
     const [selectedType, setSelectedType] = useState<"game" | "all">("all")
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [chats, setChats] = useState<IChat[]>([])
     const {data, error, isLoading} = useFetchChatsQuery()
+    const socket = useRef<any>();
+
+    // useEffect(() => {
+    //     socket.current = io("ws://localhost:5000");
+    // }, []);
 
     useEffect(() => {
         if(data) {
@@ -33,7 +40,7 @@ const Chat: NextPage = () => {
                    {isLoading && <div>loading...</div>}
                    {chats.length && <ChatMenu selected={selectedType} chats={chats} />}
                </div>
-               {selectedType === 'all' ? <ChatBox /> : <GameBox />}
+               {selectedType === 'all' ? <ChatBox socket={socket} /> : <GameBox socket={socket} />}
            </div>
             {selectedType === 'all' ? <CreateChatDialog setChats={setChats} open={isOpen} setOpen={setIsOpen} />
                 :
