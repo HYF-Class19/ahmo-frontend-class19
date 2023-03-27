@@ -29,16 +29,18 @@ export type IMove = {
     round: IRound;
     player: IUser;
     createdAt: string;
-    isCorrect: boolean;
+    correct: boolean;
 }
 
 export type ArrivingMove = {
     id: number;
     move_data: string;
     move_type: string;
-    round: number;
+    correct: boolean;
     player: IUser;
-    createdAt: Date;
+    createdAt: string;
+    round: IRound;
+    chatId: number;
 }
 
 export type CreateChatDto = {

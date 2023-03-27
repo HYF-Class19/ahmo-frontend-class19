@@ -28,18 +28,17 @@ const ChatBox: React.FC<ChatBoxProps> = ({socket}) => {
 
     const scrollRef = useRef<any>();
 
-    // useEffect(() => {
-    //    socket.current = io("ws://localhost:5000");
-    //    socket.current.on("getMessage", (data: ArrivingMessage) => {
-    //        setArrivalMessage({
-    //            id: data.id,
-    //            sender: data.sender,
-    //            chatId: data.chatId,
-    //            text:  data.text,
-    //            createdAt: data.createdAt,
-    //        });
-    //    });
-    // }, []);
+    useEffect(() => {
+        socket?.current?.on("getMessage", (data: ArrivingMessage) => {
+            setArrivalMessage({
+                id: data.id,
+                sender: data.sender,
+                chatId: data.chatId,
+                text:  data.text,
+                createdAt: data.createdAt,
+            });
+        });
+    }, []);
 
     useEffect(() => {
         if(data) {
@@ -47,13 +46,14 @@ const ChatBox: React.FC<ChatBoxProps> = ({socket}) => {
         }
     }, [data])
 
-    // useEffect(() => {
-    //     socket.current.emit("addUser", userData)
-    // }, [userData]);
+    useEffect(() => {
+        console.log('activeChat', activeChat.messages)
+    }, [activeChat])
 
+   
     useEffect(() => {
         if(arrivalMessage?.sender && activeChat) {
-            if(arrivalMessage.chatId === activeChat.activeChat) {
+            if(arrivalMessage.chatId === activeChat.activeChat && arrivalMessage.sender.id !== userData?.id) {
                 dispatch(addMessage(arrivalMessage))
             }
         }
@@ -63,16 +63,18 @@ const ChatBox: React.FC<ChatBoxProps> = ({socket}) => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [activeChat.messages]);
 
-    // useEffect(() => {
-    //     socket.current.on('getTyping', (data: { sender: IUser, chatId: number }) => {
-    //         if(data.sender.id !== userData?.id) {
-    //             setSomeoneTyping(data)
-    //         }
-    //     })
-    //     socket.current.on('getStopTyping', () => {
-    //         setSomeoneTyping(null)
-    //     })
-    // }, []);
+    useEffect(() => {
+       if(socket?.currect?.on) {
+        socket.current.on('getTyping', (data: { sender: IUser, chatId: number }) => {
+            if(data.sender.id !== userData?.id) {
+                setSomeoneTyping(data)
+            }
+        })
+        socket.current.on('getStopTyping', () => {
+            setSomeoneTyping(null)
+        })
+       }
+    }, []);
 
     return (
         <div className={styles.chatBoxWrapper}>
@@ -83,7 +85,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({socket}) => {
                         <div style={{overflowY: 'auto'}}>
                             {isLoading && <div>loading...</div>}
                             {data && activeChat.messages.map((message: IMessage) => (
-                                <div ref={scrollRef}>
+                                <div key={message.id} ref={scrollRef}>
                                     <Message key={message.id} isMy={message.sender.id === userData?.id} message={message}/>
                                 </div>
                             ))}

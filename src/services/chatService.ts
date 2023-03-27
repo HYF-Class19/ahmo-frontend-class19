@@ -12,7 +12,7 @@ export const chatApi = api.injectEndpoints({
             query: (id) => ({
                 url: `/chats/${id}`,
             }),
-            providesTags: result => ['Message', 'Chat']
+            providesTags: result => ['Message']
         }),
         createGroup: builder.mutation<IChat, {type: string, name: string, members: string }>({
             query: (body) => ({
