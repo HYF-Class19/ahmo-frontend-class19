@@ -8,7 +8,12 @@ import {addMove, addRoundData, selectActiveRound, setRound} from '@/store/slices
 import {selectUserData} from "@/store/slices/userSlice";
 import {IMember} from "@/models/IChat";
 
-const GameTextField = () => {
+interface GameTextFieldProps {
+    chatId: number;
+    socket: any;
+}
+
+const GameTextField: React.FC<GameTextFieldProps> = ({chatId, socket}) => {
     const [moveData, setMoveData] = useState<string>()
     const [moveType, setMoveType] = useState<string>('question')
     const [roundData, setRoundData] = useState<string>()
@@ -22,7 +27,6 @@ const GameTextField = () => {
     const dispatch = useAppDispatch()
 
     const sendResponse = async (answer?: string) => {
-        console.log(moveData, moveType, answer, activeRound)
         if ((answer || moveData) && (moveType || answer) && activeRound) {
             const result = await createMove({move_data: moveData || answer, move_type: moveType || 'answer', roundId: activeRound.id})
             console.log("yes")
@@ -30,9 +34,10 @@ const GameTextField = () => {
             const move = result.data
             if(move) {
                 dispatch(addMove(move))
+                const receivers = activeGame.members.filter((m: IMember) => m.user.id !== userData?.id).map((m: IMember) => m.user.id)
+                socket.current.emit("sendMove", {...move, chatId, receivers})
                 if(move.correct) {
                     dispatch(addScore({winner: move.player.id}))
-
                     const newRiddler = members.find((m: IMember) => m.user.id !== activeRound?.riddler?.id)
                     if(newRiddler) {
                         console.log(newRiddler)

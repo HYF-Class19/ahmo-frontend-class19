@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {IMove, IRound} from "@/models/IGame";
 import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
 import {selectUserData} from "@/store/slices/userSlice";
@@ -20,6 +20,7 @@ const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
     const dispatch = useAppDispatch()
     const members = useAppSelector(selectMembers)
     const activeRound = useAppSelector(selectActiveRound)
+    const scrollRef = useRef<any>();
 
     useEffect(() => {
         if(round) {
@@ -37,6 +38,10 @@ const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
 
     const isYourTurnToGuess = (round: IRound, userData: any) =>
         round.round_data && userData.id !== round.riddler.id;
+
+        useEffect(() => {
+            scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, [activeRound.moves]);
 
     return (
         <div className={styles.wrapper}>
@@ -93,7 +98,7 @@ const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
                         ))
                         :
                         activeRound.moves.map((move: IMove) => (
-                            <RoundMove move={move} key={move.id} />
+                            <div key={move.id} ref={scrollRef}><RoundMove move={move}  /></div>
                         ))
                     }
                     {activeRound.round_winner || round.id !== activeRound?.id && (

@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import styles from "@/components/chat/ChatBox/ChatBox.module.scss";
 import {IMember} from "@/models/IChat";
-import {useAppSelector} from "@/hooks/useAppHooks";
+import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
 import {selectUserData} from "@/store/slices/userSlice";
 import {useMutateMessageMutation} from "@/services/messageService";
+import { addMessage } from '@/store/slices/chatSlice';
 
 interface ChatTextAreaProps {
     receivers: number[];
@@ -15,6 +16,8 @@ const ChatTextArea:React.FC<ChatTextAreaProps> = ({receivers, activeChatId, sock
     const [message, setMessage] = useState<string>('')
     const [mutateMessage, {isLoading: sendLoading}] = useMutateMessageMutation()
     const userData = useAppSelector(selectUserData)!
+    const dispatch = useAppDispatch()
+    
 
     const sendMessage = async () => {
         if(message.length > 0 && userData) {
@@ -31,6 +34,7 @@ const ChatTextArea:React.FC<ChatTextAreaProps> = ({receivers, activeChatId, sock
                     chatId: activeChatId,
                     text: message,
                 })
+                dispatch(addMessage(postedMessage))
             }
         }
     }

@@ -9,7 +9,6 @@ const messageApi = api.injectEndpoints({
                 method: 'POST',
                 body,
             }),
-            invalidatesTags: ['Message', 'Chat'],
         })
     })
 })
