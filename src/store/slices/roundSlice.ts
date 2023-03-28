@@ -38,7 +38,7 @@ export const roundSlice = createSlice({
         addRoundData: (state, action: PayloadAction<string>) => {
             state.round_data = action.payload
         },
-        updateRoundStatus: (state, action: PayloadAction<{round_status: string, id: number, winner: number}>) => {
+        updateRoundStatus: (state, action: PayloadAction<{round_status: string, winner: number}>) => {
             state.round_status = action.payload.round_status
             state.round_winner = action.payload.winner
         },

@@ -92,12 +92,12 @@ const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
                                     )
                                 )
                         )}
-                    {round.id !== activeRound?.id ?
+                    {round.round_status === 'finished' ?
                         round.moves.map((move) => (
                          <RoundMove move={move} key={move.id} />
                         ))
                         :
-                        activeRound.moves.map((move: IMove) => (
+                        activeRound?.moves?.map((move: IMove) => (
                             <div key={move.id} ref={scrollRef}><RoundMove move={move}  /></div>
                         ))
                     }

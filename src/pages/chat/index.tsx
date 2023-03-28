@@ -13,6 +13,7 @@ import {IChat} from "@/models/IChat";
 import { io } from 'socket.io-client';
 import { useAppSelector } from '@/hooks/useAppHooks';
 import { selectUserData } from '@/store/slices/userSlice';
+import { socket } from '@/utils/socket';
 
 const Chat: NextPage = () => {
     const [selectedType, setSelectedType] = useState<"game" | "all">("all")
@@ -20,15 +21,10 @@ const Chat: NextPage = () => {
     const [chats, setChats] = useState<IChat[]>([])
     const {data, error, isLoading} = useFetchChatsQuery()
     const userData = useAppSelector(selectUserData)
-    const socket = useRef<any>();
-
-    useEffect(() => {
-        socket.current = io("ws://localhost:5000");
-    }, []);
 
     useEffect(() => {
         if(userData) {
-            socket.current.emit("addUser", userData)
+            socket.emit("addUser", userData)
         }
     }, [userData]);
 
@@ -48,7 +44,7 @@ const Chat: NextPage = () => {
                    {isLoading && <div>loading...</div>}
                    {chats.length && <ChatMenu selected={selectedType} chats={chats} />}
                </div>
-               {socket ? selectedType !== 'all' ?  <GameBox socket={socket} /> : <ChatBox socket={socket} /> : null}
+               {selectedType !== 'all' ?  <GameBox /> : <ChatBox />}
            </div>
             {selectedType === 'all'? <CreateChatDialog setChats={setChats} open={isOpen} setOpen={setIsOpen} />
                 :

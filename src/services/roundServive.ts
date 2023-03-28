@@ -22,7 +22,7 @@ export const roundService = api.injectEndpoints({
                 method: 'POST',
                 body: dto,
             }),
-            invalidatesTags: ['Round'],
+            invalidatesTags: ['Round', 'Game'],
         }),
         updateRoundData: build.mutation({
             query: (dto: {id: number, round_data?: string, round_status?: string, round_winner?: number }) => ({
@@ -30,6 +30,7 @@ export const roundService = api.injectEndpoints({
                 method: 'PATCH',
                 body: dto,
             }),
+            invalidatesTags:['Round', 'Game']
         }),
         createMove: build.mutation<IMove, any>({
             query: (dto: { move_data: string, move_type: string, roundId: number}) => ({
@@ -37,7 +38,7 @@ export const roundService = api.injectEndpoints({
                 method: 'POST',
                 body: dto,
             }),
-
+            invalidatesTags: ['Round', 'Game']
         }),
     })
 })
