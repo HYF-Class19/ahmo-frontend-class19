@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import styles from "@/components/chat/ChatBox/ChatBox.module.scss";
-import {IMember} from "@/models/IChat";
 import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
 import {selectUserData} from "@/store/slices/userSlice";
 import {useMutateMessageMutation} from "@/services/messageService";

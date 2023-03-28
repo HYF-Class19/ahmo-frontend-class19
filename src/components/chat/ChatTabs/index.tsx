@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styles from './ChatTabs.module.scss'
-import {useAppDispatch} from "@/hooks/useAppHooks";
 
 interface ChatTabsProps {
     selectedType: 'all' | 'game';

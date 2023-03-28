@@ -1,16 +1,7 @@
 import React from 'react';
 import styles from './ChatMenu.module.scss'
-import {
-    Box,
-    ListItemButton,
-    ListItemText,
-} from "@mui/material";
-import {KeyboardArrowDown} from "@mui/icons-material";
-import Conversation from "@/components/chat/Conversation";
 import ChatType from "@/components/chat/ChatType";
 import {IChat} from "@/models/IChat";
-import {IGame} from "@/models/IGame";
-import {type} from "os";
 
 interface ChatMenuProps {
     chats: IChat[]
