@@ -49,9 +49,11 @@ export const chatSlice = createSlice({
             state.name = action.payload.name;
         },
         loadMessages: (state, action: PayloadAction<IMessage[]>) => {
-            for(let i = action.payload.length - 1; i > 0; i--) {
-                state.messages.push(action.payload[i])
-            }
+            // let messages = []
+            // for(let i = action.payload.length - 1; i > 0; i--) {
+            //     messages.push(action.payload[i])
+            // }
+            state.messages = action.payload
             
         },
         addMessage: (state, action: PayloadAction<IMessage>) => {

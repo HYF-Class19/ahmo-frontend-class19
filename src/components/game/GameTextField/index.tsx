@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
-import styles from './GameTextField.module.scss'
-import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
+import {Button, InputLabel, MenuItem, Select, TextField} from "@mui/material";
 import {useCreateMoveMutation, useCreateRoundMutation, useUpdateRoundDataMutation} from "@/services/roundServive";
 import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
-import {addRound, addScore, selectActiveChat, selectMembers} from "@/store/slices/chatSlice";
-import {addMove, addRoundData, selectActiveRound, setRound, updateRoundStatus} from '@/store/slices/roundSlice'
+import {addScore, selectActiveChat, selectMembers} from "@/store/slices/chatSlice";
+import {addRoundData, selectActiveRound, setRound} from '@/store/slices/roundSlice'
 import {selectUserData} from "@/store/slices/userSlice";
 import {IMember} from "@/models/IChat";
 import { socket } from '@/utils/socket';
+
+import styles from './GameTextField.module.scss'
 
 interface GameTextFieldProps {
     chatId: number;
@@ -33,27 +34,24 @@ const GameTextField: React.FC<GameTextFieldProps> = ({chatId}) => {
             // @ts-ignore
             const move = result.data
             if(move) {
-                dispatch(addMove(move))
                 const receivers = activeGame.members.filter((m: IMember) => m.user.id !== userData?.id).map((m: IMember) => m.user.id)
                 socket.emit("sendMove", {...move, chatId, receivers})
                 if(move.correct) {
-                    dispatch(updateRoundStatus({round_status: 'finished', winner: move.player.id}))
-                    dispatch(addRound(activeRound))
                     dispatch(addScore({winner: move.player.id}))
                     const newRiddler = members.find((m: IMember) => m.user.id !== activeRound?.riddler?.id)
                     if(newRiddler) {
-                        console.log(newRiddler)
                         const res = await createRound({riddlerId: newRiddler.user.id, chatId: activeGame.activeChat})
                         // @ts-ignore
                         const newRound = res.data
                         if(newRound) {
+                            socket.emit("newRound", {round: newRound, receivers})
                             dispatch(setRound(newRound))
                         }
                     }
                 }
             }
         }
-        setMoveType('')
+        setMoveType('question')
         setMoveData('')
         setRoundData('')
     }

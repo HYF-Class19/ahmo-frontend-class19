@@ -1,5 +1,6 @@
 import {api} from "@/services/api";
 import {IMove, IRound} from "@/models/IGame";
+import { socket } from "@/utils/socket";
 
 export const roundService = api.injectEndpoints({
     endpoints: (build) => ({
@@ -9,12 +10,46 @@ export const roundService = api.injectEndpoints({
                 method: 'GET',
             }),
             providesTags: (result) => ['Round'],
+            async onCacheEntryAdded(arg, {cacheDataLoaded, cacheEntryRemoved, updateCachedData}) {
+                try {
+                    await cacheDataLoaded
+                    socket.on('getNewRound', (round: IRound) => {
+                        console.log('getNewRound', round)
+                        updateCachedData((draft) => {
+                            if (draft && round) {
+                                draft.push(round);
+                            }
+                        })
+                    })
+                    await cacheEntryRemoved;
+                    socket.off('getNewRound');
+                } catch (e) {}
+            }
         }),
         getRound: build.query<IRound, number>({
             query: (roundId: number) => ({
                 url: `rounds/${roundId}`,
                 method: 'GET',
-            })
+            }),
+            providesTags: (result) => ['Round'],
+            async onCacheEntryAdded(arg, {cacheDataLoaded, cacheEntryRemoved, updateCachedData}) {
+                try {
+                    await cacheDataLoaded
+                    socket.on('getMove', (move: IMove) => {
+                        console.log('getMove', move)
+                        updateCachedData((draft) => {
+                            console.log('draft', draft)
+                            if (draft && move) {
+                                if (draft.id === move.round.id) {
+                                    draft?.moves?.push(move);
+                                }
+                            }
+                        })
+                    })
+                    await cacheEntryRemoved;
+                    socket.off('getMove');
+                } catch (e) {}
+            }
         }),
         createRound: build.mutation<IRound, { riddlerId: number, chatId: number }>({
             query: (dto: { riddlerId: number, chatId: number }) => ({
