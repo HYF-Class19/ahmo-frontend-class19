@@ -3,37 +3,32 @@ import '@/styles/globals.scss'
 import type { AppProps } from 'next/app'
 import {Api} from "@/api";
 import {setUserData} from "@/store/slices/userSlice";
-import {GetServerSideProps, GetServerSidePropsContext} from "next";
-function App({ Component, pageProps }: AppProps) {
+import { Provider } from 'react-redux';
+import { CacheProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
+import { useEffect } from 'react';
+import { useGetUserQuery } from '@/services/authService';
 
-  return (
-      <Component {...pageProps} />
-  )
-}
+const cache = createCache({ key: 'myapp' });
 
-App.getInitialProps = wrapper.getInitialAppProps(
-    (store) =>
-        async ({ctx, Component}) => {
-            try {
-                const userData = await Api(ctx).user.getMe();
-                store.dispatch(setUserData(userData));
-            } catch (err) {
-                if (ctx.asPath === '/write') {
-                    ctx.res?.writeHead(302, {
-                        location: '/403',
-                    });
-                    ctx.res?.end();
-                }
-                console.log(err);
-            }
-            return {
-                pageProps: {
-                    ...(Component.getInitialProps
-                        ? await Component.getInitialProps({...ctx, store})
-                        : {}),
-                },
-            };
+function MyApp({ Component, ...rest }: AppProps) {
+    const {store, props} = wrapper.useWrappedStore(rest);
+    const {data: user, isLoading, error} = useGetUserQuery()
+
+    useEffect(() => {
+        if(user) {
+            store.dispatch(setUserData(user));
         }
-);
+    }, [user]);
+  
+    return (
+      <Provider store={store}>
+        <CacheProvider value={cache}>
+            {isLoading && <div>Loading...</div>}
+            {user && <Component {...props} />}
+        </CacheProvider>
+      </Provider>
+    );
+  }
 
-export default wrapper.withRedux(App);
+  export default wrapper.withRedux(MyApp);

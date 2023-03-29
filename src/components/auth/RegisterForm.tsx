@@ -1,7 +1,7 @@
 import { FormField } from '@/components/shared/FormField';
 import {Alert, Box, Button, Checkbox, FormControlLabel, Grid} from '@mui/material';
 import {yupResolver} from "@hookform/resolvers/yup";
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import {LoginFormSchema, RegisterSchema} from '@/utils/FormSchemas';
 import Link from "next/link";
@@ -11,7 +11,6 @@ import {setCookie} from "nookies";
 import {setUserData} from "@/store/slices/userSlice";
 import {useAppDispatch} from "@/hooks/useAppHooks";
 import {useRegisterUserMutation} from "@/services/authService";
-import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 /*Styles*/
 import styles from "./loginRegister.module.scss"
 
@@ -22,17 +21,25 @@ const Form: React.FC<FormProps> = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter()
     const [registerUser, {error, isLoading}] = useRegisterUserMutation()
-
+    const dispatch = useAppDispatch()
 
     const form = useForm({
         mode: 'onChange',
         resolver: yupResolver(RegisterSchema),
     });
 
+    useEffect(() => {
+        // @ts-ignore
+        setErrorMessage(error?.data?.message || '')
+    }, [error])
+
     const onSubmit = async (dto: any) => {
         try {
 
-            await registerUser(dto).unwrap()
+            const user: any = await registerUser(dto).unwrap()
+            if(user) {
+                dispatch(setUserData(user));
+            }
             router.push('/')
         } catch (err: any) {
             console.log(err)
@@ -67,7 +74,7 @@ const Form: React.FC<FormProps> = () => {
                 <Grid item xs={12}>
                     {error && (
                         <Alert severity="error" className="mb-20">
-                            {error?.data?.message}
+                            {errorMessage}
                         </Alert>
                     )}
                 </Grid>

@@ -10,6 +10,8 @@ import {useLoginUserMutation} from "@/services/authService";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 /*Styles    className={styles.hello}*/
 import styles from "./loginRegister.module.scss"
+import { useAppDispatch } from '@/hooks/useAppHooks';
+import { setUserData } from '@/store/slices/userSlice';
 
 
 interface FormProps {
@@ -19,6 +21,7 @@ const Form: React.FC<FormProps> = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter()
     const [loginUser, {isLoading, error}] = useLoginUserMutation()
+    const dispatch = useAppDispatch()
 
     const form = useForm({
         mode: 'onChange',
@@ -33,7 +36,11 @@ const Form: React.FC<FormProps> = () => {
     const onSubmit = async (dto: any) => {
         setErrorMessage('');
         try {
-            await loginUser(dto).unwrap()
+            const res = await loginUser(dto).unwrap()
+
+            if(res) {
+                dispatch(setUserData(res));
+            }
             router.push('/')
         } catch (err: any) {
             console.log(err)

@@ -24,7 +24,7 @@ export const gameService = api.injectEndpoints({
                 method: 'POST',
                 body: dto,
             }),
-            invalidatesTags: ['Game']
+            invalidatesTags: ['Chat']
         }),
     })
 })

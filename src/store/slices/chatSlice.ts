@@ -70,14 +70,6 @@ export const chatSlice = createSlice({
          })
         }
     },
-    extraReducers: {
-        [HYDRATE]: (state, action) => {
-            return {
-                ...state,
-                ...action.payload.chat,
-            };
-        },
-    },
 })
 
 export const {setActiveChat, addMessage, addRound, loadMessages, addScore, setGameChat} = chatSlice.actions

@@ -34,6 +34,7 @@ export const authApi = api.injectEndpoints({
                 setToken(response.token);
                 return response;
             },
+            invalidatesTags: ['Auth'],
         }),
         loginUser: builder.mutation<IUser, LoginUserRequest>({
             query: (body) => ({
@@ -45,11 +46,13 @@ export const authApi = api.injectEndpoints({
                 setToken(response.token);
                 return response;
             },
+            invalidatesTags: ['Auth'],
         }),
         getUser: builder.query<ResponseUser, void>({
             query: () => ({
                 url: '/users/me',
             }),
+            providesTags: (result) => ['Auth'],
         }),
         searchUsers: builder.query<ResponseUser[], string>({
             query: (search) => ({
