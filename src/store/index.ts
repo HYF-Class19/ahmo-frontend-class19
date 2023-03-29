@@ -13,6 +13,7 @@ export function makeStore() {
             round: roundReducer,
             [api.reducerPath]: api.reducer,
         },
+        devTools: true,
         middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware)
     });
 }
