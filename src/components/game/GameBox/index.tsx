@@ -8,9 +8,11 @@ import GameRound from "@/components/game/GameRound";
 import GameTextField from "@/components/game/GameTextField";
 import {IRound} from "@/models/IGame";
 import GameHeader from "@/components/game/GameHeader";
-import {setRound } from '@/store/slices/roundSlice';
+import {addRoundData, setRound } from '@/store/slices/roundSlice';
 import { socket } from '@/utils/socket';
 import { api } from '@/services/api';
+import RoundData from '../RoundData';
+import { IUser } from '@/models/IUser';
 
 interface GameBoxProps {
 }
@@ -28,8 +30,13 @@ const GameBox: React.FC<GameBoxProps> = () => {
             dispatch(setRound(round))
         })
 
+        socket.on('getUpdatedWord', (data: {player: IUser, round_data: string}) => {
+            dispatch(addRoundData(data.round_data));
+        })
+
         return () => {
             socket.off('getNewRound')
+            socket.off('getUpdatedWord')
         }
     }, [])
 
@@ -45,23 +52,14 @@ const GameBox: React.FC<GameBoxProps> = () => {
         <div className={styles.chatBoxWrapper}>
             {game?.id &&  userData ? (
                 <>
-                 <div className={styles.chatBoxTop}>
-                     {isLoading && <div>Loading...</div>}
-                        {error && <div>Error</div>}
-                        {game && (
-                            <>
-                                <div className={styles.chatBoxTopTitle}>
-                                    <GameHeader />
-                                </div>
-                                <div style={{overflowY: 'auto'}} className={styles.box}>
-                                    {game.rounds.map((round: IRound, index: number) => (
-                                        <GameRound key={round.id} roundId={round.id} index={index} />
-                                    ))}
-                                </div>
-                            </>
-                        )}
-                 </div>
-                    <GameTextField chatId={selectedGame.activeChat} /> 
+                <GameHeader />
+                <RoundData count={game.rounds.length}/>
+                <div style={{overflowY: 'auto'}} className={styles.box}>
+                    {game.rounds.map((round: IRound, index: number) => (
+                        <GameRound key={round.id} roundId={round.id} index={index} />
+                    ))}
+                </div>
+                 <GameTextField chatId={selectedGame.activeChat} /> 
                 </>
             ) : <h1>No chat available</h1>}
         </div>

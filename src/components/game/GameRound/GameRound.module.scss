@@ -1,0 +1,29 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    .riddler {
+        display: flex;
+        width: 100%;
+        justify-content: flex-start;
+        margin: 10px 20px;
+        color: white;
+        p {
+            font-size: 24px;
+        }
+    }
+    .winner {
+        position: relative;
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        p {
+            font-size: 24px;
+            color: #F3FB8C;
+            position: absolute;
+            
+        }
+    }
+}

@@ -4,7 +4,7 @@ import {round} from "@popperjs/core/lib/utils/math";
 import {RootState} from "@/store";
 import {IUser} from "@/models/IUser";
 
-interface roundState {
+export interface roundState {
     id: number |  null
     round_data: string | null;
     round_status: string | null;
