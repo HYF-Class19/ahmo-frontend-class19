@@ -38,7 +38,7 @@ const RoundData: React.FC<RoundDataProps> = ({ count }) => {
               </p>
             </div>
             <p>
-              Statements left: <b>2</b>
+              Statements left: <b>{3 - activeRound.attempt}</b>
             </p>
           </div>
         </>

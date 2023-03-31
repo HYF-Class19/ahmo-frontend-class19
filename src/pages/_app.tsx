@@ -1,7 +1,6 @@
 import { wrapper } from '@/store';
 import '@/styles/globals.scss'
 import type { AppProps } from 'next/app'
-import {Api} from "@/api";
 import {setUserData} from "@/store/slices/userSlice";
 import { Provider } from 'react-redux';
 import { CacheProvider, ThemeProvider } from '@emotion/react';

@@ -20,9 +20,7 @@ export const chatApi = api.injectEndpoints({
                 try {
                     await cacheDataLoaded;
                     socket.on('getMessage', (message: ArrivingMessage) => {
-                        console.log('getMessage', message)
                         updateCachedData((draft) => {
-                            console.log('draft', draft)
                             if(draft && message) {
                                 if(draft.id === message.chatId) {
                                     draft?.messages?.push(message);

@@ -58,8 +58,12 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
           .filter((m: IMember) => m.user.id !== userData?.id)
           .map((m: IMember) => m.user.id);
         socket.emit("sendMove", { ...move, chatId, receivers });
-        if (move.correct) {
-          dispatch(addScore({ winner: move.player.id }));
+        if ((move.correct || activeRound.attempt >= 3) && activeRound?.riddler) {
+         if(move.correct) {
+             dispatch(addScore({ winner: move.player.id }));
+         } else {
+            dispatch(addScore({ winner: activeRound.riddler.id })); 
+         }
           const newRiddler = members.find(
             (m: IMember) => m.user.id !== activeRound?.riddler?.id
           );
@@ -88,6 +92,10 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
       await updateRoundData({ id: activeRound.id!, round_data: roundData });
       if (!error) {
         dispatch(addRoundData(roundData));
+        const receivers = members
+        .filter((m: IMember) => m.user.id !== userData?.id)
+        .map((m: IMember) => m.user.id);
+        socket.emit('updateWord', {player: userData, receivers, round_data: roundData})
       }
       setRoundData("");
     }

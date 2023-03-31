@@ -14,7 +14,6 @@ export const roundService = api.injectEndpoints({
                 try {
                     await cacheDataLoaded
                     socket.on('getNewRound', (round: IRound) => {
-                        console.log('getNewRound', round)
                         updateCachedData((draft) => {
                             if (draft && round) {
                                 draft.push(round);
@@ -36,9 +35,7 @@ export const roundService = api.injectEndpoints({
                 try {
                     await cacheDataLoaded
                     socket.on('getMove', (move: IMove) => {
-                        console.log('getMove', move)
                         updateCachedData((draft) => {
-                            console.log('draft', draft)
                             if (draft && move) {
                                 if (draft.id === move.round.id) {
                                     draft?.moves?.push(move);
