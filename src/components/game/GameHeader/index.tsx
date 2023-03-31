@@ -9,11 +9,6 @@ const GameHeader = () => {
 
     if(!activeChat.activeChat) return null;
 
-    useEffect(() => {
-        console.log(activeChat)
-    }, []);
-
-
     return (
         <header className={styles.header}>
             <div className={styles.chatName}>

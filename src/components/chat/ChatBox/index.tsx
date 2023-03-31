@@ -27,7 +27,6 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
 
     useEffect(() => {
         if(data) {
-            console.log('data messages changed', data)
             dispatch(loadMessages(data.messages))
         }
     }, [data])

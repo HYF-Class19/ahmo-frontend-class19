@@ -34,22 +34,27 @@ const Chat: NextPage = () => {
         }
     }, [data]);
 
-
     return (
         <MainLayout>
-           <div className={styles.chat}>
-               <ChatTabs setSelectedType={setSelectedType} setIsActive={setIsOpen} selectedType={selectedType} />
-               <div className={styles.chatMenu}>
-                   {error && <div>error</div>}
-                   {isLoading && <div>loading...</div>}
-                   {data?.length && <ChatMenu selected={selectedType} chats={data} />}
-               </div>
-               {selectedType !== 'all' ?  <GameBox /> : <ChatBox />}
-           </div>
-            {selectedType === 'all'? <CreateChatDialog setChats={setChats} open={isOpen} setOpen={setIsOpen} />
+            {!userData ? 'AUTHORIZE' : (
+            <>
+            <div className={styles.chat}>
+                <ChatTabs setSelectedType={setSelectedType} setIsActive={setIsOpen} selectedType={selectedType} />
+                <div className={styles.chatMenu}>
+                    {error && <div>error</div>}
+                    {isLoading && <div>loading...</div>}
+                    {data?.length && <ChatMenu selected={selectedType} chats={data} />}
+                </div>
+                {selectedType !== 'all' ?  <GameBox /> : <ChatBox />}
+            </div>
+            <div>
+                {selectedType === 'all'? <CreateChatDialog setChats={setChats} open={isOpen} setOpen={setIsOpen} />
                 :
                 <CreateGameDialog setChats={setChats} open={isOpen} setOpen={setIsOpen} />
-            }
+                }
+            </div>
+            </>
+        )}
         </MainLayout>
     );
 };

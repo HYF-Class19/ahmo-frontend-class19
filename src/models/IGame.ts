@@ -19,6 +19,7 @@ export type IRound = {
     round_winner: number;
     game: IGame;
     riddler: IUser;
+    attempt: number;
     moves: IMove[];
 }
 

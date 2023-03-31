@@ -1,19 +1,34 @@
-.moveBox {
+.moveWrapper {
+  position: relative;
   display: flex;
-  width: 100%;
-  background-color: #cccccc;
-  align-items: center;
-  padding: 10px;
-  border-radius: 10px;
-  .my {
-    background-color: lightblue;
-  }
-  .message {
-    margin-left: 20px;
-    font-size: 20px;
-  }
-  .date {
+  &.my {
     align-self: flex-end;
-    justify-self: flex-end;
+  }
+  .avatar {
+    height: 100%;
+    align-self: center;
+  }
+  .moveBox {
+    display: flex;
+    background-color: #484153;
+    align-items: center;
+    padding: 10px;
+    margin-left: 10px;
+    align-self: start;
+    border-radius: 15px 15px 15px 0;
+    margin-bottom: 20px;
+    position: relative;
+    &.myBox {
+      border-radius: 15px 15px 0 15px;
+      background-color: #B885F4;
+    }
+    .message {
+      margin: 10px 20px 10px;
+      font-size: 20px;
+    }
+    .date {
+      align-self: flex-end;
+      justify-self: flex-end;
+    }
   }
 }

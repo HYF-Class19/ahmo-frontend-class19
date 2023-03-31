@@ -1,0 +1,22 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 10px 0 10px;
+    background-color: #484153;
+    color: black;
+    .item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        p:last-child {
+            color: white;
+        }
+        .roles {
+            display: flex;
+            color: white;
+            p {
+                margin-right: 20px;
+            }
+        }
+    }
+}
