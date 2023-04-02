@@ -54,9 +54,9 @@ export const authApi = api.injectEndpoints({
             }),
             providesTags: (result) => ['Auth'],
         }),
-        searchUsers: builder.query<ResponseUser[], string>({
-            query: (search) => ({
-                url: `/users?query=${search}`,
+        searchUsers: builder.query<any[], {query: string, type: string}>({
+            query: ({query, type}) => ({
+                url: type === 'direct' ? `/users?query=${query}` : `/chats?query=${query}&type=${type}` ,
             })
         })
     }),

@@ -61,7 +61,7 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
                             {someoneTyping && someoneTyping.chatId === activeChat.activeChat && <div>{someoneTyping?.sender?.fullName} is typing...</div>}
                         </div>
                     </div>
-                    <ChatTextarea activeChatId={activeChat.activeChat} receivers={getReceivers(activeChat.members, userData.id)} />
+                    <ChatTextarea activeChatId={activeChat.activeChat} receivers={getReceivers(userData.id, activeChat?.members)} />
                 </>
             ) : (
                 <div className={styles.noConversation}>

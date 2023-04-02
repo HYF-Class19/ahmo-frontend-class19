@@ -4,6 +4,8 @@ import { InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search'
 import { useSearchUsersQuery } from '@/services/authService';
 import SearchResult from '../SearchResult';
+import { useAppSelector } from '@/hooks/useAppHooks';
+import { selectUserData } from '@/store/slices/userSlice';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -51,25 +53,34 @@ const Search = styled('div')(({ theme }) => ({
   
 interface SearchBarProps {
     searchType: 'group' | 'direct' | 'game';
+    isActive: boolean
     setActive: Function
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
     searchType,
-    setActive
+    setActive,
+    isActive
 }) => {
     const [searchValue, setSearchValue] = useState('')
-    const {data: users, isLoading, error } = useSearchUsersQuery(searchValue)
+    const {data, isLoading, error } = useSearchUsersQuery({query: searchValue, type: searchType})
+    const userData = useAppSelector(selectUserData)
 
     useEffect(() => {
         setActive(searchValue.length > 0)
     }, [searchValue])
 
+    useEffect(() => {
+      if(!isActive) {
+        setSearchValue('')
+      }
+    }, [isActive])
+
   return (
-    <>
+    <div onClick={(e) => e.stopPropagation()}>
     <Search>
         <SearchIconWrapper>
-        <SearchIcon />
+          <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase
             value={searchValue}
@@ -78,8 +89,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
         inputProps={{ 'aria-label': 'search' }}
         />
     </Search>
-    {users && searchValue && <SearchResult data={users} />}
-    </>
+    {searchValue ? searchType === 'group' ? <SearchResult setActive={setActive} isLoading={isLoading} chats={data} /> : <SearchResult setActive={setActive} isLoading={isLoading} users={data?.filter(user => user.id !== userData?.id)} /> : null}
+    </div>
   )
 }
 

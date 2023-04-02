@@ -7,35 +7,50 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton, ListItemIcon } from "@mui/material";
-import { useFetchChatsQuery } from "@/services/chatService";
+import { useCreateGroupMutation, useFetchChatsQuery } from "@/services/chatService";
 import { IChat } from "@/models/IChat";
+import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
+import { setActiveChat, setGameChat } from "@/store/slices/chatSlice";
+import { selectUserData } from "@/store/slices/userSlice";
 
 interface SeacrhResultProps {
-  data: IUser[];
+  users?: IUser[];
+  chats?: IChat[];
+  isLoading: boolean;
+  setActive: Function;
 }
 
-const SearchResult: React.FC<SeacrhResultProps> = ({ data }) => {
-    const {data: chats, isLoading, error} = useFetchChatsQuery()
+const SearchResult: React.FC<SeacrhResultProps> = ({ users, chats, isLoading, setActive }) => {
+    const {data, error} = useFetchChatsQuery()
+    const userData = useAppSelector(selectUserData)
     const [directChats, setDirectChats] = useState<IChat[]>()
+    const [createGroup, result] = useCreateGroupMutation()
+
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
-        if(chats) {
-            setDirectChats(chats.filter((chat) => chat.type === 'direct'))
+        if(data) {
+            setDirectChats(data.filter((chat) => chat.type === 'direct'))
         }
-    }, [chats])
+    }, [data])
 
 
-    const openChat = (user: IUser) => {
+    const openChat = async (data: IUser) => {
         try {
-            let isExist = false
-            directChats?.forEach(chat => {
-                if(chat.members.find(m => m.user.id === user.id)) {
-                    isExist = true
-                }
-            })
+            const chat = directChats?.find(chat => 
+                chat.members.find(m => m.user.id === data.id)
+            )
 
-            if(isExist) {
-                
+            if(chat) {
+              dispatch(setActiveChat(chat))
+              setActive(false)
+            } else {
+              const members = [userData?.id, data.id].join(',')
+              await createGroup({type: 'direct', name: data.fullName, members })
+              if(result.data) {
+                console.log(result.data)
+                dispatch(setActiveChat(result.data))
+              }
             }
         } catch (error) {
             console.log(error)
@@ -51,7 +66,13 @@ const SearchResult: React.FC<SeacrhResultProps> = ({ data }) => {
         cursor: 'pointer'
       }}
     >
-      {data.length > 0 ? data.map((user) => (
+      {isLoading && (
+        <ListItem>
+      <ListItemText primary='Loading...' />
+       </ListItem>
+      )}
+      {users ?
+       users.length > 0 ? users.map((user) => (
         <ListItem key={user.id} secondaryAction={
             <IconButton onClick={() => openChat(user)} edge="end">
               <SendIcon />
@@ -66,7 +87,23 @@ const SearchResult: React.FC<SeacrhResultProps> = ({ data }) => {
         <ListItem>
         <ListItemText primary='No users found' secondary='Try enter other name' />
       </ListItem>
-      )}
+      ) : (
+        chats && chats.length > 0 ? chats.map((chat) => (
+          <ListItem key={chat.id} secondaryAction={
+              <IconButton edge="end">
+                <SendIcon />
+              </IconButton>
+            }>
+            <ListItemAvatar>
+              <Avatar>{chat.name![0]}</Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={chat.name} secondary={chat?.lastMessage?.text} />
+          </ListItem>
+        )) : (
+          <ListItem>
+          <ListItemText primary='No users found' secondary='Try enter other name' />
+        </ListItem>
+        ))}
     </List>
   );
 };
