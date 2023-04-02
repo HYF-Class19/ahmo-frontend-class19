@@ -32,10 +32,6 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
     }, [data])
 
     useEffect(() => {
-        console.log('activeChat', activeChat.messages)
-    }, [activeChat])
-
-    useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [activeChat.messages]);
 
@@ -52,17 +48,16 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
 
     return (
         <div className={styles.chatBoxWrapper}>
-
             {activeChat.activeChat && userData ? (
                 <>
                     <div className={styles.chatBoxTop}>
                         <div style={{overflowY: 'auto'}}>
                             {isLoading && <div>loading...</div>}
-                            {data && activeChat.messages.map((message: IMessage) => (
+                            {data ? activeChat.messages.length > 0 ? activeChat.messages.map((message: IMessage) => (
                                 <div key={message.id} ref={scrollRef}>
                                     <Message key={message.id} isMy={message.sender.id === userData?.id} message={message}/>
                                 </div>
-                            ))}
+                            )) : <h3>No messages yet</h3> : null}
                             {someoneTyping && someoneTyping.chatId === activeChat.activeChat && <div>{someoneTyping?.sender?.fullName} is typing...</div>}
                         </div>
                     </div>
