@@ -11,25 +11,27 @@ import { useFetchChatsQuery } from "@/services/chatService";
 import { IChat } from "@/models/IChat";
 
 interface SeacrhResultProps {
-  data: IUser[];
+  users?: IUser[];
+  chats?: IChat[];
+  isLoading: boolean;
 }
 
-const SearchResult: React.FC<SeacrhResultProps> = ({ data }) => {
-    const {data: chats, isLoading, error} = useFetchChatsQuery()
+const SearchResult: React.FC<SeacrhResultProps> = ({ users, chats, isLoading }) => {
+    const {data, error} = useFetchChatsQuery()
     const [directChats, setDirectChats] = useState<IChat[]>()
 
     useEffect(() => {
-        if(chats) {
-            setDirectChats(chats.filter((chat) => chat.type === 'direct'))
+        if(data) {
+            setDirectChats(data.filter((chat) => chat.type === 'direct'))
         }
-    }, [chats])
+    }, [data])
 
 
-    const openChat = (user: IUser) => {
+    const openChat = (data: any) => {
         try {
             let isExist = false
             directChats?.forEach(chat => {
-                if(chat.members.find(m => m.user.id === user.id)) {
+                if(chat.members.find(m => m.user.id === data.id)) {
                     isExist = true
                 }
             })
@@ -51,7 +53,13 @@ const SearchResult: React.FC<SeacrhResultProps> = ({ data }) => {
         cursor: 'pointer'
       }}
     >
-      {data.length > 0 ? data.map((user) => (
+      {isLoading && (
+        <ListItem>
+      <ListItemText primary='Loading...' />
+       </ListItem>
+      )}
+      {users ?
+       users.length > 0 ? users.map((user) => (
         <ListItem key={user.id} secondaryAction={
             <IconButton onClick={() => openChat(user)} edge="end">
               <SendIcon />
@@ -66,7 +74,23 @@ const SearchResult: React.FC<SeacrhResultProps> = ({ data }) => {
         <ListItem>
         <ListItemText primary='No users found' secondary='Try enter other name' />
       </ListItem>
-      )}
+      ) : (
+        chats && chats.length > 0 ? chats.map((chat) => (
+          <ListItem key={chat.id} secondaryAction={
+              <IconButton edge="end">
+                <SendIcon />
+              </IconButton>
+            }>
+            <ListItemAvatar>
+              <Avatar>{chat.name![0]}</Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={chat.name} secondary={chat?.lastMessage?.text} />
+          </ListItem>
+        )) : (
+          <ListItem>
+          <ListItemText primary='No users found' secondary='Try enter other name' />
+        </ListItem>
+        ))}
     </List>
   );
 };

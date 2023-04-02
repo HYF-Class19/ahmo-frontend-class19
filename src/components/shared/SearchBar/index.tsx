@@ -51,22 +51,29 @@ const Search = styled('div')(({ theme }) => ({
   
 interface SearchBarProps {
     searchType: 'group' | 'direct' | 'game';
+    isActive: boolean
     setActive: Function
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
     searchType,
-    setActive
+    setActive,
+    isActive
 }) => {
     const [searchValue, setSearchValue] = useState('')
-    const {data: users, isLoading, error } = useSearchUsersQuery(searchValue)
-
+    const {data, isLoading, error } = useSearchUsersQuery({query: searchValue, type: searchType})
     useEffect(() => {
         setActive(searchValue.length > 0)
     }, [searchValue])
 
+    useEffect(() => {
+      if(!isActive) {
+        setSearchValue('')
+      }
+    }, [isActive])
+
   return (
-    <>
+    <div onClick={(e) => e.stopPropagation()}>
     <Search>
         <SearchIconWrapper>
         <SearchIcon />
@@ -78,8 +85,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
         inputProps={{ 'aria-label': 'search' }}
         />
     </Search>
-    {users && searchValue && <SearchResult data={users} />}
-    </>
+    {searchValue ? searchType === 'group' ? <SearchResult isLoading={isLoading} chats={data} /> : <SearchResult isLoading={isLoading} users={data} /> : null}
+    </div>
   )
 }
 

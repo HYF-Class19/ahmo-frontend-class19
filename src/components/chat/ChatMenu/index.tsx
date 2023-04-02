@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './ChatMenu.module.scss'
 import ChatType from "@/components/chat/ChatType";
 import {IChat} from "@/models/IChat";
@@ -11,12 +11,13 @@ interface ChatMenuProps {
 
 const ChatMenu: React.FC<ChatMenuProps> = ({chats, selected}) => {
     const [typeOfChat, setTypeOfChat] = useState<"group" | "direct" | "game">('group')
+    const [isSearchActive, setIsSearchActive] = useState(false)
 
     return (
-        <div className={styles.menu}>
+        <div className={styles.menu} onClick={() => setIsSearchActive(false)}>
             {selected === 'all' ? 
                 <>
-                    <ChatType chats={chats.filter((item: any) => item.type === typeOfChat)} type={typeOfChat} />
+                    <ChatType isSearchActive={isSearchActive} setIsSearchActive={setIsSearchActive} chats={chats.filter((item: any) => item.type === typeOfChat)} type={typeOfChat} />
                     <div className={styles.actions}>
                         <Button onClick={() => setTypeOfChat('group')} variant={typeOfChat === 'group' ? 'contained' : 'outlined'} color='warning'>Groups</Button>
                         <Button onClick={() => setTypeOfChat('direct')} variant={typeOfChat === 'direct' ? 'contained' : 'outlined'} color='warning'>Direct</Button>
@@ -24,7 +25,7 @@ const ChatMenu: React.FC<ChatMenuProps> = ({chats, selected}) => {
                 </>
                 :
                 (
-                    <ChatType chats={chats.filter((item: any) => item.type === 'game')} type={'game'} />
+                    <ChatType isSearchActive={isSearchActive} setIsSearchActive={setIsSearchActive} chats={chats.filter((item: any) => item.type === 'game')} type={'game'} />
                 )
            }
         </div>

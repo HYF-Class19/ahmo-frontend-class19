@@ -25,7 +25,7 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({open, setOpen, setChats}) 
     const [name, setName] = useState<string>('');
     const [query, setQuery] = useState<string>('')
     const [members, setMembers] = useState<number[]>([userData.id]);
-    const {data, isLoading, error}  = useSearchUsersQuery(query)
+    const {data, isLoading, error}  = useSearchUsersQuery({query, type: 'direct'})
     const [createGroup, {}] = useCreateGroupMutation()
 
     const handleClose = () => {

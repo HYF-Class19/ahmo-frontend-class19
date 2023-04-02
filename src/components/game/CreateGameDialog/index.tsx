@@ -24,7 +24,7 @@ const CreateGameDialog: React.FC<CreateGameDialogProps> = ({open, setOpen, setCh
     const [game, setGame] = useState<string>('');
     const [query, setQuery] = useState<string>('')
     const [members, setMembers] = useState<number[]>([]);
-    const {data, isLoading, error} = useSearchUsersQuery(query)
+    const {data, isLoading, error} = useSearchUsersQuery({query, type: 'direct'})
     const [createGame, {}] = useCreateGameMutation()
 
     const handleClose = () => {
