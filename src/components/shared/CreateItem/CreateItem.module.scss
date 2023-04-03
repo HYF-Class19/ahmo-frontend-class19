@@ -1,0 +1,26 @@
+.item {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border: 1px solid #F3FB8C;
+    border-radius: 10px;
+    list-style: none;
+    width: 100%;
+    background-color: black;
+    margin-bottom: 10px;
+    &:first-child {
+        margin-top: 20px;
+    }
+    &:last-child {
+        margin-bottom: 0px;
+    }
+    .value {
+        font-size: 20px;
+        text-transform: capitalize;
+        margin-left: 20px;
+    }
+    .check {
+        justify-self: flex-end;
+        margin-left: auto;
+    }
+}

@@ -52,18 +52,21 @@ const Search = styled('div')(({ theme }) => ({
   }));
   
 interface SearchBarProps {
-    searchType: 'group' | 'direct' | 'game';
+    searchType: 'group' | 'direct' | 'game' | 'all';
     isActive: boolean
     setActive: Function
+    placeholder: string
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
     searchType,
     setActive,
-    isActive
+    isActive,
+    placeholder
 }) => {
     const [searchValue, setSearchValue] = useState('')
-    const {data, isLoading, error } = useSearchUsersQuery({query: searchValue, type: searchType})
+    const {data, isLoading, error } = useSearchUsersQuery({query: searchValue, type: searchType === 'all' ? 'direct' : searchType})
+    const {data: chatsResult} = useSearchUsersQuery({query: searchValue, type: searchType})
     const userData = useAppSelector(selectUserData)
 
     useEffect(() => {
@@ -76,6 +79,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       }
     }, [isActive])
 
+
   return (
     <div onClick={(e) => e.stopPropagation()}>
     <Search>
@@ -85,11 +89,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <StyledInputBase
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-        placeholder="Search…"
+        placeholder={placeholder}
         inputProps={{ 'aria-label': 'search' }}
         />
     </Search>
-    {searchValue ? searchType === 'group' ? <SearchResult setActive={setActive} isLoading={isLoading} chats={data} /> : <SearchResult setActive={setActive} isLoading={isLoading} users={data?.filter(user => user.id !== userData?.id)} /> : null}
+    {searchValue ? 
+    searchType === 'group' 
+    ? <SearchResult setActive={setActive} isLoading={isLoading} chats={data} /> 
+    : searchType === 'all' 
+    ? <SearchResult setActive={setActive} isLoading={isLoading} chats={chatsResult} users={data?.filter(user => user.id !== userData?.id)} /> 
+    : <SearchResult setActive={setActive} isLoading={isLoading} users={data?.filter(user => user.id !== userData?.id)} />
+    : null}
     </div>
   )
 }

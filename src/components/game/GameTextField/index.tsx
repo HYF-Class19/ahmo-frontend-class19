@@ -168,7 +168,6 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
                   onChange={(e) => {
                     setMoveType(e.target.value);
                   }}
-                  defaultValue={"question"}
                 >
                   <option value={"question"}>Question</option>
                   <option value={"statement"}>Statement</option>

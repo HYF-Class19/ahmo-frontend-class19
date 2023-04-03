@@ -11,7 +11,7 @@ import SearchBar from '@/components/shared/SearchBar';
 
 interface ChatTypeProps {
     chats: IChat[],
-    type: 'group' | 'direct' | 'game'
+    type: 'group' | 'direct' | 'game' | 'all'
     isSearchActive: boolean
     setIsSearchActive: Function
 }
@@ -22,7 +22,7 @@ const ChatType: React.FC<ChatTypeProps> = ({chats, type, setIsSearchActive, isSe
     return (
         <div className={styles.wrapper}>
             <h3>{type.toUpperCase()} chat</h3>
-            <SearchBar isActive={isSearchActive} setActive={setIsSearchActive} searchType={type} />
+            <SearchBar placeholder='search...' isActive={isSearchActive} setActive={setIsSearchActive} searchType={type} />
             {!isSearchActive ? chats.length > 0 ?
                 chats.map((chat: IChat) => <Conversation key={chat.id} chat={chat} />)
                  : <div>You have no {type} chats, maybe create one?</div> : null
