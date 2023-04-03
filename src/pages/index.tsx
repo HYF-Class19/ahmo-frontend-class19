@@ -1,7 +1,9 @@
 import Head from 'next/head'
 import MainLayout from "@/layouts/MainLayout";
+import styles from '../styles/Main.module.scss'
 
 export default function Home() {
+
   return (
     <>
       <Head>

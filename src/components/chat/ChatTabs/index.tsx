@@ -24,7 +24,7 @@ const ChatTabs: React.FC<ChatTabsProps> = ({setSelectedType, selectedType, setIs
                 <li onClick={() => setSelectedType('game')}>
                     Chat Games
                 </li>
-                <li onClick={() => setIsActive(true)}>Create {selectedType === 'all' ? 'Chat' : selectedType}</li>
+                <li onClick={() => setIsActive(true)}>Create Chat</li>
             </ul>
         </div>
     );

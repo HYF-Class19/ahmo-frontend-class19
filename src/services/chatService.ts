@@ -35,6 +35,11 @@ export const chatApi = api.injectEndpoints({
                 }
             }
         }),
+        getChatByType: builder.query<IChat[], string>({
+            query: (type) => ({
+                url: `/chats?type=${type}&query=`
+            }),
+        }),
         createGroup: builder.mutation<IChat, {type: string, name: string, members: string }>({
             query: (body) => ({
                 url: '/chats',
@@ -42,12 +47,13 @@ export const chatApi = api.injectEndpoints({
                 body,
             }),
             invalidatesTags: ['Chat'],
-        })
+        }),
     })
 })
 
 export const {
     useFetchChatsQuery,
     useFetchChatWithMessagesQuery,
-    useCreateGroupMutation
+    useCreateGroupMutation,
+    useGetChatByTypeQuery
 } = chatApi
