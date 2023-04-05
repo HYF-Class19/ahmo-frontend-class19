@@ -10,17 +10,24 @@ import CreateChatDialog from "@/components/chat/CreateChatDialog";
 import CreateGameDialog from "@/components/game/CreateGameDialog";
 import GameBox from "@/components/game/GameBox";
 import {IChat} from "@/models/IChat";
+import { useAppSelector } from '@/hooks/useAppHooks';
+import { selectUserData } from '@/store/slices/userSlice';
+import { socket } from '@/utils/socket';
+import { selectActiveChat } from '@/store/slices/chatSlice';
 
 const Chat: NextPage = () => {
-    const [selectedType, setSelectedType] = useState<"game" | "all">("all")
+    const [selectedType, setSelectedType] = useState<"game" | "group" | "group" | "all">("all")
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [chats, setChats] = useState<IChat[]>([])
     const {data, error, isLoading} = useFetchChatsQuery()
-    const socket = useRef<any>();
+    const userData = useAppSelector(selectUserData)
+    const activeChat = useAppSelector(selectActiveChat)
 
-    // useEffect(() => {
-    //     socket.current = io("ws://localhost:5000");
-    // }, []);
+    useEffect(() => {
+        if(userData) {
+            socket.emit("addUser", userData)
+        }
+    }, [userData]);
 
     useEffect(() => {
         if(data) {
@@ -28,22 +35,24 @@ const Chat: NextPage = () => {
         }
     }, [data]);
 
-
     return (
         <MainLayout>
-           <div className={styles.chat}>
-               <ChatTabs setSelectedType={setSelectedType} setIsActive={setIsOpen} selectedType={selectedType} />
-               <div className={styles.chatMenu}>
-                   {error && <div>error</div>}
-                   {isLoading && <div>loading...</div>}
-                   {chats.length && <ChatMenu selected={selectedType} chats={chats} />}
-               </div>
-               {selectedType === 'all' ? <ChatBox socket={socket} /> : <GameBox socket={socket} />}
-           </div>
-            {selectedType === 'all' ? <CreateChatDialog setChats={setChats} open={isOpen} setOpen={setIsOpen} />
-                :
-                <CreateGameDialog setChats={setChats} open={isOpen} setOpen={setIsOpen} />
-            }
+            {!userData ? 'AUTHORIZE' : (
+            <>
+            <div className={styles.chat}>
+                <ChatTabs setSelectedType={setSelectedType} setIsActive={setIsOpen} selectedType={selectedType} />
+                <div className={styles.chatMenu}>
+                    {error && <div>error</div>}
+                    {isLoading && <div>loading...</div>}
+                    {data?.length && <ChatMenu selected={selectedType} chats={data} />}
+                </div>
+                {selectedType === 'game' || activeChat.type === 'game' ?  <GameBox /> : <ChatBox />}
+            </div>
+            <div>
+               <CreateChatDialog setChats={setChats} open={isOpen} setOpen={setIsOpen} type={selectedType} />
+            </div>
+            </>
+        )}
         </MainLayout>
     );
 };

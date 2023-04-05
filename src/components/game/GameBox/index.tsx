@@ -1,40 +1,46 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useGetGameQuery} from "@/services/gameService";
 import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
-import {selectActiveChat, setActiveChat, setGameChat} from "@/store/slices/chatSlice";
+import {selectActiveChat,setGameChat} from "@/store/slices/chatSlice";
 import styles from "./GameBox.module.scss";
 import {selectUserData} from "@/store/slices/userSlice";
 import GameRound from "@/components/game/GameRound";
 import GameTextField from "@/components/game/GameTextField";
-import {ArrivingMove, IGame} from "@/models/IGame";
+import {IRound} from "@/models/IGame";
 import GameHeader from "@/components/game/GameHeader";
-import {io} from "socket.io-client";
-import {ArrivingMessage} from "@/models/IMessage";
+import {addRoundData, setRound } from '@/store/slices/roundSlice';
+import { socket } from '@/utils/socket';
+import { api } from '@/services/api';
+import RoundData from '../RoundData';
+import { IUser } from '@/models/IUser';
 
 interface GameBoxProps {
-    socket: any
 }
 
-const GameBox: React.FC<GameBoxProps> = ({socket}) => {
-    const [arrivalMove, setArrivalMove] = useState<ArrivingMove>();
+const GameBox: React.FC<GameBoxProps> = () => {
     const selectedGame = useAppSelector(selectActiveChat)
     const userData = useAppSelector(selectUserData)
     const {data: game, isLoading, error} = useGetGameQuery(selectedGame.activeChat || 0)
     const dispatch = useAppDispatch()
+    const boxRef = useRef<any>()
+    const scrollRef = useRef<any>();
 
-    // useEffect(() => {
-    //     socket.current = io("ws://localhost:5000");
-    //     socket.current.on("getMove", (data: ArrivingMove) => {
-    //         setArrivalMove({
-    //             id: data.id,
-    //             player: data.player,
-    //             round: data.round,
-    //             move_data:  data.move_data,
-    //             move_type: data.move_type,
-    //             createdAt: data.createdAt,
-    //         });
-    //     });
-    // }, []);
+    useEffect(() => {
+        socket.on('getNewRound', (round: IRound) => {
+            dispatch(api.util.invalidateTags(['Game', 'Round']))
+            dispatch(setRound(round))
+        })
+
+        socket.on('getUpdatedWord', (data: {player: IUser, round_data: string}) => {
+            dispatch(addRoundData(data.round_data));
+        })
+
+        return () => {
+            socket.off('getNewRound')
+            socket.off('getUpdatedWord')
+        }
+    }, [])
+
 
     useEffect(() => {
         if(game) {
@@ -42,28 +48,25 @@ const GameBox: React.FC<GameBoxProps> = ({socket}) => {
         }
     }, [game])
 
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+    }, [selectedGame.rounds]) 
+
 
     return (
         <div className={styles.chatBoxWrapper}>
-            {selectedGame.activeChat &&  userData ? (
+            {game?.id && userData && selectedGame?.members.length > 1 ? (
                 <>
-                 <div className={styles.chatBoxTop}>
-                     {isLoading && <div>Loading...</div>}
-                        {error && <div>Error</div>}
-                        {game && (
-                            <>
-                                <div className={styles.chatBoxTopTitle}>
-                                    <GameHeader />
-                                </div>
-                                <div style={{overflowY: 'auto'}} className={styles.box}>
-                                    {game.rounds.map((round, index) => (
-                                        <GameRound key={round.id} roundId={round.id} index={index} />
-                                    ))}
-                                </div>
-                            </>
-                        )}
-                 </div>
-                    <GameTextField />
+                 <GameHeader />
+                <RoundData count={game.rounds.length}/>
+                <div ref={boxRef} style={{overflowY: 'auto'}} className={styles.box}>
+                    {game.rounds.map((round: IRound, index: number) => (
+                        <div key={round.id} ref={scrollRef}>
+                            <GameRound roundId={round.id} index={index} />
+                        </div>
+                    ))}
+                </div>
+                 <GameTextField chatId={selectedGame.activeChat} /> 
                 </>
             ) : <h1>No chat available</h1>}
         </div>
@@ -71,3 +74,4 @@ const GameBox: React.FC<GameBoxProps> = ({socket}) => {
 };
 
 export default GameBox;
+

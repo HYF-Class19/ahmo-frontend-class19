@@ -1,32 +1,31 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './ChatMenu.module.scss'
-import {
-    Box,
-    ListItemButton,
-    ListItemText,
-} from "@mui/material";
-import {KeyboardArrowDown} from "@mui/icons-material";
-import Conversation from "@/components/chat/Conversation";
 import ChatType from "@/components/chat/ChatType";
 import {IChat} from "@/models/IChat";
-import {IGame} from "@/models/IGame";
-import {type} from "os";
+import { Button } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '@/hooks/useAppHooks';
+import { selectMenu, setMenu } from '@/store/slices/menuSlice';
 
 interface ChatMenuProps {
     chats: IChat[]
-    selected: 'game' | 'all'
+    selected: 'game' | 'direct' | 'group' | 'all'
 }
 
 const ChatMenu: React.FC<ChatMenuProps> = ({chats, selected}) => {
+    const [isSearchActive, setIsSearchActive] = useState(false)
+    const menu = useAppSelector(selectMenu)
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(setMenu(chats))
+    }, [chats])
 
     return (
-        <div className={styles.menu}>
-            {selected === 'all' ? ['group', 'direct'].map((type: any, i) => (
-                chats && <ChatType key={i} chats={chats.filter((item: any) => item.type === type)} type={type} />
-                ))
+        <div className={styles.menu} onClick={() => setIsSearchActive(false)}>
+            {selected === 'all' ? <ChatType isSearchActive={isSearchActive} setIsSearchActive={setIsSearchActive} chats={menu} type={selected} />
                 :
                 (
-                    <ChatType chats={chats.filter((item: any) => item.type === 'game')} type={'game'} />
+                    <ChatType isSearchActive={isSearchActive} setIsSearchActive={setIsSearchActive} chats={menu.filter((item: any) => item.type === selected)} type={selected} />
                 )
            }
         </div>

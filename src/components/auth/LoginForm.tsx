@@ -8,7 +8,11 @@ import Link from "next/link";
 import {useRouter} from "next/router";
 import {useLoginUserMutation} from "@/services/authService";
 import styles from "./loginRegister.module.scss";
-import { red } from '@mui/material/colors';
+import { red } from '@mui/material/colors'
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import styles from "./loginRegister.module.scss"
+import { useAppDispatch } from '@/hooks/useAppHooks';
+import { setUserData } from '@/store/slices/userSlice';
 
 
 interface FormProps {
@@ -18,6 +22,7 @@ const Form: React.FC<FormProps> = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter()
     const [loginUser, {isLoading, error}] = useLoginUserMutation()
+    const dispatch = useAppDispatch()
 
     const form = useForm({
         mode: 'onChange',
@@ -32,7 +37,11 @@ const Form: React.FC<FormProps> = () => {
     const onSubmit = async (dto: any) => {
         setErrorMessage('');
         try {
-            await loginUser(dto).unwrap()
+            const res = await loginUser(dto).unwrap()
+
+            if(res) {
+                dispatch(setUserData(res));
+            }
             router.push('/')
         } catch (err: any) {
             console.log(err)

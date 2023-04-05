@@ -1,13 +1,18 @@
 import { wrapper } from '@/store';
 import '@/styles/globals.scss'
 import type { AppProps } from 'next/app'
-import {Api} from "@/api";
 import {setUserData} from "@/store/slices/userSlice";
 import {GetServerSideProps, GetServerSidePropsContext} from "next";
 
 /*import custom pallette*/
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { dark, light } from '@mui/material/styles/createPalette';
+import { Provider } from 'react-redux';
+import { CacheProvider, ThemeProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
+import { useEffect } from 'react';
+import { useGetUserQuery } from '@/services/authService';
+import { theme } from '@/styles/theme';
 
 
 const darkTheme = createTheme ({
@@ -27,38 +32,28 @@ const darkTheme = createTheme ({
     }
 })
 
-function App({ Component, pageProps }: AppProps) {
+const cache = createCache({ key: 'myapp' });
 
-  return (
-    <ThemeProvider theme={darkTheme}>
-        <Component {...pageProps} />
-    </ThemeProvider>
-    )
-}
+function MyApp({ Component, ...rest }: AppProps) {
+    const {store, props} = wrapper.useWrappedStore(rest);
+    const {data: user, isLoading, error} = useGetUserQuery()
 
-App.getInitialProps = wrapper.getInitialAppProps(
-    (store) =>
-        async ({ctx, Component}) => {
-            try {
-                const userData = await Api(ctx).user.getMe();
-                store.dispatch(setUserData(userData));
-            } catch (err) {
-                if (ctx.asPath === '/write') {
-                    ctx.res?.writeHead(302, {
-                        location: '/403',
-                    });
-                    ctx.res?.end();
-                }
-                console.log(err);
-            }
-            return {
-                pageProps: {
-                    ...(Component.getInitialProps
-                        ? await Component.getInitialProps({...ctx, store})
-                        : {}),
-                },
-            };
+    useEffect(() => {
+        if(user) {
+            store.dispatch(setUserData(user));
         }
-);
+    }, [user]);
+  
+    return (
+      <Provider store={store}>
+        <CacheProvider value={cache}>
+          <ThemeProvider theme={theme}>
+          {isLoading && <div>Loading...</div>}
+            {!isLoading && <Component {...props.pageProps} />}
+          </ThemeProvider>
+        </CacheProvider>
+      </Provider>
+    );
+  }
 
-export default wrapper.withRedux(App);
+  export default wrapper.withRedux(MyApp);

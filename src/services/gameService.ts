@@ -9,6 +9,7 @@ export const gameService = api.injectEndpoints({
                 url: `chats/${id}`,
                 method: 'GET',
             }),
+            providesTags: result => ['Game', 'Round']
         }),
         getGames: build.query<IGame[], void>({
             query: () => ({
@@ -23,7 +24,7 @@ export const gameService = api.injectEndpoints({
                 method: 'POST',
                 body: dto,
             }),
-            invalidatesTags: ['Game']
+            invalidatesTags: ['Chat']
         }),
     })
 })

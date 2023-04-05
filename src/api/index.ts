@@ -15,7 +15,7 @@ export const Api = (
     const headers = token ? { Authorization: 'Bearer ' + token } : {};
 
     const instance = axios.create({
-        baseURL: 'https://ahmo-api.up.railway.app/',
+        baseURL: "https://ahmo-api.up.railway.app",
         headers,
     });
 

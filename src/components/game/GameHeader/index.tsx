@@ -8,12 +8,6 @@ const GameHeader = () => {
     const activeChat = useAppSelector(selectActiveChat)
 
     if(!activeChat.activeChat) return null;
-
-    useEffect(() => {
-        console.log(activeChat)
-    }, []);
-
-
     return (
         <header className={styles.header}>
             <div className={styles.chatName}>
@@ -25,7 +19,7 @@ const GameHeader = () => {
                 </Avatar>
                 <div className={styles.score}>
                     <h4>Score:</h4>
-                    <p>{activeChat.members[0].score} : {activeChat.members[1].score}</p>
+                    <p>{activeChat.members[0]?.score} : {activeChat.members[1]?.score}</p>
                 </div>
                 <Avatar>
                     {activeChat.members[1].user.fullName[0]}

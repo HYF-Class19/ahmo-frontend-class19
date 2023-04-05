@@ -11,7 +11,6 @@ import {setCookie} from "nookies";
 import {setUserData} from "@/store/slices/userSlice";
 import {useAppDispatch} from "@/hooks/useAppHooks";
 import {useRegisterUserMutation} from "@/services/authService";
-import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 /*Styles*/
 import styles from "./loginRegister.module.scss"
 import { red } from '@mui/material/colors';
@@ -23,7 +22,7 @@ const Form: React.FC<FormProps> = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter()
     const [registerUser, {error, isLoading}] = useRegisterUserMutation()
-
+    const dispatch = useAppDispatch()
 
     const form = useForm({
         mode: 'onChange',
@@ -38,7 +37,10 @@ const Form: React.FC<FormProps> = () => {
     const onSubmit = async (dto: any) => {
         try {
 
-            await registerUser(dto).unwrap()
+            const user: any = await registerUser(dto).unwrap()
+            if(user) {
+                dispatch(setUserData(user));
+            }
             router.push('/')
         } catch (err: any) {
             console.log(err)

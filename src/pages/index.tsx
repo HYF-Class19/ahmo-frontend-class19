@@ -1,7 +1,11 @@
 import Head from 'next/head'
 import MainLayout from "@/layouts/MainLayout";
+import styles from '../styles/Main.module.scss'
+import ActionAreaCard from '@/components/card';
+import WelcomeText from '@/components/welcome-text';
 
 export default function Home() {
+
   return (
     <>
       <Head>
@@ -11,7 +15,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MainLayout>
-        <h1>Initial</h1>
+        <WelcomeText />
+        <ActionAreaCard />
       </MainLayout>
     </>
   ) 

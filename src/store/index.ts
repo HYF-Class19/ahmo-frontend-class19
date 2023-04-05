@@ -4,6 +4,7 @@ import {userReducer} from "@/store/slices/userSlice";
 import {api} from "@/services/api";
 import {chatReducer} from "@/store/slices/chatSlice";
 import {roundReducer} from "@/store/slices/roundSlice";
+import { menuReducer } from './slices/menuSlice';
 
 export function makeStore() {
     return configureStore({
@@ -11,8 +12,10 @@ export function makeStore() {
             user: userReducer,
             chat: chatReducer,
             round: roundReducer,
+            menu: menuReducer,
             [api.reducerPath]: api.reducer,
         },
+        devTools: true,
         middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware)
     });
 }
