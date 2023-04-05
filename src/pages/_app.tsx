@@ -2,10 +2,9 @@ import { wrapper } from '@/store';
 import '@/styles/globals.scss'
 import type { AppProps } from 'next/app'
 import {setUserData} from "@/store/slices/userSlice";
-import {GetServerSideProps, GetServerSidePropsContext} from "next";
 
 /*import custom pallette*/
-import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { createTheme } from '@mui/material/styles'
 import { dark, light } from '@mui/material/styles/createPalette';
 import { Provider } from 'react-redux';
 import { CacheProvider, ThemeProvider } from '@emotion/react';

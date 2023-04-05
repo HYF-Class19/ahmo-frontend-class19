@@ -41,8 +41,6 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
     }
 }, [data])
 
-
-
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [activeChat.messages]);
