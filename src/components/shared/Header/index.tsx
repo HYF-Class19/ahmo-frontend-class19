@@ -6,7 +6,6 @@ import {deleteUserData, selectUserData} from "@/store/slices/userSlice";
 import {useAppDispatch} from "@/hooks/useAppHooks";
 import {destroyCookie} from "nookies";
 import {useRouter} from "next/router";
-import LogoutIcon from '@mui/icons-material/Logout';
 
 const Header = () => {
     const userData = useSelector(selectUserData);

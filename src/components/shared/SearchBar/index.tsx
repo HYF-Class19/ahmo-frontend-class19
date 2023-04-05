@@ -69,6 +69,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const {data: chatsResult} = useSearchUsersQuery({query: searchValue, type: searchType})
     const userData = useAppSelector(selectUserData)
 
+
+    useEffect(() => {
+      setSearchValue('')
+    }, [searchType])
+
     useEffect(() => {
         setActive(searchValue.length > 0)
     }, [searchValue])
