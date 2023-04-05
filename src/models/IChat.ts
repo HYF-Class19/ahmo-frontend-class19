@@ -22,3 +22,13 @@ export type IMember = {
     chat: IChat;
     score: number;
 }
+
+export type IMenuItem = {
+    id: number,
+    game: string | null,
+    lastMessage: IMessage | null,
+    members: IMember[],
+    name: string,
+    type: string,
+    createdAt: string
+}

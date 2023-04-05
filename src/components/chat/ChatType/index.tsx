@@ -17,7 +17,6 @@ interface ChatTypeProps {
 }
 
 const ChatType: React.FC<ChatTypeProps> = ({chats, type, setIsSearchActive, isSearchActive}) => {
-    const userData = useAppSelector(selectUserData)
 
     return (
         <div className={styles.wrapper}>

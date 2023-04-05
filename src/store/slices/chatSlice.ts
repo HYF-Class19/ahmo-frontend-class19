@@ -5,6 +5,7 @@ import {IChat, IMember} from "@/models/IChat";
 import {IMessage} from "@/models/IMessage";
 import {io} from "socket.io-client";
 import {IGame, IMove, IRound} from "@/models/IGame";
+import { RootState } from "..";
 
 interface chatState {
     activeChat: number | null;
@@ -49,12 +50,11 @@ export const chatSlice = createSlice({
             state.name = action.payload.name;
         },
         loadMessages: (state, action: PayloadAction<IMessage[]>) => {
-            // let messages = []
-            // for(let i = action.payload.length - 1; i > 0; i--) {
-            //     messages.push(action.payload[i])
-            // }
-            state.messages = action.payload
-            
+            let messages = []
+            for(let i = action.payload.length - 1; i > 0; i--) {
+                messages.push(action.payload[i])
+            } 
+            state.messages = messages
         },
         addMessage: (state, action: PayloadAction<IMessage>) => {
             state.messages.push(action.payload)

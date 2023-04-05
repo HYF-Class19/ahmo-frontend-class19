@@ -5,6 +5,7 @@ import {selectUserData} from "@/store/slices/userSlice";
 import {useMutateMessageMutation} from "@/services/messageService";
 import { addMessage } from '@/store/slices/chatSlice';
 import { socket } from '@/utils/socket';
+import { messageAdded } from '@/store/slices/menuSlice';
 
 interface ChatTextAreaProps {
     receivers: number[];
@@ -34,6 +35,7 @@ const ChatTextArea:React.FC<ChatTextAreaProps> = ({receivers, activeChatId}) => 
                     text: message,
                 })
                 dispatch(addMessage(postedMessage))
+                dispatch(messageAdded({message: postedMessage, chatId: activeChatId}))
             }
         }
     }

@@ -9,10 +9,17 @@ const messageApi = api.injectEndpoints({
                 method: 'POST',
                 body,
             }),
+        }),
+        getMessagesByChat: builder.query<IMessage[], {chatId: number, limit: number, page: number}>({
+            query: (props) => ({
+                url: `/messages?chatId=${props.chatId}&limit=${props.limit}&page=${props.page}`
+            }),
+            providesTags: result => ['Message', 'Chat'],
         })
     })
 })
 
 export const {
-    useMutateMessageMutation
+    useMutateMessageMutation,
+    useGetMessagesByChatQuery
 } = messageApi

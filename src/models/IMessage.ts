@@ -7,6 +7,7 @@ export type IMessage = {
     chat?: IChat;
     sender: IUser;
     createdAt: Date;
+    chatId?: number;
 }
 
 export type ArrivingMessage = {
