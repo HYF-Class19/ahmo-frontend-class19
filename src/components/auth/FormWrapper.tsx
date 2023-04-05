@@ -18,12 +18,12 @@ const FormWrapper: React.FC<formWrapperProps> = ({children, mode}) => {
                     alignItems: 'center',
                 }}
             >
-                <Avatar sx={{m: 1, bgcolor: 'secondary'}}>
-                    <LockOutlinedIcon/>
+                <Avatar sx={{m: 1, mt:5}}>
+                    <img src="" alt="logo" />
                 </Avatar>
-                <Typography component="h1" variant="h5">
+                {/* <Typography component="h1" variant="h5">
                     {mode === 'login' ? 'Sign in' : 'Sign up'}
-                </Typography>
+                </Typography> */}
             </Box>
             {children}
         </Container>

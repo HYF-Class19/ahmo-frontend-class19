@@ -5,23 +5,28 @@ $col4: #F3FB8C;
 $col5: #5751D7;
 $col6: #B885F4;
 
-
-.hello{
-    background-color: $col4;
+.formField{
+    padding: 50px !important;
 }
 
-
-.button{
-    border-radius: 5px;
-    font-family: Arial;
-    color: $col4 !important;
+.loginTitle {
     font-size: 20px;
-    background: $col1 !important;
-    padding: 2px;
-    border: solid $col4 8px;
-    text-decoration: none;
-    &:hover {
-        background: #1A1E28 !important;
-        text-decoration: none;
+    color: $col5;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.registerLink{
+    color: white !important;
+    :active{
+        color: yellow !important;
     }
+}
+
+.textField{
+    background-color: $col1 !important;
+    border-radius: 5px;
+}
+.bottomLink{
+    justify-content: center;
 }
