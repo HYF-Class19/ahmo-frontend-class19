@@ -30,7 +30,7 @@ const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
     }, [round])
 
         useEffect(() => {
-            scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+            scrollRef.current?.scrollIntoView();
         }, [activeRound.moves]);
 
     return (
@@ -43,7 +43,9 @@ const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
                         <p><span>{round.riddler.id === userData.id ? "you are" : round.riddler.fullName + ' is'}</span> a riddler</p>
                     </div>
                     {round.moves.map((move) => (
-                        <RoundMove my={userData.id === move?.player?.id} move={move} key={move.id} />
+                        <div ref={scrollRef} key={move.id}>
+                            <RoundMove my={userData.id === move?.player?.id} move={move} />
+                        </div> 
                     ))}
                     {activeRound.round_winner || round.id !== activeRound?.id && (
                         <div className={styles.winner}>

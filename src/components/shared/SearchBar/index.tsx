@@ -94,7 +94,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         />
     </Search>
     {searchValue ? 
-    searchType === 'group' 
+    searchType === 'group' || searchType === 'game'
     ? <SearchResult setActive={setActive} isLoading={isLoading} chats={data} /> 
     : searchType === 'all' 
     ? <SearchResult setActive={setActive} isLoading={isLoading} chats={chatsResult} users={data?.filter(user => user.id !== userData?.id)} /> 

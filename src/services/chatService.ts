@@ -9,7 +9,29 @@ export const chatApi = api.injectEndpoints({
             query: () => ({
                 url: '/chats/me',
             }),
-            providesTags: result => ['Chat']
+            providesTags: result => ['Message','Chat'],
+            async onCacheEntryAdded(arg, {cacheDataLoaded, cacheEntryRemoved, updateCachedData}) {
+                try {
+                    await cacheDataLoaded;
+                    socket.on('getMessage', (message: ArrivingMessage) => {
+                        updateCachedData((draft) => {
+                            if(draft && message) {
+                                const chatIndex = draft.findIndex(d => d.id === message.chatId)
+                                if(chatIndex) {
+                                    console.log(123)
+                                    const chat = draft[chatIndex]
+                                    chat.lastMessage = message
+                                    draft.splice(chatIndex, 1)
+                                    draft.unshift(chat)
+                                }
+                            }
+                        });
+                      })
+                    await cacheEntryRemoved;
+                    socket.off('getMessage');
+                } catch (e) {
+                }
+            }
         }),
         fetchChatWithMessages: builder.query<IChat, number>({
             query: (id) => ({
@@ -27,8 +49,7 @@ export const chatApi = api.injectEndpoints({
                                 }
                             }
                         });
-                      });
-                    
+                      })
                     await cacheEntryRemoved;
                     socket.off('getMessage');
                 } catch (e) {
@@ -48,7 +69,8 @@ export const chatApi = api.injectEndpoints({
             }),
             invalidatesTags: ['Chat'],
         }),
-    })
+    }),
+    overrideExisting: true,
 })
 
 export const {
