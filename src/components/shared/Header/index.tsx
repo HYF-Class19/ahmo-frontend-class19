@@ -35,7 +35,7 @@ const Header = () => {
                             <Link href={'/chat'}>Chat</Link>
                         </li>
                         <li>
-                            <Link onClick={logout} href={'/'}>Logout</Link>
+                            <Link onClick={logout} href={'/'}>{userData.fullName} Logout</Link>
                         </li>
                     </ul>
                 ) : (

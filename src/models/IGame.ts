@@ -21,6 +21,7 @@ export type IRound = {
     riddler: IUser;
     attempt: number;
     moves: IMove[];
+    submiting: number;
 }
 
 export type IMove = {
