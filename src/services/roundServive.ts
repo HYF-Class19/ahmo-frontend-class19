@@ -43,8 +43,18 @@ export const roundService = api.injectEndpoints({
                             }
                         })
                     })
+
+                    socket.on('getSubmitRound', () => {
+                        updateCachedData(draft => {
+                            if(draft) {
+                                draft.submiting++
+                                console.log('yead')
+                            }
+                        })
+                    })
                     await cacheEntryRemoved;
                     socket.off('getMove');
+                    socket.off('getSubmitRound')
                 } catch (e) {}
             }
         }),
@@ -57,7 +67,7 @@ export const roundService = api.injectEndpoints({
             invalidatesTags: ['Round', 'Game'],
         }),
         updateRoundData: build.mutation({
-            query: (dto: {id: number, round_data?: string, round_status?: string, round_winner?: number }) => ({
+            query: (dto: {id: number, round_data?: string, round_status?: string, round_winner?: number, submiting?: number }) => ({
                 url: `rounds/${dto.id}`,
                 method: 'PATCH',
                 body: dto,

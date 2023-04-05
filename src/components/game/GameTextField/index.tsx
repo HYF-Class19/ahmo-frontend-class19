@@ -101,6 +101,10 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
     }
   };
 
+  if(activeRound.submiting !== 2) {
+    return null
+  }
+
   return (
     <div className={styles.wrapper}>
         {userData && activeRound ? 

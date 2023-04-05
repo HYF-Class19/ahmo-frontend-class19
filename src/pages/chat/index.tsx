@@ -44,7 +44,7 @@ const Chat: NextPage = () => {
                 <div className={styles.chatMenu}>
                     {error && <div>error</div>}
                     {isLoading && <div>loading...</div>}
-                    {data?.length && <ChatMenu selected={selectedType} chats={data} />}
+                    {data && <ChatMenu selected={selectedType} chats={data} />}
                 </div>
                 {selectedType === 'game' || activeChat.type === 'game' ?  <GameBox /> : <ChatBox />}
             </div>
