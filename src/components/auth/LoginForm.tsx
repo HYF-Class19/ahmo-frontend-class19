@@ -1,4 +1,4 @@
-import { FormField } from '@/components/shared/FormField';
+import { FormField} from '@/components/shared/FormField';
 import {Alert, Box, Button, Checkbox, FormControlLabel, Grid} from '@mui/material';
 import {yupResolver} from "@hookform/resolvers/yup";
 import React, {useEffect, useState} from 'react';
@@ -7,8 +7,9 @@ import { LoginFormSchema } from '@/utils/FormSchemas';
 import Link from "next/link";
 import {useRouter} from "next/router";
 import {useLoginUserMutation} from "@/services/authService";
+import styles from "./loginRegister.module.scss";
+import { red } from '@mui/material/colors'
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
-/*Styles    className={styles.hello}*/
 import styles from "./loginRegister.module.scss"
 import { useAppDispatch } from '@/hooks/useAppHooks';
 import { setUserData } from '@/store/slices/userSlice';
@@ -48,21 +49,32 @@ const Form: React.FC<FormProps> = () => {
         }
     }
 
+    const formControlLabelStyle = {
+        "& .MuiFormControlLabel-label": {
+          fontSize: "14px",
+          width: 300,
+          backgroundColor: 'rgba(0,0,0,0.1)',
+          accentcolor: '#9b59b6'
+        }
+    }
+
     return (
         <FormProvider {...form}>
-            <Box component="form" onSubmit={form.handleSubmit(onSubmit)} sx={{mt: 2}}>
-                <Grid item xs={12}>
-                    <FormField
+            <Box component="form" onSubmit={form.handleSubmit(onSubmit)} sx={{ border: 1, borderColor: '#B885F4', borderRadius: '10px', p: 4, mt: 5}} bgcolor="#1A1E28">
+                <h1 className={styles.loginTitle}>Join the Game, join the Chat!</h1>
+                <Grid item xs={12} color="secondary">
+                    <FormField  
                         label="Email"
                         name="email"
                         type="text"
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} color="secondary">
                     <FormField
                         name="password"
                         label="Password"
                         type="password"
+                        
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -73,22 +85,24 @@ const Form: React.FC<FormProps> = () => {
                     )}
                 </Grid>
                 <FormControlLabel
-                    control={<Checkbox value="remember" color="primary"/>}
+                    sx={{ color: '#F3FB8C', ...formControlLabelStyle }}
+                    control={<Checkbox value="remember" style ={{color: "#F3FB8C",}}/>}
                     label="Remember me"
                 />
                 <Button
                     type="submit"
                     fullWidth
-                    disabled={!form.formState.isValid || form.formState.isSubmitting}
+                    // disabled={!form.formState.isValid || form.formState.isSubmitting}
                     variant="contained"
-                    sx={{mt: 3, mb: 2}}
+                    sx={{mt: 3, mb: 2, color:'#000'}}
+                    color="secondary"
                 >
                     Sign In
                 </Button>
-                <Grid container>
+                <Grid container className={styles.bottomLink} sx={{ mt: 2, mb: 1 }}>
                     <Grid item>
-                        <Link href="/auth/register">
-                            {"Don't have an account? Sign Up"}
+                        <Link href="/auth/register" className={styles.registerLink}>
+                            {"Not a member? Register now"}
                         </Link>
                     </Grid>
                 </Grid>

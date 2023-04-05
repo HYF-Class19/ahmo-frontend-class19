@@ -13,6 +13,7 @@ import {useAppDispatch} from "@/hooks/useAppHooks";
 import {useRegisterUserMutation} from "@/services/authService";
 /*Styles*/
 import styles from "./loginRegister.module.scss"
+import { red } from '@mui/material/colors';
 
 interface FormProps {
 }
@@ -45,25 +46,35 @@ const Form: React.FC<FormProps> = () => {
             console.log(err)
         }
     }
+    
+    const formControlLabelStyle = {
+        "& .MuiFormControlLabel-label": {
+          fontSize: "14px",
+          width: 300,
+          backgroundColor: 'rgba(0,0,0,0.1)',
+          accentcolor: '#9b59b6'
+        }
+    }
 
     return (
         <FormProvider {...form}>
-            <Box component="form" onSubmit={form.handleSubmit(onSubmit)} sx={{mt: 2}}>
-                <Grid item xs={12}>
+            <Box component="form" onSubmit={form.handleSubmit(onSubmit)} sx={{ border: 1, borderColor: '#B885F4', borderRadius: '10px', p: 4, mt: 5}} bgcolor="#1A1E28">
+                <h1 className={styles.loginTitle}>Join the Game, join the Chat!</h1>
+                <Grid item xs={12} color="secondary">
                     <FormField
                         name="fullName"
                         label="User Name"
                         type="text"
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} color="secondary">
                     <FormField
                         name="email"
                         label="Email"
                         type="email"
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} color="secondary">
                     <FormField
                         name="password"
                         label="Password"
@@ -71,7 +82,7 @@ const Form: React.FC<FormProps> = () => {
 
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} color="secondary">
                     {error && (
                         <Alert severity="error" className="mb-20">
                             {errorMessage}
@@ -79,23 +90,24 @@ const Form: React.FC<FormProps> = () => {
                     )}
                 </Grid>
                 <FormControlLabel
-                    control={<Checkbox value="remember" color="primary"/>}
+                    sx={{ color: '#F3FB8C', ...formControlLabelStyle }}
+                    control={<Checkbox value="remember" style ={{color: "#F3FB8C",}}/>}
                     label="Remember me"
                 />
                 <Button
-                    className={styles.button}
                     type="submit"
                     fullWidth
-                    disabled={!form.formState.isValid || form.formState.isSubmitting}
+                    // disabled={!form.formState.isValid || form.formState.isSubmitting}
                     variant="contained"
-                    sx={{mt: 3, mb: 2}}
+                    sx={{mt: 3, mb: 2, color:'#000'}}
+                    color="secondary"
                 >
                     Sign In
                 </Button>
-                <Grid container className='nMember'>
+                <Grid container className={styles.bottomLink} sx={{ mt: 2, mb: 1 }}>
                     <Grid item>
-                        <Link href="/auth/register">
-                            {"Not a member? Register now"}
+                        <Link href="/auth/register" className={styles.registerLink}>
+                            {"Already a member? Log in now"}
                         </Link>
                     </Grid>
                 </Grid>
