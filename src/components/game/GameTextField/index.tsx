@@ -31,9 +31,9 @@ interface GameTextFieldProps {
 }
 
 const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
-  const [moveData, setMoveData] = useState<string>();
+  const [moveData, setMoveData] = useState<string>('');
   const [moveType, setMoveType] = useState<string>("question");
-  const [roundData, setRoundData] = useState<string>();
+  const [roundData, setRoundData] = useState<string>('');
   const [createMove, {isLoading}] = useCreateMoveMutation();
   const userData = useAppSelector(selectUserData);
   const members = useAppSelector(selectMembers);
@@ -50,7 +50,6 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
         move_type: moveType || "answer",
         roundId: activeRound.id,
       });
-      console.log("yes");
       // @ts-ignore
       const move = result.data;
       if (move) {
@@ -95,7 +94,7 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
         const receivers = members
         .filter((m: IMember) => m.user.id !== userData?.id)
         .map((m: IMember) => m.user.id);
-        socket.emit('updateWord', {player: userData, receivers, round_data: roundData})
+        socket.emit('updateWord', {player: userData, receivers, round_data: roundData, roundId: activeRound.id})
       }
       setRoundData("");
     }

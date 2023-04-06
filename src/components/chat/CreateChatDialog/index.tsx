@@ -77,8 +77,6 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
       } else if (chatType === "direct") {
         let chat
         if(directChats) {
-            console.log(directChats)
-            console.log(directChats.find(chat => chat.members.find(m => m.user.id !== userData?.id)?.user.id ))
             chat = directChats.find(chat => chat.members.find(m => m.user.id !== userData?.id)?.user.id === directMember)
         }
 
@@ -86,7 +84,6 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
             alert('direct chat with that user already exist')
         } else {
             const chatName = data?.find(user => user.id === directMember)?.fullName
-            console.log(directMember)
             await createGroup({
                 type: "direct",
                 name: chatName,
@@ -166,7 +163,7 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
         {chatType === "game" && activeStep === 2 && (
           <>
             <h2 className={styles.cardTitle}>Choose a game</h2>
-            {["guess a word"].map((game, i) => (
+            {["guess a word", 'truth or dare'].map((game, i) => (
               <div key={i}>
                 <CreateItem
                   value={game}

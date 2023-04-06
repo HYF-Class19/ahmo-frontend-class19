@@ -19,12 +19,14 @@ import { Button } from "@mui/material";
 import { socket } from "@/utils/socket";
 import { getReceivers } from "@/utils/chatHelpers";
 import clsx from "clsx";
+import TruthDareRound from "../TruthDareRound";
 
 interface GameRoundProps {
   roundId: number;
   index: number;
+  gameType: string | null;
 }
-const GameRound: React.FC<GameRoundProps> = ({ roundId, index }) => {
+const GameRound: React.FC<GameRoundProps> = ({ roundId, index,  gameType}) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const userData = useAppSelector(selectUserData);
   const { data: round, error, isLoading } = useGetRoundQuery(roundId);
@@ -49,10 +51,8 @@ const GameRound: React.FC<GameRoundProps> = ({ roundId, index }) => {
   const sendSubmit = async () => {
     await updateRound({ id: roundId, submiting: 1 });
     setIsSubmitted(true);
-    console.log(result);
     if (userData) {
       const receivers = getReceivers(userData.id, members);
-      console.log(receivers);
       socket.emit("submitRound", {
         receivers,
       });
@@ -64,7 +64,8 @@ const GameRound: React.FC<GameRoundProps> = ({ roundId, index }) => {
     <div className={clsx(styles.wrapper, isSubmitted && styles.submitted)}>
       {isLoading && <div>is loading...</div>}
       {error && <div>Error</div>}
-      {round && userData ? (
+      {round && userData && (
+      gameType === 'guess a word' ? (  
         activeRound.submiting === 2 || round.id !== activeRound.id ? (
           <>
             <div className={styles.riddler}>
@@ -117,7 +118,9 @@ const GameRound: React.FC<GameRoundProps> = ({ roundId, index }) => {
             )}
           </div>
         )
-      ) : null}
+      ):(
+        <TruthDareRound round={round} userData={userData} activeRound={activeRound} />
+      ))}
     </div>
   );
 };
