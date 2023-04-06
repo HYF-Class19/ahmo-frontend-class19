@@ -18,7 +18,6 @@ export const chatApi = api.injectEndpoints({
                             if(draft && message) {
                                 const chatIndex = draft.findIndex(d => d.id === message.chatId)
                                 if(chatIndex) {
-                                    console.log(123)
                                     const chat = draft[chatIndex]
                                     chat.lastMessage = message
                                     draft.splice(chatIndex, 1)

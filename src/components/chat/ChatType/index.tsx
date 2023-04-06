@@ -18,6 +18,7 @@ interface ChatTypeProps {
 
 const ChatType: React.FC<ChatTypeProps> = ({chats, type, setIsSearchActive, isSearchActive}) => {
 
+
     return (
         <div className={styles.wrapper}>
             <h3>{type.toUpperCase()} chat</h3>

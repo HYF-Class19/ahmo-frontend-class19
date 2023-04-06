@@ -1,6 +1,6 @@
 import {IUser} from "@/models/IUser";
 import {IMessage} from "@/models/IMessage";
-import {IRound} from "@/models/IGame";
+import {IMove, IRound} from "@/models/IGame";
 
 export type IChat = {
     id: number;
@@ -13,6 +13,8 @@ export type IChat = {
     createdAt: string;
     game: string | null;
     rounds: IRound[];
+    status?: string;
+    lastMove?: IMove 
 
 }
 

@@ -13,6 +13,7 @@ import { socket } from '@/utils/socket';
 import { api } from '@/services/api';
 import RoundData from '../RoundData';
 import { IUser } from '@/models/IUser';
+import TruthDareField from '../TruthDareField';
 
 interface GameBoxProps {
 }
@@ -31,13 +32,8 @@ const GameBox: React.FC<GameBoxProps> = () => {
             dispatch(setRound(round))
         })
 
-        socket.on('getUpdatedWord', (data: {player: IUser, round_data: string}) => {
-            dispatch(addRoundData(data.round_data));
-        })
-
         return () => {
             socket.off('getNewRound')
-            socket.off('getUpdatedWord')
         }
     }, [])
 
@@ -55,18 +51,18 @@ const GameBox: React.FC<GameBoxProps> = () => {
 
     return (
         <div className={styles.chatBoxWrapper}>
-            {game?.id && userData && selectedGame?.members.length > 1 ? (
+            {game?.game && userData && selectedGame?.members.length > 1 ? (
                 <>
                  <GameHeader />
-                <RoundData count={game.rounds.length}/>
+                <RoundData gameType={game.game} count={game.rounds.length}/>
                 <div ref={boxRef} style={{overflowY: 'auto'}} className={styles.box}>
                     {game.rounds.map((round: IRound, index: number) => (
                         <div key={round.id} ref={scrollRef}>
-                            <GameRound roundId={round.id} index={index} />
+                            <GameRound gameType={game.game} roundId={round.id} index={index} />
                         </div>
                     ))}
                 </div>
-                 <GameTextField chatId={selectedGame.activeChat} /> 
+                 {game.game === 'truth or dare' ? <TruthDareField chatId={selectedGame.activeChat} /> : <GameTextField chatId={selectedGame.activeChat} /> }
                 </>
             ) : <h1>No chat available</h1>}
         </div>
