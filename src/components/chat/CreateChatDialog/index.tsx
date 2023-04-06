@@ -163,7 +163,7 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
         {chatType === "game" && activeStep === 2 && (
           <>
             <h2 className={styles.cardTitle}>Choose a game</h2>
-            {["guess a word", 'truth or dare'].map((game, i) => (
+            {["guess a word", 'truth or dare', 'words'].map((game, i) => (
               <div key={i}>
                 <CreateItem
                   value={game}

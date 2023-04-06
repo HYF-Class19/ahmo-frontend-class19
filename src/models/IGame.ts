@@ -32,6 +32,7 @@ export type IMove = {
     player: IUser;
     createdAt: string;
     correct: boolean;
+    last_word: string | null;
 }
 
 export type ArrivingMove = {

@@ -14,6 +14,7 @@ import { api } from '@/services/api';
 import RoundData from '../RoundData';
 import { IUser } from '@/models/IUser';
 import TruthDareField from '../TruthDareField';
+import WordsTextField from '../WordsTextField';
 
 interface GameBoxProps {
 }
@@ -53,16 +54,18 @@ const GameBox: React.FC<GameBoxProps> = () => {
         <div className={styles.chatBoxWrapper}>
             {game?.game && userData && selectedGame?.members.length > 1 ? (
                 <>
-                 <GameHeader />
-                <RoundData gameType={game.game} count={game.rounds.length}/>
+                <GameHeader />
+                {game.game !== 'words' && <RoundData gameType={game.game} count={game.rounds.length}/>}
                 <div ref={boxRef} style={{overflowY: 'auto'}} className={styles.box}>
                     {game.rounds.map((round: IRound, index: number) => (
                         <div key={round.id} ref={scrollRef}>
-                            <GameRound gameType={game.game} roundId={round.id} index={index} />
+                            <GameRound gameType={game.game} roundId={round.id} />
                         </div>
                     ))}
                 </div>
-                 {game.game === 'truth or dare' ? <TruthDareField chatId={selectedGame.activeChat} /> : <GameTextField chatId={selectedGame.activeChat} /> }
+                 {game.game === 'truth or dare' && <TruthDareField chatId={selectedGame.activeChat} /> }
+                    {game.game === 'guess a word' &&  <GameTextField chatId={selectedGame.activeChat} />}
+                    {game.game === 'words' &&  <WordsTextField chatId={selectedGame.activeChat} />}
                 </>
             ) : <h1>No chat available</h1>}
         </div>

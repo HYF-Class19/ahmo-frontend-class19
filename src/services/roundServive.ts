@@ -105,6 +105,7 @@ export const roundService = api.injectEndpoints({
         move_data: string;
         move_type: string;
         roundId: number;
+        last_word?: string 
       }) => ({
         url: `moves`,
         method: "POST",

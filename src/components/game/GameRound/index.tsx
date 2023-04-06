@@ -23,10 +23,9 @@ import TruthDareRound from "../TruthDareRound";
 
 interface GameRoundProps {
   roundId: number;
-  index: number;
   gameType: string | null;
 }
-const GameRound: React.FC<GameRoundProps> = ({ roundId, index,  gameType}) => {
+const GameRound: React.FC<GameRoundProps> = ({ roundId, gameType}) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const userData = useAppSelector(selectUserData);
   const { data: round, error, isLoading } = useGetRoundQuery(roundId);
@@ -118,8 +117,14 @@ const GameRound: React.FC<GameRoundProps> = ({ roundId, index,  gameType}) => {
             )}
           </div>
         )
-      ):(
+      ): gameType === 'truth or dare' ? (
         <TruthDareRound round={round} userData={userData} activeRound={activeRound} />
+      ): (
+        round.moves.map((move) => (
+          <div ref={scrollRef} key={move.id}>
+            <RoundMove my={userData.id === move?.player?.id} move={move} />
+          </div>
+        ))
       ))}
     </div>
   );
