@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, IconButton, TextField } from "@mui/material";
 import {
   useCreateMoveMutation,
   useCreateRoundMutation,
@@ -19,22 +19,21 @@ import {
 import { selectUserData } from "@/store/slices/userSlice";
 import { IMember } from "@/models/IChat";
 import { socket } from "@/utils/socket";
-import { styled } from "@mui/material/styles";
-import { ButtonProps } from "@mui/material/Button";
-import { purple } from "@mui/material/colors";
-
 import styles from "./GameTextField.module.scss";
 import { disableNotMyTurn } from "@/utils/round-helper";
+import Image from "next/image";
+import SendIcon from "@/components/shared/SendIcon";
+import GameInput from "../GameInput";
 
 interface GameTextFieldProps {
   chatId: number;
 }
 
 const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
-  const [moveData, setMoveData] = useState<string>('');
+  const [moveData, setMoveData] = useState<string>("");
   const [moveType, setMoveType] = useState<string>("question");
-  const [roundData, setRoundData] = useState<string>('');
-  const [createMove, {isLoading}] = useCreateMoveMutation();
+  const [roundData, setRoundData] = useState<string>("");
+  const [createMove, { isLoading }] = useCreateMoveMutation();
   const userData = useAppSelector(selectUserData);
   const members = useAppSelector(selectMembers);
   const activeGame = useAppSelector(selectActiveChat);
@@ -57,12 +56,15 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
           .filter((m: IMember) => m.user.id !== userData?.id)
           .map((m: IMember) => m.user.id);
         socket.emit("sendMove", { ...move, chatId, receivers });
-        if ((move.correct || activeRound.attempt >= 3) && activeRound?.riddler) {
-         if(move.correct) {
-             dispatch(addScore({ winner: move.player.id }));
-         } else {
-            dispatch(addScore({ winner: activeRound.riddler.id })); 
-         }
+        if (
+          (move.correct || activeRound.attempt >= 3) &&
+          activeRound?.riddler
+        ) {
+          if (move.correct) {
+            dispatch(addScore({ winner: move.player.id }));
+          } else {
+            dispatch(addScore({ winner: activeRound.riddler.id }));
+          }
           const newRiddler = members.find(
             (m: IMember) => m.user.id !== activeRound?.riddler?.id
           );
@@ -92,106 +94,97 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
       if (!error) {
         dispatch(addRoundData(roundData));
         const receivers = members
-        .filter((m: IMember) => m.user.id !== userData?.id)
-        .map((m: IMember) => m.user.id);
-        socket.emit('updateWord', {player: userData, receivers, round_data: roundData, roundId: activeRound.id})
+          .filter((m: IMember) => m.user.id !== userData?.id)
+          .map((m: IMember) => m.user.id);
+        socket.emit("updateWord", {
+          player: userData,
+          receivers,
+          round_data: roundData,
+          roundId: activeRound.id,
+        });
       }
       setRoundData("");
     }
   };
 
-  if(activeRound.submiting !== 2) {
-    return null
+  if (activeRound.submiting !== 2) {
+    return null;
   }
 
   return (
     <div className={styles.wrapper}>
-        {userData && activeRound ? 
+      {userData && activeRound ? (
         activeRound?.riddler?.id === userData.id ? (
-            activeRound.round_data ? (
-              <div className={styles.buttons}>
-                <Button
-                  onClick={() => sendResponse("yes")}
-                  className={styles.boolBtn}
-                  variant="contained"
-                  color="warning"
-                  disabled={isLoading|| disableNotMyTurn(activeRound, userData)}
-                >
-                  YES
-                </Button>
-                <Button
-                  className={styles.boolBtn}
-                  onClick={() => sendResponse("no")}
-                  variant="outlined"
-                  color="warning"
-                  disabled={isLoading|| disableNotMyTurn(activeRound, userData)}
-                >
-                  NO
-                </Button>
-              </div>
-            ) : (
-              <div className={styles.textfield}>
-                <div className={styles.inputfield}>
-              <label htmlFor="round_data">Riddle a word</label>
-              <input
-                value={roundData}
-                onChange={(e) => setRoundData(e.target.value)}
-                id="round_data"
-                placeholder={"place your riddle here"}
-              />
+          activeRound.round_data ? (
+            <div className={styles.buttons}>
+              <Button
+                onClick={() => sendResponse("yes")}
+                className={styles.boolBtn}
+                variant="contained"
+                color="warning"
+                disabled={isLoading || disableNotMyTurn(activeRound, userData)}
+              >
+                YES
+              </Button>
+              <Button
+                className={styles.boolBtn}
+                onClick={() => sendResponse("no")}
+                variant="outlined"
+                color="warning"
+                disabled={isLoading || disableNotMyTurn(activeRound, userData)}
+              >
+                NO
+              </Button>
             </div>
-                <div className={styles.btnSection}>
-                  <Button
-                    onClick={updateWord}
-                    variant={"outlined"}
-                    color={"warning"}
-                    disabled={isLoading|| disableNotMyTurn(activeRound, userData)}
-                  >
-                    Send
-                  </Button>
-                </div>
-              </div>
-            )
           ) : (
             <div className={styles.textfield}>
+              <GameInput
+                value={roundData}
+                onChange={(e: any) => setRoundData(e.target.value)}
+                name={"round data"}
+                label={"Riddle a word"}
+              />
+              <div className={styles.btnSection}>
+                <SendIcon
+                  disabled={
+                    isLoading || disableNotMyTurn(activeRound, userData)
+                  }
+                  onClick={sendResponse}
+                />
+              </div>
+            </div>
+          )
+        ) : (
+          <div className={styles.textfield}>
             <div className={styles.inputfield}>
-              <label htmlFor="move_data">Move data</label>
-              <input
+              <GameInput
                 value={moveData}
-                onChange={(e) => setMoveData(e.target.value)}
-                id="move_data"
-                placeholder={"place your move data here"}
+                onChange={(e: any) => setMoveData(e.target.value)}
+                name={"move"}
+                label={"Move data"}
               />
             </div>
-              <div className={styles.selectItem}>
-                <label id="input-type">Type of propose</label>
-                <select
-                  id="input-type"
-                  value={moveType}
-                  onChange={(e) => {
-                    setMoveType(e.target.value);
-                  }}
-                >
-                  <option value={"question"}>Question</option>
-                  <option value={"statement"}>Statement</option>
-                </select>
-              </div>
-              <div className={styles.btnSection}>
-                <Button
-                  onClick={() => sendResponse()}
-                  variant={"contained"}
-                  disabled={isLoading || disableNotMyTurn(activeRound, userData)}
-                  color={"warning"}
-                >
-                  Send
-                </Button>
-              </div>
+            <div className={styles.selectItem}>
+              <label id="input-type">Type of propose</label>
+              <select
+                id="input-type"
+                value={moveType}
+                onChange={(e) => {
+                  setMoveType(e.target.value);
+                }}
+              >
+                <option value={"question"}>Question</option>
+                <option value={"statement"}>Statement</option>
+              </select>
             </div>
-          )
-          : (
-            <h1>unathorized</h1>
-          )
-    }
+            <div className={styles.btnSection}>
+              <SendIcon onClick={sendResponse} disabled={isLoading} />
+            </div>
+          </div>
+        )
+      ) : (
+        <h1>unathorized</h1>
+      )}
     </div>
   );
 };

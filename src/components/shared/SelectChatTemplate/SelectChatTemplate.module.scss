@@ -1,0 +1,34 @@
+.wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &.game {
+    background: url("/img/game-template.jpg") no-repeat center center/cover;
+  }
+  &.chat {
+    background: url("/img/chat-template.jpg") no-repeat center center/cover;
+  }
+  h3 {
+    font-size: 24px;
+    font-stretch: expanded;
+    padding: 10px;
+    background-color: rgba($color: #000000, $alpha: 0.5);
+    border-radius: 5px;
+    color: white;
+    z-index: 10;
+  }
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba($color: #000000, $alpha: 0.5);
+  }

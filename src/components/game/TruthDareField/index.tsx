@@ -23,6 +23,8 @@ import React, { useEffect, useState } from "react";
 import styles from '../GameTextField/GameTextField.module.scss'
 import { Button } from "@mui/material";
 import GameActions from "../GameActions";
+import GameInput from "../GameInput";
+import SendIcon from "@/components/shared/SendIcon";
 
 interface TruthDareFieldProps {
   chatId: number;
@@ -113,15 +115,12 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId }) => {
         ?  activeRound?.riddler?.id === userData.id ? (
             !activeRound.round_data && (
                 <div className={styles.textfield}>
-                  <div className={styles.inputfield}>
-                    <label htmlFor="move_data">Your statement</label>
-                    <input
+                    <div className={styles.inputfield}><GameInput
                       value={moveData}
-                      onChange={(e) => setMoveData(e.target.value)}
+                      onChange={(e: any) => setMoveData(e.target.value)}
                       id="move_data"
                       placeholder={"place your move data here"}
-                    />
-                  </div>
+                    /></div>
                   <div className={styles.selectItem}>
                     <label id="input-type">Type of propose</label>
                     <select
@@ -136,17 +135,13 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId }) => {
                     </select>
                   </div>
                   <div className={styles.btnSection}>
-                    <Button
-                      onClick={() => sendResponse()}
-                      variant={"contained"}
-                      disabled={
-                        isLoading || disableNotMyTurn(activeRound, userData)
-                      }
-                      color={"warning"}
-                    >
-                      Send
-                    </Button>
-                  </div>
+                <SendIcon
+                  disabled={
+                    isLoading || disableNotMyTurn(activeRound, userData)
+                  }
+                  onClick={sendResponse}
+                />
+              </div>
                 </div>
               )
         ) 

@@ -15,8 +15,10 @@ import RoundData from '../RoundData';
 import { IUser } from '@/models/IUser';
 import TruthDareField from '../TruthDareField';
 import WordsTextField from '../WordsTextField';
+import SelectChatTemplate from '@/components/shared/SelectChatTemplate';
 
 interface GameBoxProps {
+    
 }
 
 const GameBox: React.FC<GameBoxProps> = () => {
@@ -67,7 +69,7 @@ const GameBox: React.FC<GameBoxProps> = () => {
                     {game.game === 'guess a word' &&  <GameTextField chatId={selectedGame.activeChat} />}
                     {game.game === 'words' &&  <WordsTextField chatId={selectedGame.activeChat} />}
                 </>
-            ) : <h1>No chat available</h1>}
+            ) : <SelectChatTemplate typeOfChat={'game'} />}
         </div>
     );
 };

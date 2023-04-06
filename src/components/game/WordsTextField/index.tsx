@@ -8,7 +8,10 @@ import { socket } from '@/utils/socket';
 import React, { useState } from 'react'
 import styles from '../GameTextField/GameTextField.module.scss'
 import { disableNotMyTurn } from '@/utils/round-helper';
-import { Button } from '@mui/material';
+import { Button, IconButton, TextField } from '@mui/material';
+import Image from 'next/image'
+import GameInput from '../GameInput';
+import SendIcon from '@/components/shared/SendIcon';
 
 interface WordsTextFieldProps {
     chatId: number;
@@ -36,7 +39,7 @@ const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId}) => {
       // @ts-ignore
       const move = result.data;
 
-      if(move.correct) {
+      if(move?.correct) {
          const receivers = activeGame.members
           .filter((m: IMember) => m.user.id !== userData?.id)
           .map((m: IMember) => m.user.id);
@@ -44,7 +47,7 @@ const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId}) => {
         setErrorMessage('')
         setMoveData("");
       } else {
-        setErrorMessage(move.error)
+        setErrorMessage(move?.error)
       }
     }
   }
@@ -67,24 +70,17 @@ const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId}) => {
         {userData && activeRound && (
             isMyTurn() ?
             <div className={styles.textfield}>
-            <div className={styles.inputfield}>
-          <label htmlFor="move">Name a word</label>
-          <input
+         <GameInput
             value={moveData}
-            onChange={(e) => setMoveData(e.target.value)}
-            id="move"
-            placeholder={"place your word here"}
-          />
-        </div>
-            <div className={styles.btnSection}>
-              <Button
+            onChange={(e: any) => setMoveData(e.target.value)}
+            name={'move'}
+            label={'Name a word'}
+        />
+        <div className={styles.btnSection}>
+              <SendIcon
                 onClick={sendResponse}
-                variant={"outlined"}
-                color={"warning"}
                 disabled={isLoading}
-              >
-                Send
-              </Button>
+              />
             </div>
           </div>
          : (
