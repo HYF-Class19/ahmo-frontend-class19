@@ -41,7 +41,6 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId }) => {
     useUpdateRoundDataMutation();
   const dispatch = useAppDispatch();
 
-
   const sendResponse = async (answer?: string) => {
     if (!activeRound.round_data) {
       await updateWord();
