@@ -6,11 +6,9 @@ const GameInput = ({...rest}) => {
     <TextField
     {...rest}
                 variant="filled"
-                name={"move"}
                 color="warning"
                 margin="normal"
                 size="medium"
-                label={"Move data"}
                 type={"text"}
                 fullWidth
                 autoFocus

@@ -24,8 +24,9 @@ import TruthDareRound from "../TruthDareRound";
 interface GameRoundProps {
   roundId: number;
   gameType: string | null;
+  activateAlert: Function
 }
-const GameRound: React.FC<GameRoundProps> = ({ roundId, gameType}) => {
+const GameRound: React.FC<GameRoundProps> = ({ roundId, gameType, activateAlert}) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const userData = useAppSelector(selectUserData);
   const { data: round, error, isLoading } = useGetRoundQuery(roundId);
@@ -55,7 +56,7 @@ const GameRound: React.FC<GameRoundProps> = ({ roundId, gameType}) => {
       socket.emit("submitRound", {
         receivers,
       });
-      dispatch(addSubmitting);
+      dispatch(addSubmitting());
     }
   };
 

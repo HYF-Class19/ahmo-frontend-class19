@@ -23,7 +23,16 @@ const findRiddlerWord = (activeRound: roundState, user: IUser) => {
     }
 }
 
-export const getStatusForCurrentUser = (activeRound: roundState, user: IUser, gameType: string) => {
+export const getStatusForCurrentUser = (activeRound: roundState, user: IUser, gameType: string) => { 
+    if(gameType === 'words') {
+        const lastMove = activeRound?.moves[activeRound.moves.length - 1]
+        if(lastMove) {
+            return lastMove.player.id === user.id ? 'We are waiting for your opponent\'s word' : 'We are waiting for your word'
+        } else {
+            return activeRound?.riddler?.id === user.id ? 'We are waiting for your opponent\'s word' : 'We are waiting for your word'
+        }
+    }
+   
     if(!activeRound.round_data) {
         if(user.id === activeRound?.riddler?.id) {
             return gameType === 'guess a word' ? 'We are waiting for your word' : 'We are waiting for your statement'

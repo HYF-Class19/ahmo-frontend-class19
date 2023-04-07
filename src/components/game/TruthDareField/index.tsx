@@ -21,15 +21,17 @@ import { socket } from "@/utils/socket";
 import React, { useEffect, useState } from "react";
 
 import styles from '../GameTextField/GameTextField.module.scss'
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import GameActions from "../GameActions";
 import GameInput from "../GameInput";
 import SendIcon from "@/components/shared/SendIcon";
+import Image from 'next/image'
 
 interface TruthDareFieldProps {
   chatId: number;
+  activateAlert: Function
 }
-const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId }) => {
+const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId, activateAlert }) => {
   const [moveData, setMoveData] = useState<string>('');
   const [moveType, setMoveType] = useState<string>("answer");
   const [roundData, setRoundData] = useState<string>("truth");
@@ -64,8 +66,10 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId }) => {
         if (answer && activeRound?.riddler) {
           if (move.correct) {
             dispatch(addScore({ winner: move.player.id }));
+            activateAlert('success', 'You won this round')
           } else {
             dispatch(addScore({ winner: activeRound.riddler.id }));
+            activateAlert('warning', 'You lost this round')
           }
           const newRiddler = members.find(
             (m: IMember) => m.user.id !== activeRound?.riddler?.id
@@ -134,14 +138,12 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId }) => {
                       <option value={"dare"}>Dare</option>
                     </select>
                   </div>
-                  <div className={styles.btnSection}>
-                <SendIcon
-                  disabled={
-                    isLoading || disableNotMyTurn(activeRound, userData)
-                  }
-                  onClick={sendResponse}
-                />
-              </div>
+                  <div onClick={() => sendResponse()} className={styles.btnSection}>
+                  {!isLoading && !isLoading || disableNotMyTurn(activeRound, userData) &&<IconButton
+                  >
+                  <Image src='/img/send.svg' width="30" height='30' alt={'Send icon'} />
+                </IconButton>}
+                </div>
                 </div>
               )
         ) 

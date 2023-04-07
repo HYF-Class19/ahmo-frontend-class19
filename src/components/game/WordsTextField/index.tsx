@@ -15,9 +15,10 @@ import SendIcon from '@/components/shared/SendIcon';
 
 interface WordsTextFieldProps {
     chatId: number;
+    activateAlert: Function
   }
 
-const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId}) => {
+const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId, activateAlert}) => {
     const [moveData, setMoveData] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState('')
     const userData = useAppSelector(selectUserData);
@@ -48,6 +49,7 @@ const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId}) => {
         setMoveData("");
       } else {
         setErrorMessage(move?.error)
+        activateAlert('error', move?.error)
       }
     }
   }
@@ -64,9 +66,6 @@ const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId}) => {
     
   return (
     <div className={styles.wrapper}>
-        {errorMessage && (
-            <h2>{errorMessage}</h2>
-        )}
         {userData && activeRound && (
             isMyTurn() ?
             <div className={styles.textfield}>
@@ -76,11 +75,11 @@ const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId}) => {
             name={'move'}
             label={'Name a word'}
         />
-        <div className={styles.btnSection}>
-              <SendIcon
-                onClick={sendResponse}
-                disabled={isLoading}
-              />
+      <div onClick={() => sendResponse()} className={styles.btnSection}>
+      {!isLoading && <IconButton
+                  >
+                  <Image src='/img/send.svg' width="30" height='30' alt={'Send icon'} />
+                </IconButton>}
             </div>
           </div>
          : (

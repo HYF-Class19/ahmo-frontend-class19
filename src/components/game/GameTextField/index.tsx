@@ -27,9 +27,10 @@ import GameInput from "../GameInput";
 
 interface GameTextFieldProps {
   chatId: number;
+  activateAlert: Function
 }
 
-const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
+const GameTextField: React.FC<GameTextFieldProps> = ({ chatId, activateAlert }) => {
   const [moveData, setMoveData] = useState<string>("");
   const [moveType, setMoveType] = useState<string>("question");
   const [roundData, setRoundData] = useState<string>("");
@@ -62,8 +63,10 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
         ) {
           if (move.correct) {
             dispatch(addScore({ winner: move.player.id }));
+            activateAlert('success', 'You won this round!')
           } else {
             dispatch(addScore({ winner: activeRound.riddler.id }));
+            activateAlert('warning', 'You lost this round(')
           }
           const newRiddler = members.find(
             (m: IMember) => m.user.id !== activeRound?.riddler?.id
@@ -144,13 +147,14 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
                 name={"round data"}
                 label={"Riddle a word"}
               />
-              <div className={styles.btnSection}>
-                <SendIcon
-                  disabled={
-                    isLoading || disableNotMyTurn(activeRound, userData)
-                  }
-                  onClick={sendResponse}
-                />
+              <div onClick={() => updateWord()} className={styles.btnSection}>
+              <IconButton
+                    disabled={
+                      isLoading || disableNotMyTurn(activeRound, userData)
+                    }
+                  >
+                  <Image src='/img/send.svg' width="30" height='30' alt={'Send icon'} />
+                </IconButton>
               </div>
             </div>
           )
@@ -177,9 +181,11 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId }) => {
                 <option value={"statement"}>Statement</option>
               </select>
             </div>
-            <div className={styles.btnSection}>
-              <SendIcon onClick={sendResponse} disabled={isLoading} />
-            </div>
+            {!isLoading && !disableNotMyTurn(activeRound, userData) && <div onClick={() => sendResponse()} className={styles.btnSection}>
+            <IconButton>
+                  <Image src='/img/send.svg' width="30" height='30' alt={'Send icon'} />
+                </IconButton>
+            </div>}
           </div>
         )
       ) : (
