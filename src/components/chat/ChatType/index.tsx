@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {Box, ListItemButton, ListItemText} from "@mui/material";
-import {KeyboardArrowDown, Search} from "@mui/icons-material";
 import Conversation from "@/components/chat/Conversation";
-import {getChatSnippet} from "@/utils/obj-helper";
-import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
-import {selectUserData} from "@/store/slices/userSlice";
 import {IChat} from "@/models/IChat";
 import styles from './ChatType.module.scss'
 import SearchBar from '@/components/shared/SearchBar';

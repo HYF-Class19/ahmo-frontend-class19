@@ -4,13 +4,13 @@ import Message from "@/components/chat/Message";
 import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
 import { loadMessages, selectActiveChat } from "@/store/slices/chatSlice";
 import { selectUserData } from "@/store/slices/userSlice";
-import { ArrivingMessage, IMessage } from "@/models/IMessage";
+import { IMessage } from "@/models/IMessage";
 import { IUser } from "@/models/IUser";
 import ChatTextarea from "@/components/chat/ChatTextarea";
 import { getReceivers } from "@/utils/chatHelpers";
 import { socket } from "@/utils/socket";
 import { useFetchChatWithMessagesQuery } from "@/services/chatService";
-import { messageAdded } from "@/store/slices/menuSlice";
+import SelectChatTemplate from "@/components/shared/SelectChatTemplate";
 
 interface ChatBoxProps {}
 
@@ -91,9 +91,7 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
           />
         </>
       ) : (
-        <div className={styles.noConversation}>
-          <h2>Open a conversation to start chat</h2>
-        </div>
+        <SelectChatTemplate typeOfChat={'group'} />
       )}
     </div>
   );

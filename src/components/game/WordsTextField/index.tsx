@@ -8,13 +8,17 @@ import { socket } from '@/utils/socket';
 import React, { useState } from 'react'
 import styles from '../GameTextField/GameTextField.module.scss'
 import { disableNotMyTurn } from '@/utils/round-helper';
-import { Button } from '@mui/material';
+import { Button, IconButton, TextField } from '@mui/material';
+import Image from 'next/image'
+import GameInput from '../GameInput';
+import SendIcon from '@/components/shared/SendIcon';
 
 interface WordsTextFieldProps {
     chatId: number;
+    activateAlert: Function
   }
 
-const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId}) => {
+const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId, activateAlert}) => {
     const [moveData, setMoveData] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState('')
     const userData = useAppSelector(selectUserData);
@@ -36,7 +40,7 @@ const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId}) => {
       // @ts-ignore
       const move = result.data;
 
-      if(move.correct) {
+      if(move?.correct) {
          const receivers = activeGame.members
           .filter((m: IMember) => m.user.id !== userData?.id)
           .map((m: IMember) => m.user.id);
@@ -44,7 +48,8 @@ const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId}) => {
         setErrorMessage('')
         setMoveData("");
       } else {
-        setErrorMessage(move.error)
+        setErrorMessage(move?.error)
+        activateAlert('error', move?.error)
       }
     }
   }
@@ -61,30 +66,20 @@ const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId}) => {
     
   return (
     <div className={styles.wrapper}>
-        {errorMessage && (
-            <h2>{errorMessage}</h2>
-        )}
         {userData && activeRound && (
             isMyTurn() ?
             <div className={styles.textfield}>
-            <div className={styles.inputfield}>
-          <label htmlFor="move">Name a word</label>
-          <input
+         <GameInput
             value={moveData}
-            onChange={(e) => setMoveData(e.target.value)}
-            id="move"
-            placeholder={"place your word here"}
-          />
-        </div>
-            <div className={styles.btnSection}>
-              <Button
-                onClick={sendResponse}
-                variant={"outlined"}
-                color={"warning"}
-                disabled={isLoading}
-              >
-                Send
-              </Button>
+            onChange={(e: any) => setMoveData(e.target.value)}
+            name={'move'}
+            label={'Name a word'}
+        />
+      <div onClick={() => sendResponse()} className={styles.btnSection}>
+      {!isLoading && <IconButton
+                  >
+                  <Image src='/img/send.svg' width="30" height='30' alt={'Send icon'} />
+                </IconButton>}
             </div>
           </div>
          : (
