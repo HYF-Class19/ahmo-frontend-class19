@@ -6,6 +6,7 @@ import {deleteUserData, selectUserData} from "@/store/slices/userSlice";
 import {useAppDispatch} from "@/hooks/useAppHooks";
 import {destroyCookie} from "nookies";
 import {useRouter} from "next/router";
+import { Box, Avatar, Typography } from '@mui/material';
 
 const Header = () => {
     const userData = useSelector(selectUserData);
@@ -35,6 +36,14 @@ const Header = () => {
                         </li>
                         <li>
                             <Link onClick={logout} href={'/'}>{userData.fullName} Logout</Link>
+                        </li>
+                        <li>
+                            <Link href={'/profile'}>
+                                <Box sx={{display: 'flex', flexDirection: 'row', alignItems:'center' }}>
+                                <Avatar />
+                                    <Typography style={{paddingLeft:"5px" }}>Helen</Typography>
+                                </Box>
+                            </Link>
                         </li>
                     </ul>
                 ) : (
