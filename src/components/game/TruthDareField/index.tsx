@@ -60,7 +60,6 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId, activateAlert }
       const move = result.data;
       if (move) {
         const receivers = activeGame.members
-          .filter((m: IMember) => m.user.id !== userData?.id)
           .map((m: IMember) => m.user.id);
         socket.emit("sendMove", { ...move, chatId, receivers });
         if (answer && activeRound?.riddler) {
@@ -138,12 +137,12 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId, activateAlert }
                       <option value={"dare"}>Dare</option>
                     </select>
                   </div>
+                  {!isLoading && !disableNotMyTurn(activeRound, userData) &&
                   <div onClick={() => sendResponse()} className={styles.btnSection}>
-                  {!isLoading && !isLoading || disableNotMyTurn(activeRound, userData) &&<IconButton
-                  >
+                  <IconButton>
                   <Image src='/img/send.svg' width="30" height='30' alt={'Send icon'} />
-                </IconButton>}
-                </div>
+                </IconButton>
+                </div>}
                 </div>
               )
         ) 

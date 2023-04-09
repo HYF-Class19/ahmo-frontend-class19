@@ -65,7 +65,7 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
               {isLoading && <div>loading...</div>}
               {data?.messages ? (
                 data.messages.length > 0 ? (
-                    data.messages
+                  data.messages
                     .map((message: IMessage) => (
                       <div key={message.id} ref={scrollRef}>
                         <Message

@@ -25,8 +25,44 @@ export const roundService = api.injectEndpoints({
             });
           });
 
+          socket.on("getMove", (move: IMove) => {
+            updateCachedData((draft) => {
+              console.log('move received', draft)
+              const roundIdx = draft.findIndex(round => round.id === move?.round?.id)
+              console.log('move received', draft[roundIdx])
+              if (roundIdx + 1) {
+                  draft[roundIdx].moves?.push(move);
+                  console.log('got')
+                }
+            });
+          });
+
+          socket.on("getSubmitRound", () => {
+            updateCachedData((draft) => {
+              const roundIdx = draft.findIndex(round => round.round_status === 'active')
+              if (roundIdx + 1) {
+                draft[roundIdx].submiting++
+              }
+            });
+          });
+
+           socket.on(
+            "getUpdatedWord",
+            (data: { player: IUser; round_data: string, roundId: number}) => {
+                updateCachedData((draft) => {
+                  const roundIdx = draft.findIndex(round => round.round_status === 'active')
+                    if (roundIdx + 1) {
+                      draft[roundIdx].round_data = data.round_data
+                    }
+                  });
+            }
+          );
+
           await cacheEntryRemoved;
+          socket.off("getMove");
           socket.off("getNewRound");
+          socket.off("getSubmitRound");
+          socket.off('getUpdatedWord')
         } catch (e) {}
       },
     }),
@@ -45,8 +81,10 @@ export const roundService = api.injectEndpoints({
           socket.on("getMove", (move: IMove) => {
             updateCachedData((draft) => {
               if (draft && move) {
+                console.log(draft.id === move.round.id)
                 if (draft.id === move.round.id) {
                   draft?.moves?.push(move);
+                  console.log('got')
                 }
               }
             });
@@ -84,7 +122,7 @@ export const roundService = api.injectEndpoints({
         method: "POST",
         body: dto,
       }),
-      invalidatesTags: ["Round", "Game"],
+      invalidatesTags: ["Game"],
     }),
     updateRoundData: build.mutation({
       query: (dto: {
@@ -98,7 +136,7 @@ export const roundService = api.injectEndpoints({
         method: "PATCH",
         body: dto,
       }),
-      invalidatesTags: ["Round", "Game"],
+      // invalidatesTags: ["Round", "Game"],
     }),
     createMove: build.mutation<IMove, any>({
       query: (dto: {
@@ -111,7 +149,7 @@ export const roundService = api.injectEndpoints({
         method: "POST",
         body: dto,
       }),
-      invalidatesTags: ["Round", "Game"],
+      // invalidatesTags: [],
     }),
   }),
 });

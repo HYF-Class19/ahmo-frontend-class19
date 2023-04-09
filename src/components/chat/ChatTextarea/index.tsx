@@ -30,7 +30,7 @@ const ChatTextArea:React.FC<ChatTextAreaProps> = ({receivers, activeChatId}) => 
                 socket.emit('sendMessage', {
                     id: postedMessage.id,
                     sender: userData,
-                    receivers: receivers,
+                    receivers: [...receivers, userData.id],
                     chatId: activeChatId,
                     text: message,
                 })

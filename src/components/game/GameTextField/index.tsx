@@ -54,7 +54,6 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId, activateAlert }) 
       const move = result.data;
       if (move) {
         const receivers = activeGame.members
-          .filter((m: IMember) => m.user.id !== userData?.id)
           .map((m: IMember) => m.user.id);
         socket.emit("sendMove", { ...move, chatId, receivers });
         if (
@@ -97,7 +96,6 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId, activateAlert }) 
       if (!error) {
         dispatch(addRoundData(roundData));
         const receivers = members
-          .filter((m: IMember) => m.user.id !== userData?.id)
           .map((m: IMember) => m.user.id);
         socket.emit("updateWord", {
           player: userData,

@@ -54,7 +54,7 @@ export const chatSlice = createSlice({
             for(let i = action.payload.length - 1; i > 0; i--) {
                 messages.push(action.payload[i])
             } 
-            state.messages = messages
+            state.messages = action.payload
         },
         addMessage: (state, action: PayloadAction<IMessage>) => {
             state.messages.push(action.payload)

@@ -1,8 +1,6 @@
 import React from "react";
 import { IMove } from "@/models/IGame";
 import styles from "./RoundMove.module.scss";
-import { useAppSelector } from "@/hooks/useAppHooks";
-import { selectUserData } from "@/store/slices/userSlice";
 import { Avatar } from "@mui/material";
 import { format } from "timeago.js";
 import clsx from "clsx";
@@ -12,7 +10,6 @@ interface RoundMoveProps {
   my: boolean;
 }
 const RoundMove: React.FC<RoundMoveProps> = ({ move, my }) => {
-  const userData = useAppSelector(selectUserData);
 
   return (
     <div className={clsx(styles.moveWrapper, my && styles.my)}>
