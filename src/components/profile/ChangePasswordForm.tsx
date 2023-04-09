@@ -3,7 +3,7 @@ import { Button, Container, Typography } from "@mui/material";
 import { useForm, FormProvider } from "react-hook-form";
 import { FormField } from "@/components/shared/FormField";
 
-interface ChangePasswordFormData {
+export interface ChangePasswordFormData {
   oldPassword: string;
   newPassword: string;
   confirmNewPassword: string;
