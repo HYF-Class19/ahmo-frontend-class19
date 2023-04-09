@@ -42,7 +42,6 @@ const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId, activateAlert}) 
 
       if(move?.correct) {
          const receivers = activeGame.members
-          .filter((m: IMember) => m.user.id !== userData?.id)
           .map((m: IMember) => m.user.id);
         socket.emit("sendMove", { ...move, chatId, receivers });
         setErrorMessage('')

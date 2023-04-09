@@ -8,7 +8,7 @@ const messageApi = api.injectEndpoints({
                 url: '/messages',
                 method: 'POST',
                 body,
-            }),
+            })
         }),
         getMessagesByChat: builder.query<IMessage[], {chatId: number, limit: number, page: number}>({
             query: (props) => ({

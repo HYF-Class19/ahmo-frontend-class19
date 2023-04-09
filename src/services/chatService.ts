@@ -9,7 +9,7 @@ export const chatApi = api.injectEndpoints({
             query: () => ({
                 url: '/chats/me',
             }),
-            providesTags: result => ['Message','Chat'],
+            providesTags: result => ['Chat', 'Message'],
             async onCacheEntryAdded(arg, {cacheDataLoaded, cacheEntryRemoved, updateCachedData}) {
                 try {
                     await cacheDataLoaded;
@@ -17,7 +17,8 @@ export const chatApi = api.injectEndpoints({
                         updateCachedData((draft) => {
                             if(draft && message) {
                                 const chatIndex = draft.findIndex(d => d.id === message.chatId)
-                                if(chatIndex) {
+                                console.log(chatIndex)
+                                if(chatIndex + 1) {
                                     const chat = draft[chatIndex]
                                     chat.lastMessage = message
                                     draft.splice(chatIndex, 1)

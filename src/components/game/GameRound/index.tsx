@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { IMove } from "@/models/IGame";
+import { IMove, IRound } from "@/models/IGame";
 import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
 import { selectUserData } from "@/store/slices/userSlice";
 import {
@@ -20,50 +20,35 @@ import { socket } from "@/utils/socket";
 import { getReceivers } from "@/utils/chatHelpers";
 import clsx from "clsx";
 import TruthDareRound from "../TruthDareRound";
+import { IMember } from "@/models/IChat";
 
 interface GameRoundProps {
-  roundId: number;
+  round: IRound;
   gameType: string | null;
   activateAlert: Function
+  scrollRef: any
 }
-const GameRound: React.FC<GameRoundProps> = ({ roundId, gameType, activateAlert}) => {
+const GameRound: React.FC<GameRoundProps> = ({ round, gameType, activateAlert, scrollRef}) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const userData = useAppSelector(selectUserData);
-  const { data: round, error, isLoading } = useGetRoundQuery(roundId);
   const [updateRound, result] = useUpdateRoundDataMutation();
   const dispatch = useAppDispatch();
   const members = useAppSelector(selectMembers);
   const activeRound = useAppSelector(selectActiveRound);
-  const scrollRef = useRef<any>();
-
-  useEffect(() => {
-    if (round) {
-      if (round.round_status === "active") {
-        dispatch(setRound(round));
-      }
-    }
-  }, [round]);
-
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView();
-  }, [activeRound.moves]);
 
   const sendSubmit = async () => {
-    await updateRound({ id: roundId, submiting: 1 });
+    await updateRound({ id: round.id, submiting: 1 });
     setIsSubmitted(true);
     if (userData) {
-      const receivers = getReceivers(userData.id, members);
+      const receivers = members.map((m: IMember) => m.user.id)
       socket.emit("submitRound", {
         receivers,
       });
-      dispatch(addSubmitting());
     }
   };
 
   return (
     <div className={clsx(styles.wrapper, isSubmitted && styles.submitted)}>
-      {isLoading && <div>is loading...</div>}
-      {error && <div>Error</div>}
       {round && userData && (
       gameType === 'guess a word' ? (  
         activeRound.submiting === 2 || round.id !== activeRound.id ? (
@@ -78,7 +63,7 @@ const GameRound: React.FC<GameRoundProps> = ({ roundId, gameType, activateAlert}
                 a riddler
               </p>
             </div>
-            {round.moves.map((move) => (
+            {round?.moves?.map((move) => (
               <div ref={scrollRef} key={move.id}>
                 <RoundMove my={userData.id === move?.player?.id} move={move} />
               </div>

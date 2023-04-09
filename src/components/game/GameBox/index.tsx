@@ -20,6 +20,7 @@ import GameAlert from '@/components/shared/GameAlert';
 import { getStatusForCurrentUser } from '@/utils/round-helper';
 import clsx from 'clsx';
 import { AlertColor } from '@mui/material';
+import { useGetRoundsQuery } from '@/services/roundServive';
 
 interface GameBoxProps {
     
@@ -35,7 +36,7 @@ const GameBox: React.FC<GameBoxProps> = () => {
     const activeRound = useAppSelector(selectActiveRound);
     const dispatch = useAppDispatch()
     const boxRef = useRef<any>()
-    const scrollRef = useRef<any>();
+    const scrollRef = useRef<any>()
 
     useEffect(() => {
         socket.on('getNewRound', (round: IRound) => {
@@ -64,6 +65,15 @@ const GameBox: React.FC<GameBoxProps> = () => {
     }, [game])
 
     useEffect(() => {
+        if (game?.rounds) {
+            const roundIdx = game.rounds.findIndex(round => round.round_status === 'active')
+          if (roundIdx + 1) {
+            dispatch(setRound(game.rounds[roundIdx]));
+          }
+        }
+      }, [selectedGame.activeChat, game?.rounds]);
+
+    useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" })
     }, [selectedGame.rounds]) 
 
@@ -87,9 +97,9 @@ const GameBox: React.FC<GameBoxProps> = () => {
                 <GameHeader />
                 {game.game !== 'words' && <RoundData gameType={game.game} count={game.rounds.length}/>}
                 <div ref={boxRef} style={{overflowY: 'auto'}} className={styles.box}>
-                    {game.rounds.map((round: IRound, index: number) => (
-                        <div key={round.id} ref={scrollRef}>
-                            <GameRound activateAlert={activateAlert} gameType={game.game} roundId={round.id} />
+                    {game.rounds && game.rounds.map((round: IRound, index: number) => (
+                        <div key={round.id}>
+                            <GameRound scrollRef={scrollRef} activateAlert={activateAlert} gameType={game.game} round={round} />
                         </div>
                     ))}
                 </div>

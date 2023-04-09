@@ -30,6 +30,16 @@ const Chat: NextPage = () => {
     }, [userData]);
 
     useEffect(() => {
+        socket.on('getMove', (data) => {
+            console.log(data)
+        })
+
+        return () => {
+            socket.off('getMove')
+        }
+    }, [])
+
+    useEffect(() => {
         if(data) {
             setChats(data)
         }
