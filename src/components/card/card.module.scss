@@ -1,0 +1,37 @@
+@import '~@mui/material/styles';
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.card {
+  max-width: 400px;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .card-action-area {
+    position: relative;
+
+    .card-media {
+      height: 300px;
+    }
+
+    .card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 16px;
+      color: white;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
