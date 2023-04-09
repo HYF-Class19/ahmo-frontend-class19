@@ -4,7 +4,7 @@ import MainLayout from "@/layouts/MainLayout";
 import { NextPage } from "next";
 import ProfileAvatar from "@/components/profile/avatar";
 import ProfileInfo from "@/components/profile/ProfileInfo";
-import ChangePasswordForm from "@/components/profile/ChangePasswordForm";
+import ChangePasswordForm , { ChangePasswordFormData} from "@/components/profile/ChangePasswordForm";
 import SideMenuButton from "@/components/profile/SideMenuButton";
 import MainContent from "@/components/profile/mainContent";
 
@@ -14,7 +14,7 @@ const Profile: NextPage = () => {
     setShowChangePasswordForm(!showChangePasswordForm);
   };
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: ChangePasswordFormData) => {
     console.log(data);
   };
 
@@ -71,9 +71,7 @@ const Profile: NextPage = () => {
               )}
               {showChangePasswordForm && (
                 <ChangePasswordForm
-                  onSubmit={function (FormData): void {
-                    throw new Error("Function not implemented.");
-                  }}
+                  onSubmit={onSubmit}
                 />
               )}
             </MainContent>
