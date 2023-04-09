@@ -35,6 +35,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
         rows={4}
         variant="outlined"
         sx={{
+          color: "#fffff",
           margin: 2,
           width: "100%",
           "& .MuiOutlinedInput-notchedOutline": {

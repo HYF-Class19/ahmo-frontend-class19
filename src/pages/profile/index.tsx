@@ -24,7 +24,7 @@ const Profile: NextPage = () => {
 
   return (
     <MainLayout>
-       <Box sx={{ backgroundColor: colors.lightBlue[100] }}>
+        <Box sx={{ bgcolor: '#120428' }}>
       
         <Grid container>
           <Grid item xs={1}>

@@ -25,7 +25,7 @@ const EditableText: React.FC<EditableTextProps> = ({
   };
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
+    <Box sx={{ display: "flex", alignItems: "center", color: "#FFFFFF" }}>
       <Typography sx={{ marginRight: 1 }}>{label}:</Typography>
       <InputBase
         value={value}
@@ -34,6 +34,7 @@ const EditableText: React.FC<EditableTextProps> = ({
         multiline
         placeholder={placeholder}
         inputProps={{ style: { borderBottom: isEditable ? "2px solid blue" : "1px solid #F3FB8C"  } }}
+        sx= { {color: isEditable ? "blue" : "#FFFFFF"  } }
       />
       <IconButton size="small" onClick={handleIconClick}>
         {isEditable ? <Check /> : <Edit />}
