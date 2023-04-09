@@ -10,7 +10,6 @@ const MainContent: React.FC<MainContentProps> = ({ children }) => {
     <Card
       sx={{
         height:'80vh',
-        mixBlendMode: "color-dodge",
         border: 1,
         marginLeft: 2,
         marginTop: 2,
