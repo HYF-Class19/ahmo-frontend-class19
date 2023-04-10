@@ -2,9 +2,21 @@
     display: flex;
     height: 100%;
     width: 100%;
-  &Menu {
-    width: 30%;
-    height: calc(100vh - 90px);
-    padding: 30px 0;
-  }
+    overflow: hidden;
+    background-color: #120428;
+    padding-top: 20px;
+    .chatWrapper {
+      background-color: #484153;
+      display: flex;
+      height: calc(100vh - 110px);
+      width: 85%;
+      padding: 60px 80px 10px 10px;
+      .chatMenu {
+        width: 40%;
+        height: 100%;
+        padding: 0 10px
+      }
+
+    }
+  
 }

@@ -41,7 +41,12 @@ const Conversation: React.FC<ConversationProps> = ({chat}) => {
                             variant="body2"
                             color="black"
                         >
-                           {chat.lastMessage ? chat.lastMessage?.sender?.id === userData?.id ? 'You: ' : chat.lastMessage.sender.fullName + ': ': ''} {`${chat.lastMessage ? chat.lastMessage.text : 'no messages'}`}
+                            {chat.type === 'game' && 
+                                'game is active'
+                            }
+                            {chat.type !== "game" &&
+                                `${chat.lastMessage ? chat.lastMessage?.sender?.id === userData?.id ? 'You: ' : chat.lastMessage.sender.fullName + ': ': ''} ${chat.lastMessage ? chat.lastMessage.text : 'no messages yet'}`
+                            }
                         </Typography>
                     </React.Fragment>
                 }

@@ -16,6 +16,15 @@ import { setUserData } from '@/store/slices/userSlice';
 interface FormProps {
 }
 
+const formControlLabelStyle = {
+    "& .MuiFormControlLabel-label": {
+      fontSize: "14px",
+      width: 300,
+      backgroundColor: 'rgba(0,0,0,0.1)',
+      accentcolor: '#9b59b6'
+    }
+}
+
 const Form: React.FC<FormProps> = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter()
@@ -44,15 +53,6 @@ const Form: React.FC<FormProps> = () => {
         } catch (err: any) {
             console.log(err)
             setErrorMessage(err?.data?.message)
-        }
-    }
-
-    const formControlLabelStyle = {
-        "& .MuiFormControlLabel-label": {
-          fontSize: "14px",
-          width: 300,
-          backgroundColor: 'rgba(0,0,0,0.1)',
-          accentcolor: '#9b59b6'
         }
     }
 

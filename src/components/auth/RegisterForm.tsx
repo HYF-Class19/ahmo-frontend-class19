@@ -3,11 +3,9 @@ import {Alert, Box, Button, Checkbox, FormControlLabel, Grid} from '@mui/materia
 import {yupResolver} from "@hookform/resolvers/yup";
 import React, {useEffect, useState} from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import {LoginFormSchema, RegisterSchema} from '@/utils/FormSchemas';
+import { RegisterSchema} from '@/utils/FormSchemas';
 import Link from "next/link";
 import {useRouter} from "next/router";
-import {Api} from "@/api";
-import {setCookie} from "nookies";
 import {setUserData} from "@/store/slices/userSlice";
 import {useAppDispatch} from "@/hooks/useAppHooks";
 import {useRegisterUserMutation} from "@/services/authService";

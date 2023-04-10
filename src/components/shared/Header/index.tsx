@@ -6,7 +6,7 @@ import {deleteUserData, selectUserData} from "@/store/slices/userSlice";
 import {useAppDispatch} from "@/hooks/useAppHooks";
 import {destroyCookie} from "nookies";
 import {useRouter} from "next/router";
-import LogoutIcon from '@mui/icons-material/Logout';
+import { Box, Avatar, Typography } from '@mui/material';
 
 const Header = () => {
     const userData = useSelector(selectUserData);
@@ -35,7 +35,15 @@ const Header = () => {
                             <Link href={'/chat'}>Chat</Link>
                         </li>
                         <li>
-                            <Link onClick={logout} href={'/'}>Logout</Link>
+                            <Link onClick={logout} href={'/'}>{userData.fullName} Logout</Link>
+                        </li>
+                        <li>
+                            <Link href={'/profile'}>
+                                <Box sx={{display: 'flex', flexDirection: 'row', alignItems:'center' }}>
+                                <Avatar />
+                                    <Typography style={{paddingLeft:"5px" }}>Helen</Typography>
+                                </Box>
+                            </Link>
                         </li>
                     </ul>
                 ) : (

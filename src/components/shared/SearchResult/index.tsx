@@ -42,33 +42,39 @@ const SearchResult: React.FC<SeacrhResultProps> = ({
     }
   }, [data]);
 
-  const openChat = async (data: IUser) => {
+  const openChat = async (data: {user?: IUser, chat?: IChat}) => {
+   if(data.user && directChats) {
     try {
-      const chat = directChats?.find((chat) =>
-        chat.members.find((m) => m.user.id === data.id)
+      const directChat = directChats.find((chat) =>
+        chat.members.find((m) => m.user.id === data.user?.id)
       );
 
-      if (chat) {
-        dispatch(setActiveChat(chat));
+      if (directChat) {
+        dispatch(setActiveChat(directChat));
         setActive(false);
       } else {
-        const members = [userData?.id, data.id].join(",");
-        await createGroup({ type: "direct", name: data.fullName, members });
-        if (result.data) {
-          dispatch(setActiveChat(result.data));
+        const members = [userData?.id, data.user.id].join(",");
+        const res = await createGroup({ type: "direct", name: data.user.fullName, members });
+         // @ts-ignore
+        const newChat = res.data
+        if(newChat) {
+          dispatch(setActiveChat(newChat))
+          setActive(false);
         }
       }
     } catch (error) {
       console.log(error);
     }
+   } else if (data.chat) {
+    dispatch(setActiveChat(data.chat));
+    setActive(false);
+   }
   };
 
   return (
     <List
       sx={{
-        width: "90%",
-        bgcolor: "background.paper",
-        borderBottom: "1px solid gray",
+        width: "100%",
         cursor: "pointer",
       }}
     >
@@ -87,7 +93,7 @@ const SearchResult: React.FC<SeacrhResultProps> = ({
               <ListItem
                 key={user.id}
                 secondaryAction={
-                  <IconButton onClick={() => openChat(user)} edge="end">
+                  <IconButton onClick={() => openChat({user})} edge="end">
                     <SendIcon />
                   </IconButton>
                 }
@@ -123,13 +129,13 @@ const SearchResult: React.FC<SeacrhResultProps> = ({
               <ListItem
                 key={chat.id}
                 secondaryAction={
-                  <IconButton edge="end">
+                  <IconButton onClick={() => openChat({chat})} edge="end">
                     <SendIcon />
                   </IconButton>
                 }
               >
                 <ListItemAvatar>
-                  <Avatar>{chat.name![0]}</Avatar>
+                  <Avatar>{chat.name && chat.name[0]}</Avatar>
                 </ListItemAvatar>
                 <ListItemText
                   primary={chat.name}

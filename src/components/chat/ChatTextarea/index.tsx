@@ -3,9 +3,12 @@ import styles from "@/components/chat/ChatBox/ChatBox.module.scss";
 import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
 import {selectUserData} from "@/store/slices/userSlice";
 import {useMutateMessageMutation} from "@/services/messageService";
-import { addMessage } from '@/store/slices/chatSlice';
 import { socket } from '@/utils/socket';
 import { messageAdded } from '@/store/slices/menuSlice';
+import GameInput from '@/components/game/GameInput';
+import { IconButton } from '@mui/material';
+import { sendResponse } from 'next/dist/server/image-optimizer';
+import Image from 'next/image'
 
 interface ChatTextAreaProps {
     receivers: number[];
@@ -30,11 +33,10 @@ const ChatTextArea:React.FC<ChatTextAreaProps> = ({receivers, activeChatId}) => 
                 socket.emit('sendMessage', {
                     id: postedMessage.id,
                     sender: userData,
-                    receivers: receivers,
+                    receivers: [...receivers, userData.id],
                     chatId: activeChatId,
                     text: message,
                 })
-                dispatch(addMessage(postedMessage))
                 dispatch(messageAdded({message: postedMessage, chatId: activeChatId}))
             }
         }
@@ -54,8 +56,20 @@ const ChatTextArea:React.FC<ChatTextAreaProps> = ({receivers, activeChatId}) => 
 
     return (
         <div className={styles.chatBoxBottom}>
-            <textarea className={styles.chatMessageInput} onBlur={onBlur} value={message} onChange={onChange} onFocus={onFocus} placeholder='write something...'></textarea>
-            <button disabled={sendLoading} onClick={sendMessage} className={styles.chatSubmitButton}>Send</button>
+             <GameInput
+                value={message} 
+                onChange={onChange}
+                name={'message'}
+                label={'Your message'}
+                onBlur={onBlur}
+                onFocus={onFocus}
+         />
+      <div onClick={sendMessage} className={styles.btnSection}>
+             {!sendLoading && <IconButton
+                  >
+                  <Image src='/img/send.svg' width="30" height='30' alt={'Send icon'} />
+                </IconButton>}
+        </div>
         </div>
     );
 };

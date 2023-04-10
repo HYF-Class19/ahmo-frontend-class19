@@ -1,6 +1,18 @@
 .wrapper {
   display: flex;
   width: 100%;
+  border-top: 1px solid #F3FB8C;
+  .textInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+    width: 100%;
+    h4 {
+      color: white;
+      text-transform: capitalize;
+    }
+  }
   .buttons {
     display: flex;
     justify-content: center;
@@ -16,26 +28,18 @@
   .textfield {
     display: flex;
     width: 100%;
-    margin-right: 20px;
+    margin: 0 20px;
     align-items: center;
+    position: relative;
     .inputfield {
       display: flex;
-      width: 50%;
+      width: 70%;
       margin-left: 20px;
       margin-right: 20px;
       flex-direction: column;
       input {
-        padding: 20px;
-        border-radius: 10px;
+        border-radius: 20px;
         background-color: black;
-        color: white;
-        outline: none;
-        border: none;
-      }
-      label {
-        color: white;
-        margin-bottom: 10px;
-        font-size: 20px;
       }
     }
     .selectItem {
@@ -55,11 +59,14 @@
         background-color: black;
       }
     }
-  }
-  .btnSection {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 20px;
+    .btnSection {
+      position: absolute;
+      right: 0px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }

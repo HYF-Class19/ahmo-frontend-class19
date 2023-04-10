@@ -1,6 +1,8 @@
 import {api} from "@/services/api";
-import {CreateChatDto, IGame} from "@/models/IGame";
+import {CreateChatDto, IGame, IMove, IRound} from "@/models/IGame";
 import {IChat} from "@/models/IChat";
+import { socket } from "@/utils/socket";
+import { IUser } from "@/models/IUser";
 
 export const gameService = api.injectEndpoints({
     endpoints: (build) => ({
@@ -9,7 +11,60 @@ export const gameService = api.injectEndpoints({
                 url: `chats/${id}`,
                 method: 'GET',
             }),
-            providesTags: result => ['Game', 'Round']
+            providesTags: result => ['Game'],
+            async onCacheEntryAdded(
+                arg,
+                { cacheDataLoaded, cacheEntryRemoved, updateCachedData }
+              ) {
+                try {
+                  await cacheDataLoaded;
+                  socket.on("getNewRound", (round: IRound) => {
+                    updateCachedData((draft) => {
+                      if (draft && round) {
+                        if(draft.rounds) {
+                            draft.rounds.push(round);
+                        }
+                      }
+                    });
+                  });
+        
+                  socket.on("getMove", (move: IMove) => {
+                    updateCachedData((draft) => {
+                      const roundIdx = draft.rounds.findIndex((round) => round.id === move?.round?.id)
+                      if (roundIdx + 1) {
+                          draft.rounds[roundIdx].moves?.push(move);
+                        }
+                    });
+                  });
+        
+                  socket.on("getSubmitRound", () => {
+                    updateCachedData((draft) => {
+                      const roundIdx = draft?.rounds?.findIndex(round => round.round_status === 'active')
+                      if (roundIdx + 1) {
+                        draft.rounds[roundIdx].submiting++
+                      }
+                    });
+                  });
+        
+                   socket.on(
+                    "getUpdatedWord",
+                    (data: { player: IUser; round_data: string, roundId: number}) => {
+                        updateCachedData((draft) => {
+                          const roundIdx = draft.rounds.findIndex(round => round.round_status === 'active')
+                            if (roundIdx + 1) {
+                              draft.rounds[roundIdx].round_data = data.round_data
+                            }
+                          });
+                    }
+                  );
+        
+                  await cacheEntryRemoved;
+                  socket.off("getMove");
+                  socket.off("getNewRound");
+                  socket.off("getSubmitRound");
+                  socket.off('getUpdatedWord')
+                } catch (e) {}
+              },
         }),
         getGames: build.query<IGame[], void>({
             query: () => ({

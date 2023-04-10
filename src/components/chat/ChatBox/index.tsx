@@ -2,15 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./ChatBox.module.scss";
 import Message from "@/components/chat/Message";
 import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
-import { loadMessages, selectActiveChat } from "@/store/slices/chatSlice";
+import { selectActiveChat } from "@/store/slices/chatSlice";
 import { selectUserData } from "@/store/slices/userSlice";
-import { ArrivingMessage, IMessage } from "@/models/IMessage";
+import { IMessage } from "@/models/IMessage";
 import { IUser } from "@/models/IUser";
 import ChatTextarea from "@/components/chat/ChatTextarea";
-import { getReceivers } from "@/utils/chatHelpers";
+import { getReceivers, isAvatarUnvisible } from "@/utils/chatHelpers";
 import { socket } from "@/utils/socket";
 import { useFetchChatWithMessagesQuery } from "@/services/chatService";
-import { messageAdded } from "@/store/slices/menuSlice";
+import SelectChatTemplate from "@/components/shared/SelectChatTemplate";
+import ChatHeader from "../ChatHeader";
 
 interface ChatBoxProps {}
 
@@ -33,19 +34,10 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
     }
     setOldData(data)
   }, [data]);
-  
-
-  useEffect(() => {
-    if(data) {
-        dispatch(loadMessages(data.messages))
-    }
-}, [data])
-
-
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [activeChat.messages]);
+  }, [data?.messages]);
 
   useEffect(() => {
     socket.on("getTyping", (data: { sender: IUser; chatId: number }) => {
@@ -60,17 +52,19 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
 
   return (
     <div className={styles.chatBoxWrapper}>
+      <ChatHeader />
       {activeChat.activeChat && userData ? (
         <>
           <div className={styles.chatBoxTop}>
-            <div ref={boxRef} style={{ overflowY: "auto" }}>
+            <div className={styles.messagesBox} ref={boxRef} style={{ overflowY: "auto" }}>
               {isLoading && <div>loading...</div>}
               {data?.messages ? (
                 data.messages.length > 0 ? (
-                    data.messages
-                    .map((message: IMessage) => (
+                  data.messages
+                    .map((message: IMessage, i) => (
                       <div key={message.id} ref={scrollRef}>
                         <Message
+                          isAvatarUnvisible={isAvatarUnvisible(userData.id, message, data.messages, i)}
                           key={message.id}
                           isMy={message.sender.id === userData?.id}
                           message={message}
@@ -78,7 +72,9 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
                       </div>
                     ))
                 ) : (
-                  <h3>No messages yet</h3>
+                  <div className={styles.noMessages}>
+                     <h3>No messages yet</h3>
+                  </div>
                 )
               ) : null}
               {someoneTyping &&
@@ -86,16 +82,14 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
                   <div>{someoneTyping?.sender?.fullName} is typing...</div>
                 )}
             </div>
-          </div>
-          <ChatTextarea
+            <ChatTextarea
             activeChatId={activeChat.activeChat}
             receivers={getReceivers(userData.id, activeChat?.members)}
           />
+          </div>
         </>
       ) : (
-        <div className={styles.noConversation}>
-          <h2>Open a conversation to start chat</h2>
-        </div>
+        <SelectChatTemplate typeOfChat={'group'} />
       )}
     </div>
   );

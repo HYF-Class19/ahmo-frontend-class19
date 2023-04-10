@@ -1,62 +1,119 @@
-import React, {useEffect, useRef} from 'react';
-import {IMove} from "@/models/IGame";
-import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
-import {selectUserData} from "@/store/slices/userSlice";
-import {useGetRoundQuery} from "@/services/roundServive";
+import React, { useEffect, useRef, useState } from "react";
+import { IMove, IRound } from "@/models/IGame";
+import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
+import { selectUserData } from "@/store/slices/userSlice";
+import {
+  useGetRoundQuery,
+  useUpdateRoundDataMutation,
+} from "@/services/roundServive";
 import RoundMove from "@/components/game/RoundMove";
-import {selectActiveRound, setRound} from "@/store/slices/roundSlice";
-import {selectMembers} from "@/store/slices/chatSlice";
+import {
+  addSubmitting,
+  selectActiveRound,
+  setRound,
+} from "@/store/slices/roundSlice";
+import { selectMembers } from "@/store/slices/chatSlice";
 
-import styles from './GameRound.module.scss'
+import styles from "./GameRound.module.scss";
+import { Button } from "@mui/material";
+import { socket } from "@/utils/socket";
+import { getReceivers } from "@/utils/chatHelpers";
+import clsx from "clsx";
+import TruthDareRound from "../TruthDareRound";
+import { IMember } from "@/models/IChat";
 
 interface GameRoundProps {
-    roundId: number;
-    index: number
+  round: IRound;
+  gameType: string | null;
+  activateAlert: Function
+  scrollRef: any
 }
-const GameRound: React.FC<GameRoundProps> = ({roundId, index}) => {
-    const userData = useAppSelector(selectUserData)
-    const {data: round, error, isLoading} = useGetRoundQuery(roundId)
-    const dispatch = useAppDispatch()
-    const members = useAppSelector(selectMembers)
-    const activeRound = useAppSelector(selectActiveRound)
-    const scrollRef = useRef<any>();
+const GameRound: React.FC<GameRoundProps> = ({ round, gameType, activateAlert, scrollRef}) => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const userData = useAppSelector(selectUserData);
+  const [updateRound, result] = useUpdateRoundDataMutation();
+  const dispatch = useAppDispatch();
+  const members = useAppSelector(selectMembers);
+  const activeRound = useAppSelector(selectActiveRound);
 
-    useEffect(() => {
-        if(round) {
-            if(round.round_status === 'active') {
-                dispatch(setRound(round))
-            }
-        }
-    }, [round])
+  const sendSubmit = async () => {
+    await updateRound({ id: round.id, submiting: 1 });
+    setIsSubmitted(true);
+    if (userData) {
+      const receivers = members.map((m: IMember) => m.user.id)
+      socket.emit("submitRound", {
+        receivers,
+      });
+    }
+  };
 
-        useEffect(() => {
-            scrollRef.current?.scrollIntoView();
-        }, [activeRound.moves]);
-
-    return (
-        <div className={styles.wrapper}>
-            {isLoading && <div>is loading...</div>}
-            {error && <div>Error</div>}
-            {round && userData && (
-                <>
-                    <div className={styles.riddler}>
-                        <p><span>{round.riddler.id === userData.id ? "you are" : round.riddler.fullName + ' is'}</span> a riddler</p>
-                    </div>
-                    {round.moves.map((move) => (
-                        <div ref={scrollRef} key={move.id}>
-                            <RoundMove my={userData.id === move?.player?.id} move={move} />
-                        </div> 
-                    ))}
-                    {activeRound.round_winner || round.id !== activeRound?.id && (
-                        <div className={styles.winner}>
-                            <hr />
-                            <p> winner: {members.find((m: any) => m.user.id === round.round_winner || m.user.id === activeRound.round_winner)?.user.fullName}</p>
-                        </div>
-                    )}
-                </>
-                )}
-        </div>
-    );
+  return (
+    <div className={clsx(styles.wrapper, isSubmitted && styles.submitted)}>
+      {round && userData && (
+      gameType === 'guess a word' ? (  
+        round.submiting >= 2 || round.id !== activeRound.id ? (
+          <>
+            <div className={styles.riddler}>
+              <p>
+                <span>
+                  {round.riddler.id === userData.id
+                    ? "you are"
+                    : round.riddler.fullName + " is"}
+                </span>{" "}
+                a riddler
+              </p>
+            </div>
+            {round?.moves?.map((move) => (
+              <div ref={scrollRef} key={move.id}>
+                <RoundMove my={userData.id === move?.player?.id} move={move} />
+              </div>
+            ))}
+            {activeRound.round_winner ||
+              (round.id !== activeRound?.id && (
+                <div className={styles.winner}>
+                  <hr />
+                  <p>
+                    {" "}
+                    winner:{" "}
+                    {
+                      members.find(
+                        (m: any) =>
+                          m.user.id === round.round_winner ||
+                          m.user.id === activeRound.round_winner
+                      )?.user.fullName
+                    }
+                  </p>
+                </div>
+              ))}
+          </>
+        ) : (
+          <div className={styles.submitArea}>
+            {isSubmitted ? (
+              <h4>We are waiting for your opponent sumbition</h4>
+            ) : (
+              <Button
+                onClick={sendSubmit}
+                className={styles.boolBtn}
+                variant="contained"
+                color="warning"
+                disabled={result.isLoading}
+              >
+                Start New Round
+              </Button>
+            )}
+          </div>
+        )
+      ): gameType === 'truth or dare' ? (
+        <TruthDareRound round={round} userData={userData} activeRound={activeRound} />
+      ): (
+        round.moves.map((move) => (
+          <div ref={scrollRef} key={move.id}>
+            <RoundMove my={userData.id === move?.player?.id} move={move} />
+          </div>
+        ))
+      ))}
+    </div>
+  );
 };
 
 export default GameRound;

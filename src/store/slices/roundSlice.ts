@@ -12,6 +12,7 @@ export interface roundState {
     riddler: IUser | null;
     attempt: number;
     moves: IMove[];
+    submiting: number;
 }
 
 const initialState: roundState = {
@@ -21,7 +22,8 @@ const initialState: roundState = {
     round_winner: null,
     moves: [],
     riddler: null,
-    attempt: 0
+    attempt: 0,
+    submiting: 0
 }
 
 export const roundSlice = createSlice({
@@ -36,6 +38,7 @@ export const roundSlice = createSlice({
             state.riddler = action.payload.riddler
             state.moves = action.payload.moves
             state.attempt = action.payload.attempt
+            state.submiting = action.payload.submiting
         },
         addRoundData: (state, action: PayloadAction<string>) => {
             state.round_data = action.payload
@@ -46,11 +49,14 @@ export const roundSlice = createSlice({
         },
         addMove: (state, action: PayloadAction<IMove>) => {
             state.moves.push(action.payload)
+        },
+        addSubmitting: (state) => {
+            state.submiting++
         }
     }
 })
 
-export const {setRound, addRoundData, updateRoundStatus, addMove} = roundSlice.actions
+export const {setRound, addRoundData, updateRoundStatus, addMove, addSubmitting} = roundSlice.actions
 
 export const selectActiveRound = (state: RootState) => state.round
 

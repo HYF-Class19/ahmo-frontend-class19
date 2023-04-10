@@ -1,6 +1,9 @@
 .wrapper {
     display: flex;
     flex-direction: column;
+    &.submitted {
+        margin-bottom: 40px;
+    }
     .riddler {
         display: flex;
         width: 100%;
@@ -24,6 +27,18 @@
             color: #F3FB8C;
             position: absolute;
             
+        }
+    }
+    .submitArea {
+        position: absolute;
+        bottom: 0px;
+        left: 50%;
+        width: 100%;
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.5);
+        transform: translateX(-50%);
+        h4 {
+            color: white;
         }
     }
 }

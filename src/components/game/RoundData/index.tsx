@@ -8,9 +8,10 @@ import styles from "./RoundData.module.scss";
 
 interface RoundDataProps {
   count: number;
+  gameType: string
 }
 
-const RoundData: React.FC<RoundDataProps> = ({ count }) => {
+const RoundData: React.FC<RoundDataProps> = ({ count, gameType }) => {
   const userData = useAppSelector(selectUserData);
   const activeRound = useAppSelector(selectActiveRound);
   const members = useAppSelector(selectMembers)
@@ -23,10 +24,10 @@ const RoundData: React.FC<RoundDataProps> = ({ count }) => {
         <>
           <div className={styles.item}>
             <h3>Round {count}</h3>
-            {userData?.id === activeRound.riddler?.id && activeRound.round_data && (
-                <p>You riddled a word: {activeRound.round_data}</p> 
+            { userData?.id === activeRound.riddler?.id && activeRound.round_data && (
+                gameType === 'guess a word' ? <p>You riddled a word: {activeRound.round_data}</p> : <p>your statement is {activeRound.round_data}</p> 
             )} 
-            <p>{activeRound.id && userData && getStatusForCurrentUser(activeRound, userData)}</p>
+            <p>{activeRound.id && userData && getStatusForCurrentUser(activeRound, userData, gameType)}</p>
           </div>
           <div className={styles.item}>
             <div className={styles.roles}>
@@ -37,9 +38,11 @@ const RoundData: React.FC<RoundDataProps> = ({ count }) => {
                 Guesser: <b>{activeRound.riddler && userData && getGuesser(members, userData, activeRound.riddler)}</b>
               </p>
             </div>
+            {gameType === 'guess a word' &&
             <p>
-              Statements left: <b>{3 - activeRound.attempt}</b>
-            </p>
+            Statements left: <b>{3 - activeRound.attempt}</b>
+          </p>
+          }
           </div>
         </>
       )}

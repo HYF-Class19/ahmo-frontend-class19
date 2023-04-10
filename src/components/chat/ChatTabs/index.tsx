@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './ChatTabs.module.scss'
+import { Button } from '@mui/material';
 
 interface ChatTabsProps {
     selectedType: 'group' | 'direct' | 'game' | 'all';
@@ -13,18 +14,20 @@ const ChatTabs: React.FC<ChatTabsProps> = ({setSelectedType, selectedType, setIs
         <div className={styles.tabs}>
             <ul>
                 <li onClick={() => setSelectedType('all')}>
-                    All
+                    <Button color='warning' variant={selectedType === 'all' ? 'contained' : 'text'}>All</Button>
                 </li>
                 <li onClick={() => setSelectedType('direct')}>
-                    Direct chats
+                <Button color='warning' variant={selectedType === 'direct' ? 'contained' : 'text'}>Direct chats</Button>
                 </li>
                 <li onClick={() => setSelectedType('group')}>
-                    Groups
+                <Button color='warning' variant={selectedType === 'group' ? 'contained' : 'text'}>Groups</Button>
                 </li>
                 <li onClick={() => setSelectedType('game')}>
-                    Chat Games
+                <Button color='warning' variant={selectedType === 'game' ? 'contained' : 'text'}>Chat Games</Button>
                 </li>
-                <li onClick={() => setIsActive(true)}>Create Chat</li>
+                <li onClick={() => setIsActive(true)}>
+                <Button color='warning' variant={'outlined'}>Create Chat</Button>
+                </li>
             </ul>
         </div>
     );
