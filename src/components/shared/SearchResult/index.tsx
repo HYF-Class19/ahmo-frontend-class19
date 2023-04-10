@@ -74,9 +74,7 @@ const SearchResult: React.FC<SeacrhResultProps> = ({
   return (
     <List
       sx={{
-        width: "90%",
-        bgcolor: "background.paper",
-        borderBottom: "1px solid gray",
+        width: "100%",
         cursor: "pointer",
       }}
     >

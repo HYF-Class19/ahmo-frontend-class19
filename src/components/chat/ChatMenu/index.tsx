@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from './ChatMenu.module.scss'
 import ChatType from "@/components/chat/ChatType";
 import {IChat} from "@/models/IChat";
-import { Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/hooks/useAppHooks';
 import { selectMenu, setMenu } from '@/store/slices/menuSlice';
 

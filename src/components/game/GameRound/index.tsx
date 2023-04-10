@@ -51,7 +51,7 @@ const GameRound: React.FC<GameRoundProps> = ({ round, gameType, activateAlert, s
     <div className={clsx(styles.wrapper, isSubmitted && styles.submitted)}>
       {round && userData && (
       gameType === 'guess a word' ? (  
-        activeRound.submiting === 2 || round.id !== activeRound.id ? (
+        round.submiting >= 2 || round.id !== activeRound.id ? (
           <>
             <div className={styles.riddler}>
               <p>

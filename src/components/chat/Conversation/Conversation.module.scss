@@ -1,10 +1,11 @@
 .item {
-    color: black;
+    color: white;
     cursor: pointer;
-    border-radius: 10px;
     margin-right: 20px;
-    border-bottom: 1px solid lightgray;
+    &:hover {
+        background-color: #373043 ;
+     }
     &.active {
-        background-color: #F3FB8C;
+        background-color: #23B1D0;
     }
 }
