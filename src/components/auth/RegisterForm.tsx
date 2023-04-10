@@ -106,7 +106,7 @@ const Form: React.FC<FormProps> = () => {
                 </Button>
                 <Grid container className={styles.bottomLink} sx={{ mt: 2, mb: 1 }}>
                     <Grid item>
-                        <Link href="/auth/register" className={styles.registerLink}>
+                        <Link href="/auth/login" className={styles.registerLink}>
                             {"Already a member? Log in now"}
                         </Link>
                     </Grid>
