@@ -11,7 +11,8 @@ import { CacheProvider, ThemeProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { useEffect } from 'react';
 import { useGetUserQuery } from '@/services/authService';
-import { theme } from '@/styles/theme';
+import { CustomTheme } from '@/styles/theme';
+
 
 
 const darkTheme = createTheme ({
@@ -46,7 +47,7 @@ function MyApp({ Component, ...rest }: AppProps) {
     return (
       <Provider store={store}>
         <CacheProvider value={cache}>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={CustomTheme}>
           {isLoading && <div>Loading...</div>}
             {!isLoading && <Component {...props.pageProps} />}
           </ThemeProvider>
