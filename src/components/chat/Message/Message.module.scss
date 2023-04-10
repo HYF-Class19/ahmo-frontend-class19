@@ -3,35 +3,43 @@
   margin: 0.5rem 0;
   .avatar {
     margin-right: 10px;
+    align-self: flex-end;
     &.isUnvisible {
       visibility: hidden;
     }
   }
   .message {
     display: flex;
-    align-items: center;
+    // flex-direction: column;
     padding: 1rem;
     border-radius: 1rem 2rem 2rem 0;
     background-color: #484153;
     max-width: 500px;
-    word-wrap: break-word;
     color: black;
     position: relative;
+  
+    &.my {
+      background-color: #B885F4;
+    }
+  
     .messageText {
-      margin-left: 0.5rem;
       font-size: 1rem;
+      line-height: 1.5;
+      word-wrap: break-word;
+      max-width: calc(100% - 80px);
     }
-  &.my {
-    background-color: #B885F4;
-  }
-  &Content {
-    .timeAgo {
-      position: relative;
-      bottom: -10px;
-      font-size: 0.8rem;
-      color: gray;
-      margin-left: 20px;
+  
+    .messageMeta {
+      display: flex;
+      justify-content: flex-end;
+      align-self: flex-end;
+      min-width: 80px;
+      width: 100%;
+      .timeAgo {
+        font-size: 0.8rem;
+        color: gray;
+        margin-left: 1rem;
+      }
     }
   }
-}
 }

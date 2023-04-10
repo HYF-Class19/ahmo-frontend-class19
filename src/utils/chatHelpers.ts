@@ -17,3 +17,17 @@ export const isAvatarUnvisible = (myId: number, message: IMessage, messages: IMe
         return messages[idx + 1].sender.id === senderId
     }
 }
+
+
+export const getLastMessage = (lastMessage: IMessage | null = null, myId?: number) => {
+    if(!lastMessage) {
+       return  ''
+    }
+    const firstpart = lastMessage.sender?.id === myId ? 'You: ' : lastMessage.sender.fullName + ': '
+    const length = lastMessage.text.length
+    if(length > 18) {
+        return firstpart + lastMessage.text.slice(0,15) + '...'
+    } else {
+        return firstpart + lastMessage.text.slice(0,18)
+    }
+}
