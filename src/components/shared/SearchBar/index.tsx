@@ -9,14 +9,14 @@ import { selectUserData } from '@/store/slices/userSlice';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
-    borderRadius: '10px',
+    borderRadius: '30px',
+    padding: theme.spacing(1.5, 1),
     backgroundColor: '#000',
     '&:hover': {
       backgroundColor: '#120428',
     },
-    marginRight: '20px',
     marginBottom: '20px',
-    width: '80%',
+    width: '100%',
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing(1),
       width: 'auto',
@@ -24,14 +24,13 @@ const Search = styled('div')(({ theme }) => ({
   }));
 
   const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
+    padding: theme.spacing(0, 1.2),
     color: 'white',
-    height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    top: '50%',
+    left: '10px',
+    transform: 'translateY(-45%)'
   }));
 
   const StyledInputBase = styled(InputBase)(({ theme }) => ({

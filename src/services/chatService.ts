@@ -17,7 +17,6 @@ export const chatApi = api.injectEndpoints({
                         updateCachedData((draft) => {
                             if(draft && message) {
                                 const chatIndex = draft.findIndex(d => d.id === message.chatId)
-                                console.log(chatIndex)
                                 if(chatIndex + 1) {
                                     const chat = draft[chatIndex]
                                     chat.lastMessage = message

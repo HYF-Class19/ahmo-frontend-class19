@@ -7,6 +7,7 @@ import { LoginFormSchema } from '@/utils/FormSchemas';
 import Link from "next/link";
 import {useRouter} from "next/router";
 import {useLoginUserMutation} from "@/services/authService";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import styles from "./loginRegister.module.scss"
 import { useAppDispatch } from '@/hooks/useAppHooks';
 import { setUserData } from '@/store/slices/userSlice';
