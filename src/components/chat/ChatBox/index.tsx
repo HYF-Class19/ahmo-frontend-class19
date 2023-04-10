@@ -12,10 +12,12 @@ import { socket } from "@/utils/socket";
 import { useFetchChatWithMessagesQuery } from "@/services/chatService";
 import SelectChatTemplate from "@/components/shared/SelectChatTemplate";
 import ChatHeader from "../ChatHeader";
+import ChatSetting from "../ChatSetting";
 
 interface ChatBoxProps {}
 
 const ChatBox: React.FC<ChatBoxProps> = () => {
+  const [open, setOpen] = React.useState(false);
   const activeChat = useAppSelector(selectActiveChat);
   const userData = useAppSelector(selectUserData);
   const [someoneTyping, setSomeoneTyping] = useState<{
@@ -52,7 +54,8 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
 
   return (
     <div className={styles.chatBoxWrapper}>
-      <ChatHeader />
+      <ChatHeader setSettingOpen={setOpen} />
+      <ChatSetting open={open} setOpen={setOpen} />
       {activeChat.activeChat && userData ? (
         <>
           <div className={styles.chatBoxTop}>
@@ -91,6 +94,7 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
       ) : (
         <SelectChatTemplate typeOfChat={'group'} />
       )}
+
     </div>
   );
 };
