@@ -68,12 +68,12 @@ const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId, activateAlert}) 
         {userData && activeRound && (
             isMyTurn() ?
             <div className={styles.textfield}>
-         <GameInput
-            value={moveData}
-            onChange={(e: any) => setMoveData(e.target.value)}
-            name={'move'}
-            label={'Name a word'}
-        />
+            <GameInput
+                value={moveData}
+                onChange={(e: any) => setMoveData(e.target.value)}
+                name={'move'}
+                label={'Name a word'}
+            />
       <div onClick={() => sendResponse()} className={styles.btnSection}>
       {!isLoading && <IconButton
                   >
@@ -82,7 +82,7 @@ const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId, activateAlert}) 
             </div>
           </div>
          : (
-            <div className={styles.wrapper}>
+          <div className={styles.textInfo}>
                 <h4>we are waiting for your opponents word</h4>
           </div>
         ))}

@@ -16,7 +16,6 @@ const ChatType: React.FC<ChatTypeProps> = ({chats, type, setIsSearchActive, isSe
 
     return (
         <div className={styles.wrapper}>
-            <h3>{type.toUpperCase()} chat</h3>
             <SearchBar placeholder='search...' isActive={isSearchActive} setActive={setIsSearchActive} searchType={type} />
             {!isSearchActive ? chats.length > 0 ?
                 chats.map((chat: IChat) => <Conversation key={chat.id} chat={chat} />)

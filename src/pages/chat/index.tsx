@@ -7,7 +7,6 @@ import styles from '../../styles/Chat.module.scss'
 import {useFetchChatsQuery} from "@/services/chatService";
 import ChatTabs from "@/components/chat/ChatTabs";
 import CreateChatDialog from "@/components/chat/CreateChatDialog";
-import CreateGameDialog from "@/components/game/CreateGameDialog";
 import GameBox from "@/components/game/GameBox";
 import {IChat} from "@/models/IChat";
 import { useAppSelector } from '@/hooks/useAppHooks';
@@ -30,16 +29,6 @@ const Chat: NextPage = () => {
     }, [userData]);
 
     useEffect(() => {
-        socket.on('getMove', (data) => {
-            console.log(data)
-        })
-
-        return () => {
-            socket.off('getMove')
-        }
-    }, [])
-
-    useEffect(() => {
         if(data) {
             setChats(data)
         }
@@ -51,12 +40,14 @@ const Chat: NextPage = () => {
             <>
             <div className={styles.chat}>
                 <ChatTabs setSelectedType={setSelectedType} setIsActive={setIsOpen} selectedType={selectedType} />
+                <div className={styles.chatWrapper}>
                 <div className={styles.chatMenu}>
                     {error && <div>error</div>}
                     {isLoading && <div>loading...</div>}
                     {data && <ChatMenu selected={selectedType} chats={data} />}
                 </div>
                 {selectedType === 'game' || activeChat.type === 'game' ?  <GameBox /> : <ChatBox />}
+                </div>
             </div>
             <div>
                <CreateChatDialog setChats={setChats} open={isOpen} setOpen={setIsOpen} type={selectedType} />

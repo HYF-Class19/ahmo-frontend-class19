@@ -9,8 +9,6 @@ import { RootState } from "..";
 
 interface chatState {
     activeChat: number | null;
-    messages: IMessage[];
-
     name: string | null;
     admin: IUser | null;
     members: IMember[];
@@ -21,7 +19,6 @@ interface chatState {
 
 const initialState: chatState = {
     activeChat: null,
-    messages: [],
     name: null,
     admin: null,
     members: [],
@@ -49,16 +46,6 @@ export const chatSlice = createSlice({
             state.game = action.payload.game
             state.name = action.payload.name;
         },
-        loadMessages: (state, action: PayloadAction<IMessage[]>) => {
-            let messages = []
-            for(let i = action.payload.length - 1; i > 0; i--) {
-                messages.push(action.payload[i])
-            } 
-            state.messages = action.payload
-        },
-        addMessage: (state, action: PayloadAction<IMessage>) => {
-            state.messages.push(action.payload)
-        },
         addRound: (state, action: PayloadAction<any>) => {
             state.rounds.push(action.payload)
         },
@@ -72,7 +59,7 @@ export const chatSlice = createSlice({
     },
 })
 
-export const {setActiveChat, addMessage, addRound, loadMessages, addScore, setGameChat} = chatSlice.actions
+export const {setActiveChat, addRound, addScore, setGameChat} = chatSlice.actions
 
 export const selectActiveChat = (state: any) => state.chat
 export const selectMembers = (state: any) => state.chat.members

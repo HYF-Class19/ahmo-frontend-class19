@@ -33,7 +33,6 @@ export const gameService = api.injectEndpoints({
                       const roundIdx = draft.rounds.findIndex((round) => round.id === move?.round?.id)
                       if (roundIdx + 1) {
                           draft.rounds[roundIdx].moves?.push(move);
-                          console.log('got')
                         }
                     });
                   });

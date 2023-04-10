@@ -12,7 +12,6 @@ import {addRoundData, selectActiveRound, setRound } from '@/store/slices/roundSl
 import { socket } from '@/utils/socket';
 import { api } from '@/services/api';
 import RoundData from '../RoundData';
-import { IUser } from '@/models/IUser';
 import TruthDareField from '../TruthDareField';
 import WordsTextField from '../WordsTextField';
 import SelectChatTemplate from '@/components/shared/SelectChatTemplate';
@@ -20,7 +19,6 @@ import GameAlert from '@/components/shared/GameAlert';
 import { getStatusForCurrentUser } from '@/utils/round-helper';
 import clsx from 'clsx';
 import { AlertColor } from '@mui/material';
-import { useGetRoundsQuery } from '@/services/roundServive';
 
 interface GameBoxProps {
     
@@ -96,7 +94,7 @@ const GameBox: React.FC<GameBoxProps> = () => {
                 </div>
                 <GameHeader />
                 {game.game !== 'words' && <RoundData gameType={game.game} count={game.rounds.length}/>}
-                <div ref={boxRef} style={{overflowY: 'auto'}} className={styles.box}>
+                <div ref={boxRef} style={{overflowY: 'auto', overflowX: 'hidden'}} className={styles.box}>
                     {game.rounds && game.rounds.map((round: IRound, index: number) => (
                         <div key={round.id}>
                             <GameRound scrollRef={scrollRef} activateAlert={activateAlert} gameType={game.game} round={round} />

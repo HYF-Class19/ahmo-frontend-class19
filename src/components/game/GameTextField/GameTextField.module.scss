@@ -1,6 +1,18 @@
 .wrapper {
   display: flex;
   width: 100%;
+  border-top: 1px solid #F3FB8C;
+  .textInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+    width: 100%;
+    h4 {
+      color: white;
+      text-transform: capitalize;
+    }
+  }
   .buttons {
     display: flex;
     justify-content: center;
