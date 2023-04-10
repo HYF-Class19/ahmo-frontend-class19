@@ -17,10 +17,14 @@ $col6: #B885F4;
 }
 
 .registerLink{
-    color: white !important;
-    :active{
-        color: yellow !important;
+    color: #fff !important;
+    &:hover{
+        color: $col4 !important;
     }
+    &:active{
+        color: $col5 !important;
+    }
+
 }
 
 .textField{
@@ -30,3 +34,9 @@ $col6: #B885F4;
 .bottomLink{
     justify-content: center;
 }
+.lrlogo{
+    display: flex;
+    align-items: center;
+    width: 150px;
+    height: 150px;
+  }

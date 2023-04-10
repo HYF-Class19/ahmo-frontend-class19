@@ -6,7 +6,7 @@ import {setUserData} from "@/store/slices/userSlice";
 /*import custom pallette*/
 import { createTheme } from '@mui/material/styles'
 import { Provider } from 'react-redux';
-import { CacheProvider, ThemeProvider } from '@emotion/react';
+import { CacheProvider,} from '@emotion/react';
 import createCache from '@emotion/cache';
 import { useEffect } from 'react';
 import { useGetUserQuery } from '@/services/authService';
