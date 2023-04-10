@@ -1,6 +1,6 @@
 import React from 'react';
 import {Avatar, ListItem, ListItemAvatar, ListItemText, Typography} from "@mui/material";
-import {getLastMessage} from "@/utils/obj-helper";
+import {getLastMessage} from "@/utils/chatHelpers";
 import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
 import {selectActiveChat, setActiveChat, setGameChat} from "@/store/slices/chatSlice";
 import {IChat} from "@/models/IChat";
@@ -44,9 +44,7 @@ const Conversation: React.FC<ConversationProps> = ({chat}) => {
                             {chat.type === 'game' && 
                                 'game is active'
                             }
-                            {chat.type !== "game" &&
-                                `${chat.lastMessage ? chat.lastMessage?.sender?.id === userData?.id ? 'You: ' : chat.lastMessage.sender.fullName + ': ': ''} ${chat.lastMessage ? chat.lastMessage.text : 'no messages yet'}`
-                            }
+                            {chat.type !== "game" && getLastMessage(chat.lastMessage, userData?.id)}
                         </Typography>
                     </React.Fragment>
                 }
