@@ -52,12 +52,20 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
     });
   }, []);
 
+  useEffect(() => {
+    console.log(activeChat)
+  }, [activeChat])
+
   return (
     <div className={styles.chatBoxWrapper}>
-      <ChatHeader setSettingOpen={setOpen} />
-      <ChatSetting open={open} setOpen={setOpen} />
       {activeChat.activeChat && userData ? (
         <>
+        {data && (
+        <>
+        <ChatHeader setSettingOpen={setOpen} />
+        <ChatSetting members={data.members} chat={data} open={open} setOpen={setOpen} />
+        </>
+        )}
           <div className={styles.chatBoxTop}>
             <div className={styles.messagesBox} ref={boxRef} style={{ overflowY: "auto" }}>
               {isLoading && <div>loading...</div>}
