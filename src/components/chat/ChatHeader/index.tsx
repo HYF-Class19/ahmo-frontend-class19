@@ -3,7 +3,11 @@ import styles from './ChatHeader.module.scss'
 import { Avatar, IconButton } from '@mui/material'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
-const ChatHeader = () => {
+interface ChatHeaderProps {
+  setSettingOpen: Function
+}
+
+const ChatHeader: React.FC<ChatHeaderProps> = ({setSettingOpen}) => {
   return (
     <div className={styles.header}>
         <div className={styles.chatInfo}>
@@ -12,7 +16,7 @@ const ChatHeader = () => {
             </Avatar>
             <p>Alex</p>
         </div>
-       <IconButton color={'warning'} sx={{ mr: '20px'}}>
+       <IconButton onClick={() => setSettingOpen(true)} color={'warning'} sx={{ mr: '20px'}}>
         <SettingsOutlinedIcon sx={{width: '30px', height: '30px',}} />
        </IconButton>
     </div>
