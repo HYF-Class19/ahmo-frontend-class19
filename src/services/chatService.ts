@@ -60,13 +60,27 @@ export const chatApi = api.injectEndpoints({
                 url: `/chats?type=${type}&query=`
             }),
         }),
-        createGroup: builder.mutation<IChat, {type: string, name: string, members: string }>({
+        createGroup: builder.mutation<IChat, {type: string, name?: string, members: string }>({
             query: (body) => ({
                 url: '/chats',
                 method: 'POST',
                 body,
             }),
             invalidatesTags: ['Chat'],
+        }),
+        removeMember: builder.mutation<void, number>({
+            query: (memberId) => ({
+                url: `/members/${memberId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Chat']
+        }),
+        deleteChat: builder.mutation<void, number>({
+            query: (chatId) => ({
+                url: `/chats/${chatId}`,
+                method: 'DELETE'
+            }),
+            invalidatesTags: ['Chat', 'Message']
         }),
     }),
     overrideExisting: true,
@@ -76,5 +90,7 @@ export const {
     useFetchChatsQuery,
     useFetchChatWithMessagesQuery,
     useCreateGroupMutation,
-    useGetChatByTypeQuery
+    useGetChatByTypeQuery,
+    useRemoveMemberMutation,
+    useDeleteChatMutation
 } = chatApi

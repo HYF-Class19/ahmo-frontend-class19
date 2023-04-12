@@ -7,6 +7,7 @@ import CustomRadio from '../CustomRadio';
 interface CreateItemProps {
     content: string;
     avatar?: string;
+    image_url?: string;
     value: string | number;
     values: any;
     type: 'radio'  | 'checkbox';
@@ -14,7 +15,7 @@ interface CreateItemProps {
     radioName?: string;
 }
 
-const CreateItem: React.FC<CreateItemProps> = ({content, avatar, value, values, setValue, type, radioName}) => {
+const CreateItem: React.FC<CreateItemProps> = ({content, avatar, value, values, setValue, type, radioName, image_url}) => {
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +31,8 @@ const CreateItem: React.FC<CreateItemProps> = ({content, avatar, value, values, 
 
   return (
     <li className={styles.item}>
-        {avatar && <Avatar>{avatar}</Avatar>}
+        {avatar && !image_url && <Avatar>{avatar}</Avatar>}
+        {image_url && <Avatar src={image_url} />}
         <p className={styles.value}>{content}</p>
         <div className={styles.check}>
         {type === 'radio' ? (

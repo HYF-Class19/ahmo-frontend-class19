@@ -1,24 +1,23 @@
-import { red } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 
-export const theme = createTheme({
+export const CustomTheme = createTheme({
     palette: {
       primary: {
-        light: '484153',
+        light: '#484153',
         main: '#120428',
         dark: '#1A1E28'
       },
       secondary: {
-        main: '#F3FB8C',
-        light: '#f7fcac',
-        dark: '#dbe096',
-        contrastText: '#ffffff'
+        main: '#23B1D0',
+        light: '#F3FB8C',
+        dark: '#810984',
+        contrastText: '#FFFFFF'
       },
       warning: {
-        main: '#F3FB8C'
+        main: '#FFC700'
       },
       success: {
-        main: '#0C817A'
+        main: '#08EA62'
       }
     },
   })

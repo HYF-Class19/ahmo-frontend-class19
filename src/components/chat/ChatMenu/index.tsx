@@ -16,6 +16,7 @@ const ChatMenu: React.FC<ChatMenuProps> = ({chats, selected}) => {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
+        // @ts-ignore
         dispatch(setMenu(chats))
     }, [chats])
 

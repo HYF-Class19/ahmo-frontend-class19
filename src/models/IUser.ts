@@ -2,7 +2,7 @@ export type IUser = {
     id: number;
     email: string;
     fullName: string;
-    imageUrl?: string;
+    image_url?: string;
     token: string;
 }
 

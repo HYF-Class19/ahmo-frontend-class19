@@ -7,15 +7,17 @@ import { selectUserData } from "@/store/slices/userSlice";
 import { IMessage } from "@/models/IMessage";
 import { IUser } from "@/models/IUser";
 import ChatTextarea from "@/components/chat/ChatTextarea";
-import { getReceivers, isAvatarUnvisible } from "@/utils/chatHelpers";
+import { getDirectName, getReceivers, isAvatarUnvisible } from "@/utils/chatHelpers";
 import { socket } from "@/utils/socket";
 import { useFetchChatWithMessagesQuery } from "@/services/chatService";
 import SelectChatTemplate from "@/components/shared/SelectChatTemplate";
 import ChatHeader from "../ChatHeader";
+import ChatSetting from "../ChatSetting";
 
 interface ChatBoxProps {}
 
 const ChatBox: React.FC<ChatBoxProps> = () => {
+  const [open, setOpen] = React.useState(false);
   const activeChat = useAppSelector(selectActiveChat);
   const userData = useAppSelector(selectUserData);
   const [someoneTyping, setSomeoneTyping] = useState<{
@@ -52,9 +54,14 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
 
   return (
     <div className={styles.chatBoxWrapper}>
-      <ChatHeader />
       {activeChat.activeChat && userData ? (
         <>
+        {data && (
+        <>
+        <ChatHeader chat={data.type !== 'direct' && data} user={data.type === 'direct' && getDirectName(userData.id, data.members)} setSettingOpen={setOpen} />
+        <ChatSetting members={data.members} chat={data} open={open} setOpen={setOpen} />
+        </>
+        )}
           <div className={styles.chatBoxTop}>
             <div className={styles.messagesBox} ref={boxRef} style={{ overflowY: "auto" }}>
               {isLoading && <div>loading...</div>}
@@ -91,6 +98,7 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
       ) : (
         <SelectChatTemplate typeOfChat={'group'} />
       )}
+
     </div>
   );
 };

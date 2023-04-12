@@ -6,20 +6,20 @@ interface EditableTextProps {
   label: string;
   onSubmit: (value: string) => void;
   placeholder: string;
+  value: string;
 }
-
 const EditableText: React.FC<EditableTextProps> = ({
   label,
- 
   onSubmit,
   placeholder,
+  value
 }) => {
-  const [value, setValue] = useState("");
+  const [newValue, setNewValue] = useState(value)
   const [isEditable, setIsEditable] = useState(false);
 
   const handleIconClick = () => {
     if (isEditable) {
-      onSubmit(value);
+      onSubmit(newValue);
     }
     setIsEditable(!isEditable);
   };
@@ -29,9 +29,8 @@ const EditableText: React.FC<EditableTextProps> = ({
       <Typography sx={{ marginRight: 1 }}>{label}:</Typography>
       <InputBase
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => setNewValue(e.target.value)}
         readOnly={!isEditable}
-        multiline
         placeholder={placeholder}
         inputProps={{ style: { borderBottom: isEditable ? "2px solid blue" : "1px solid #F3FB8C"  } }}
         sx= { {color: isEditable ? "blue" : "#FFFFFF"  } }

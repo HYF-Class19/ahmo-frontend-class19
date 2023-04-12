@@ -83,10 +83,8 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
         if(chat) {
             alert('direct chat with that user already exist')
         } else {
-            const chatName = data?.find(user => user.id === directMember)?.fullName
             await createGroup({
                 type: "direct",
-                name: chatName,
                 members: [directMember, userData?.id].join(","),
               });
               if (chatsResult.data) {
@@ -214,6 +212,7 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
                       <CreateItem
                         content={user.fullName}
                         avatar={user.fullName[0]}
+                        image_url={user.image_url}
                         value={user.id}
                         values={directMember}
                         type={"radio"}
@@ -224,6 +223,7 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
                       <CreateItem
                         content={user.fullName}
                         avatar={user.fullName[0]}
+                        image_url={user.image_url}
                         value={user.id}
                         values={members}
                         type={"checkbox"}

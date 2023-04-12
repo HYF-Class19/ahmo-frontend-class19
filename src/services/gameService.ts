@@ -30,9 +30,12 @@ export const gameService = api.injectEndpoints({
         
                   socket.on("getMove", (move: IMove) => {
                     updateCachedData((draft) => {
-                      const roundIdx = draft.rounds.findIndex((round) => round.id === move?.round?.id)
+                      const roundIdx = draft?.rounds?.findIndex((round) => round.id === move?.round?.id)
                       if (roundIdx + 1) {
                           draft.rounds[roundIdx].moves?.push(move);
+                          if(move.move_type === 'statement') {
+                            draft.rounds[roundIdx].attempt++
+                          }
                         }
                     });
                   });
@@ -50,7 +53,7 @@ export const gameService = api.injectEndpoints({
                     "getUpdatedWord",
                     (data: { player: IUser; round_data: string, roundId: number}) => {
                         updateCachedData((draft) => {
-                          const roundIdx = draft.rounds.findIndex(round => round.round_status === 'active')
+                          const roundIdx = draft?.rounds?.findIndex(round => round.round_status === 'active')
                             if (roundIdx + 1) {
                               draft.rounds[roundIdx].round_data = data.round_data
                             }
