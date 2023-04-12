@@ -20,3 +20,9 @@
 .MuiPaper-root-MuiDialog-paper {
     width: 100% !important;       
 }
+
+.auth-box {
+    background: url('/emoji-img.png') no-repeat bottom center/cover;
+    height: calc(100vh - 93px);
+    width: 100%;
+}

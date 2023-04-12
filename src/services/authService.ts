@@ -65,6 +65,12 @@ export const authApi = api.injectEndpoints({
                 method: 'PATCH',
                 body
             })
+        }),
+        getProfile: builder.query<void, number>({
+            query: (userId) => ({
+                url: `/users/${userId}`,
+                method: 'GET'
+            })
         })
     }),
 });

@@ -17,9 +17,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MainLayout>
-        
-        <Box minHeight="100vh" sx={{ bgcolor: "primary.main" }}>
-          <Header />
+        <Box sx={{ bgcolor: "primary.main", height: 'calc(100vh - 93px)'}}>
           <WelcomeText />
           <ActionAreaCard />
           <Footer />
