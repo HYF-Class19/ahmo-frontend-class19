@@ -15,8 +15,8 @@
     align-items: center;
     margin-left: 20px;
     img {
-      width: 40px;
-      height: 40px;
+      width: 65px;
+      height: 65px;
     }
   }
   nav {
@@ -29,13 +29,12 @@
         margin: 0 20px;
         a {
           margin: 0, 10px;
-          color: #23B1D0;
+          color: #23b1d0;
           text-decoration: none;
           font-size: 18px;
-          font-weight:600;
+          font-weight: 600;
           &:hover {
-            color: #120428;
-            text-decoration: underline;
+            color: #f3fb8c;
           }
         }
       }

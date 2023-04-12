@@ -2,9 +2,11 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { ConstructionOutlined } from "@mui/icons-material";
+import { Container } from "@mui/material";
 
 export default function WelcomeText() {
   return (
+    <Container >
     <Typography component="div" align="center">
       <Box
         sx={{
@@ -12,7 +14,7 @@ export default function WelcomeText() {
           fontWeight: "bold",
           textTransform: "uppercase",
           fontFamily: "Quicksand",
-          color: "#F3FB8C",
+          color: "secondary.light",
           m: 2,
         }}
       >
@@ -25,7 +27,7 @@ export default function WelcomeText() {
           fontWeight: "medium",
           fontSize: "h6",
           fontFamily: "Quicksand",
-          color: "#ffffff",
+          color: "secondary.contrastText",
           m: 3,
         }}
       >
@@ -37,7 +39,7 @@ export default function WelcomeText() {
      
       <Box
         sx={{
-          color: "#23B1D0",
+          color: "secondary.main",
           textTransform: "uppercase",
           fontWeight: "bold",
           m: 5,
@@ -46,5 +48,6 @@ export default function WelcomeText() {
         Choose your Chat Below
       </Box>
     </Typography>
+    </Container>
   );
 }
