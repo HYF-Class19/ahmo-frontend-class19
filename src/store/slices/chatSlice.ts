@@ -55,11 +55,18 @@ export const chatSlice = createSlice({
                     member.score += 1
                 }
          })
+        },
+        removeActiveChat: (state) => {
+            state.activeChat = null
+            state.members = []
+            state.admin = null
+            state.type = null
+            state.name = null
         }
     },
 })
 
-export const {setActiveChat, addRound, addScore, setGameChat} = chatSlice.actions
+export const {setActiveChat, addRound, addScore, setGameChat, removeActiveChat} = chatSlice.actions
 
 export const selectActiveChat = (state: any) => state.chat
 export const selectMembers = (state: any) => state.chat.members

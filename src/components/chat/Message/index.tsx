@@ -17,15 +17,15 @@ const Message: React.FC<MessageProps> = ({isMy, isAvatarUnvisible, message}) => 
                 <Avatar>{message.sender.fullName[0]}</Avatar>
             </div>
             <div className={clsx(styles.message, isMy && styles.my)}>
-            <div className={styles.messageText}>
-                    {message.text}
-                </div>
-                <div className={styles.messageContent}>
-                    <div className={styles.timeAgo}>
-                        {format(message.createdAt)}
-                    </div>
-                </div>
-            </div>
+  <div className={styles.messageText}>
+    {message.text}
+  </div>
+  <div className={styles.messageMeta}>
+    <div className={styles.timeAgo}>
+      {format(message.createdAt)}
+    </div>
+  </div>
+</div>
        </div>
     );
 };

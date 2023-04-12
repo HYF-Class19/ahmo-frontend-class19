@@ -1,6 +1,5 @@
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 0 40px;
   height: 95px;
@@ -20,11 +19,17 @@
     }
   }
   nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
     ul {
       display: flex;
       align-items: center;
       margin-right: 20px;
       list-style-type: none;
+      &:first-child {
+        margin-left: 20px;
+      }
       li {
         margin: 0 20px;
         a {
@@ -35,6 +40,14 @@
           font-weight: 600;
           &:hover {
             color: #f3fb8c;
+
+          }
+        }
+        &.active {
+          a {
+            color: #F3FB8C;
+            font-size: 18px;
+            font-weight:600;
           }
         }
       }
