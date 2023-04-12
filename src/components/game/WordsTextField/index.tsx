@@ -12,13 +12,15 @@ import { Button, IconButton, TextField } from '@mui/material';
 import Image from 'next/image'
 import GameInput from '../GameInput';
 import SendIcon from '@/components/shared/SendIcon';
+import { IRound } from '@/models/IGame';
 
 interface WordsTextFieldProps {
     chatId: number;
-    activateAlert: Function
+    activateAlert: Function;
+    nativeRound: IRound;
   }
 
-const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId, activateAlert}) => {
+const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId, activateAlert, nativeRound}) => {
     const [moveData, setMoveData] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState('')
     const userData = useAppSelector(selectUserData);
@@ -27,8 +29,8 @@ const WordsTextField: React.FC<WordsTextFieldProps> = ({chatId, activateAlert}) 
   const activeRound = useAppSelector(selectActiveRound);
 
   const sendResponse = async () => {
-    const moves = activeRound.moves
-    const last_word = moves.length > 0 ? moves[moves.length - 1].last_word : null
+    const moves = nativeRound.moves
+    const last_word = moves.length > 0 ? moves[moves.length - 1].move_data : null
 
     if (moveData) {
       const result = await createMove({

@@ -8,11 +8,11 @@ interface GameAlertProps {
     children: ReactNode
     open: boolean;
     setOpen: Function;
+    setAlertContent: Function
 }
 
 
-const GameAlert: React.FC<GameAlertProps> = ({severity, children, setOpen, open}) => {
-    const [progress, setProgress] = useState(0);
+const GameAlert: React.FC<GameAlertProps> = ({severity, children, setOpen, open, setAlertContent}) => {
 
     const getAlertSx = (): React.CSSProperties => {
         return {
@@ -28,6 +28,7 @@ const GameAlert: React.FC<GameAlertProps> = ({severity, children, setOpen, open}
     if (open) {
       timer = setTimeout(() => {
         setOpen(false);
+        setAlertContent('')
       }, 3000);
     }
     return () => {
@@ -37,7 +38,9 @@ const GameAlert: React.FC<GameAlertProps> = ({severity, children, setOpen, open}
 
   return (
     <Collapse in={open}>
-    <Alert severity={severity} onClose={() => {}} action={
+    <Alert severity={severity} onClose={() => {
+      setAlertContent('')
+    }} action={
         <IconButton
           aria-label="close"
           color="inherit"

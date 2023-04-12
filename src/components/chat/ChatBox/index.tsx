@@ -7,7 +7,7 @@ import { selectUserData } from "@/store/slices/userSlice";
 import { IMessage } from "@/models/IMessage";
 import { IUser } from "@/models/IUser";
 import ChatTextarea from "@/components/chat/ChatTextarea";
-import { getReceivers, isAvatarUnvisible } from "@/utils/chatHelpers";
+import { getDirectName, getReceivers, isAvatarUnvisible } from "@/utils/chatHelpers";
 import { socket } from "@/utils/socket";
 import { useFetchChatWithMessagesQuery } from "@/services/chatService";
 import SelectChatTemplate from "@/components/shared/SelectChatTemplate";
@@ -52,17 +52,13 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
     });
   }, []);
 
-  useEffect(() => {
-    console.log(activeChat)
-  }, [activeChat])
-
   return (
     <div className={styles.chatBoxWrapper}>
       {activeChat.activeChat && userData ? (
         <>
         {data && (
         <>
-        <ChatHeader setSettingOpen={setOpen} />
+        <ChatHeader name={data.name || getDirectName(userData.id, data.members).fullName} setSettingOpen={setOpen} />
         <ChatSetting members={data.members} chat={data} open={open} setOpen={setOpen} />
         </>
         )}

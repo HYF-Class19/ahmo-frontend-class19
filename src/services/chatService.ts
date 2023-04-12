@@ -60,7 +60,7 @@ export const chatApi = api.injectEndpoints({
                 url: `/chats?type=${type}&query=`
             }),
         }),
-        createGroup: builder.mutation<IChat, {type: string, name: string, members: string }>({
+        createGroup: builder.mutation<IChat, {type: string, name?: string, members: string }>({
             query: (body) => ({
                 url: '/chats',
                 method: 'POST',
@@ -72,7 +72,6 @@ export const chatApi = api.injectEndpoints({
             query: (memberId) => ({
                 url: `/members/${memberId}`,
                 method: 'DELETE',
-                body: {memberId}
             }),
             invalidatesTags: ['Chat']
         }),

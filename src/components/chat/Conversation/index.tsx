@@ -1,6 +1,6 @@
 import React from 'react';
 import {Avatar, ListItem, ListItemAvatar, ListItemText, Typography} from "@mui/material";
-import {getLastMessage} from "@/utils/chatHelpers";
+import {getDirectName, getLastMessage, getReceivers} from "@/utils/chatHelpers";
 import {useAppDispatch, useAppSelector} from "@/hooks/useAppHooks";
 import {selectActiveChat, setActiveChat, setGameChat} from "@/store/slices/chatSlice";
 import {IChat} from "@/models/IChat";
@@ -29,10 +29,10 @@ const Conversation: React.FC<ConversationProps> = ({chat}) => {
     return (
         <ListItem onClick={activateChat} className={clsx(styles.item, activeChat.activeChat === chat.id && styles.active)} alignItems="flex-start">
             <ListItemAvatar>
-                <Avatar>{chat.name.slice(0,1)}</Avatar>
+                <Avatar>{chat.name?.slice(0,1) || getDirectName(userData!.id, chat.members).fullName.slice(0, 1)}</Avatar>
             </ListItemAvatar>
             <ListItemText
-                primary={chat.name}
+                primary={chat.name || getDirectName(userData!.id, chat.members).fullName}
                 secondary={
                     <React.Fragment>
                         <Typography

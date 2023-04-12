@@ -12,6 +12,7 @@ import {
   selectMembers,
 } from "@/store/slices/chatSlice";
 import {
+  addAttempt,
   addRoundData,
   selectActiveRound,
   setRound,
@@ -24,13 +25,15 @@ import { disableNotMyTurn } from "@/utils/round-helper";
 import Image from "next/image";
 import SendIcon from "@/components/shared/SendIcon";
 import GameInput from "../GameInput";
+import { IRound } from "@/models/IGame";
 
 interface GameTextFieldProps {
   chatId: number;
-  activateAlert: Function
+  activateAlert: Function;
+  nativeRound: IRound
 }
 
-const GameTextField: React.FC<GameTextFieldProps> = ({ chatId, activateAlert }) => {
+const GameTextField: React.FC<GameTextFieldProps> = ({nativeRound, chatId, activateAlert }) => {
   const [moveData, setMoveData] = useState<string>("");
   const [moveType, setMoveType] = useState<string>("question");
   const [roundData, setRoundData] = useState<string>("");
@@ -53,11 +56,16 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId, activateAlert }) 
       // @ts-ignore
       const move = result.data;
       if (move) {
+        let immediateAttempts = activeRound.attempt;
+        if(moveType === 'statement') {
+          dispatch(addAttempt())
+          immediateAttempts++
+        }
         const receivers = activeGame.members
           .map((m: IMember) => m.user.id);
         socket.emit("sendMove", { ...move, chatId, receivers });
         if (
-          (move.correct || activeRound.attempt >= 3) &&
+          (move.correct || immediateAttempts >= 3) &&
           activeRound?.riddler
         ) {
           if (move.correct) {
@@ -108,7 +116,7 @@ const GameTextField: React.FC<GameTextFieldProps> = ({ chatId, activateAlert }) 
     }
   };
 
-  if (activeRound.submiting !== 2) {
+  if (nativeRound.submiting < 2) {
     return null;
   }
 

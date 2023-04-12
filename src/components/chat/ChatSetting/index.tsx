@@ -38,6 +38,7 @@ import {
   useRemoveMemberMutation,
 } from "@/services/chatService";
 import { removeActiveChat } from "@/store/slices/chatSlice";
+import { getDirectName, getReceivers } from "@/utils/chatHelpers";
 
 function PaperComponent(props: PaperProps) {
   return (
@@ -87,7 +88,12 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
 
   const leaveGroup = async () => {
     if (userData?.id) {
-      await removeMember(userData.id);
+      const member = chat.members.find(m => m.user.id === userData.id)
+      if(member) {
+        await removeMember(member.id);
+      }
+      dispatch(removeActiveChat())
+      setOpen(false)
     }
     handleCloseAnchor();
   };
@@ -148,7 +154,7 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
         >
           <Toolbar>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h5" component="div">
-              Group info
+              {chat.type} info
             </Typography>
             <IconButton
               edge="start"
@@ -171,7 +177,7 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
           >
             <Avatar sx={{ height: 60, width: 60, mr: "20px" }} />
             <Typography gutterBottom variant="h5" component="div">
-              {chat.name}
+              {chat.name || getDirectName(userData!.id, chat.members).fullName}
             </Typography>
             <Box sx={{ ml: "auto" }}>
               <IconButton
@@ -193,10 +199,10 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
                 open={openAnchor}
                 onClose={handleCloseAnchor}
               >
-                {userData?.id === chat.admin.id ? (
+                {userData?.id === chat.admin.id || chat.type === 'direct' ? (
                   <MenuItem onClick={() => openConfirmation("delete")}>
                     <HighlightOffIcon color="error" />
-                    <Typography sx={{ ml: 2 }}>Delete grop</Typography>
+                    <Typography sx={{ ml: 2 }}>Delete {chat.type}</Typography>
                   </MenuItem>
                 ) : (
                   <MenuItem onClick={() => openConfirmation("leave")}>
