@@ -39,6 +39,7 @@ import {
 } from "@/services/chatService";
 import { removeActiveChat } from "@/store/slices/chatSlice";
 import { getDirectName, getReceivers } from "@/utils/chatHelpers";
+import CustomAvatar from "@/components/shared/CustomAvatar";
 
 function PaperComponent(props: PaperProps) {
   return (
@@ -75,8 +76,7 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
 
   const userData = useAppSelector(selectUserData);
   const openAnchor = Boolean(anchorEl);
-  const dispatch = useAppDispatch()
-
+  const dispatch = useAppDispatch();
 
   const handleClickAnchor = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -88,12 +88,12 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
 
   const leaveGroup = async () => {
     if (userData?.id) {
-      const member = chat.members.find(m => m.user.id === userData.id)
-      if(member) {
+      const member = chat.members.find((m) => m.user.id === userData.id);
+      if (member) {
         await removeMember(member.id);
       }
-      dispatch(removeActiveChat())
-      setOpen(false)
+      dispatch(removeActiveChat());
+      setOpen(false);
     }
     handleCloseAnchor();
   };
@@ -101,8 +101,8 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
   const deleteGroup = async () => {
     try {
       await deleteChat(chat.id);
-      dispatch(removeActiveChat())
-      setOpen(false)
+      dispatch(removeActiveChat());
+      setOpen(false);
     } catch (error) {
       console.log(error);
     }
@@ -175,7 +175,7 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
               width: "100%",
             }}
           >
-            <Avatar sx={{ height: 60, width: 60, mr: "20px" }} />
+            <CustomAvatar chat={chat.type === 'group' ? chat : null} user={chat.type === 'direct' ? getDirectName(userData!.id, chat.members) : null} />
             <Typography gutterBottom variant="h5" component="div">
               {chat.name || getDirectName(userData!.id, chat.members).fullName}
             </Typography>
@@ -199,7 +199,7 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
                 open={openAnchor}
                 onClose={handleCloseAnchor}
               >
-                {userData?.id === chat.admin.id || chat.type === 'direct' ? (
+                {userData?.id === chat.admin.id || chat.type === "direct" ? (
                   <MenuItem onClick={() => openConfirmation("delete")}>
                     <HighlightOffIcon color="error" />
                     <Typography sx={{ ml: 2 }}>Delete {chat.type}</Typography>
@@ -224,19 +224,22 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
                 <ListItem
                   secondaryAction={
                     <>
-                    {member.user?.id === chat.admin.id && <Typography sx={{ color: "gray" }}>admin</Typography>}
-                    {userData?.id === chat.admin.id && member.user?.id !== chat.admin.id && (
-                      <IconButton
-                        onClick={() => {
-                          openConfirmation("remove");
-                          setMemberId(member.id);
-                        }}
-                        edge="start"
-                        aria-label="delete"
-                      >
-                        <PersonRemoveIcon />
-                      </IconButton>
-                    )}
+                      {member.user?.id === chat.admin.id && (
+                        <Typography sx={{ color: "gray" }}>admin</Typography>
+                      )}
+                      {userData?.id === chat.admin.id &&
+                        member.user?.id !== chat.admin.id && (
+                          <IconButton
+                            onClick={() => {
+                              openConfirmation("remove");
+                              setMemberId(member.id);
+                            }}
+                            edge="start"
+                            aria-label="delete"
+                          >
+                            <PersonRemoveIcon />
+                          </IconButton>
+                        )}
                     </>
                   }
                   key={member.id}
@@ -244,9 +247,13 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
                 >
                   <ListItemButton>
                     <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                        <PersonIcon />
-                      </Avatar>
+                      {member.user.image_url ? (
+                        <Avatar src={member.user.image_url} />
+                      ) : (
+                        <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+                          <PersonIcon />
+                        </Avatar>
+                      )}
                     </ListItemAvatar>
                     <ListItemText
                       primary={member.user.fullName}

@@ -58,7 +58,7 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
         <>
         {data && (
         <>
-        <ChatHeader name={data.name || getDirectName(userData.id, data.members).fullName} setSettingOpen={setOpen} />
+        <ChatHeader chat={data.type !== 'direct' && data} user={data.type === 'direct' && getDirectName(userData.id, data.members)} setSettingOpen={setOpen} />
         <ChatSetting members={data.members} chat={data} open={open} setOpen={setOpen} />
         </>
         )}

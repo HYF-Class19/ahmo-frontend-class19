@@ -10,6 +10,7 @@ interface chatState {
     members: IMember[];
     type: "game" | "group" | "direct" | null;
     rounds: IRound[];
+    image_url: string | null;
     game: string | null;
 }
 
@@ -20,6 +21,7 @@ const initialState: chatState = {
     members: [],
     type: null,
     rounds: [],
+    image_url: null,
     game: null,
 }
 export const chatSlice = createSlice({
@@ -31,6 +33,7 @@ export const chatSlice = createSlice({
             state.members = action.payload.members
             state.admin = action.payload.admin
             state.type = action.payload.type;
+            state.image_url = action.payload.image_url || null
             state.name = action.payload.name || null;
         },
         setGameChat: (state, action: PayloadAction<IChat>) => {
@@ -41,6 +44,7 @@ export const chatSlice = createSlice({
             state.rounds = action.payload.rounds || []
             state.game = action.payload.game
             state.name = action.payload.name || null;
+            state.image_url = action.payload.image_url || null
         },
         addRound: (state, action: PayloadAction<any>) => {
             state.rounds.push(action.payload)
@@ -57,6 +61,7 @@ export const chatSlice = createSlice({
             state.members = []
             state.admin = null
             state.type = null
+            state.image_url = null
             state.name = null
         }
     },

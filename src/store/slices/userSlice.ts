@@ -21,6 +21,16 @@ export const userSlice = createSlice({
         deleteUserData: (state) => {
             state.data = null
         },
+        updateUserData: (state, action: PayloadAction<{fullName?: string, image_url?: string}>) => {
+            const {fullName, image_url} = action.payload
+            if(state.data) {
+                if(fullName) {
+                    state.data.fullName = fullName
+                } else if(image_url) {
+                    state.data.image_url = image_url
+                }
+            }          
+        }
     },
     extraReducers: {
         [HYDRATE]: (state, action) => {
@@ -32,7 +42,7 @@ export const userSlice = createSlice({
     },
 });
 
-export const { setUserData, deleteUserData } = userSlice.actions;
+export const { setUserData, deleteUserData, updateUserData } = userSlice.actions;
 
 export const selectUserData = (state: RootState) => state.user.data;
 

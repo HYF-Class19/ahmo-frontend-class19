@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { Box, Avatar, Typography, IconButton } from "@mui/material";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import HeaderMenu from "../HeaderMenu";
+import CustomAvatar from "../CustomAvatar";
 
 const Header = () => {
   const userData = useSelector(selectUserData);
@@ -57,9 +58,9 @@ const Header = () => {
                       alignItems: "center",
                     }}
                   >
-                    <Avatar />
-                    <Typography style={{ marginLeft: "15px" }}>
-                      Helen
+                    <CustomAvatar user={userData} />
+                    <Typography variant={'h6'} style={{ marginLeft: "15px" }}>
+                      {userData.fullName}
                     </Typography>
                   </Box>
                 </Link>

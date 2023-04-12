@@ -14,6 +14,7 @@ export type IChat = {
     game: string | null;
     rounds: IRound[];
     status?: string;
+    image_url?: string;
     lastMove?: IMove 
 
 }
@@ -32,5 +33,6 @@ export type IMenuItem = {
     members: IMember[],
     name: string,
     type: string,
+    image_url?: string;
     createdAt: string
 }
