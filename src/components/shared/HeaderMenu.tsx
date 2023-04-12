@@ -1,6 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -8,6 +6,9 @@ import Divider from '@mui/material/Divider';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { useRouter } from 'next/router';
+import CustomAvatar from './CustomAvatar';
+import { useAppSelector } from '@/hooks/useAppHooks';
+import { selectUserData } from '@/store/slices/userSlice';
 
 interface HeaderMenuProps {
     anchorEl: null | HTMLElement;
@@ -19,6 +20,7 @@ interface HeaderMenuProps {
  const HeaderMenu: React.FC<HeaderMenuProps> = ({anchorEl, setAnchorEl, handleClick, logout}) => {
   const open = Boolean(anchorEl);
   const router = useRouter()
+  const userData = useAppSelector(selectUserData)
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -61,7 +63,7 @@ interface HeaderMenuProps {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem onClick={() => router.push('/profile')}>
-          <Avatar /> Profile
+          <CustomAvatar user={userData} /> Profile
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleClick}>

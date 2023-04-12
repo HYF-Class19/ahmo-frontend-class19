@@ -212,6 +212,7 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
                       <CreateItem
                         content={user.fullName}
                         avatar={user.fullName[0]}
+                        image_url={user.image_url}
                         value={user.id}
                         values={directMember}
                         type={"radio"}
@@ -222,6 +223,7 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
                       <CreateItem
                         content={user.fullName}
                         avatar={user.fullName[0]}
+                        image_url={user.image_url}
                         value={user.id}
                         values={members}
                         type={"checkbox"}

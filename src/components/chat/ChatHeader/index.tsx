@@ -1,27 +1,35 @@
-import React from 'react'
-import styles from './ChatHeader.module.scss'
-import { Avatar, IconButton } from '@mui/material'
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import React from "react";
+import styles from "./ChatHeader.module.scss";
+import { Avatar, IconButton } from "@mui/material";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import CustomAvatar from "@/components/shared/CustomAvatar";
 
 interface ChatHeaderProps {
-  setSettingOpen: Function
-  name: string
+  setSettingOpen: Function;
+  chat?: any;
+  user?: any;
 }
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({setSettingOpen, name}) => {
+const ChatHeader: React.FC<ChatHeaderProps> = ({
+  setSettingOpen,
+  chat,
+  user
+}) => {
   return (
     <div className={styles.header}>
-        <div className={styles.chatInfo}>
-            <Avatar sx={{width: '50px', height: '50px'}}>
-                {name[0]}
-            </Avatar>
-            <p>{name}</p>
-        </div>
-       <IconButton onClick={() => setSettingOpen(true)} color={'warning'} sx={{ mr: '20px'}}>
-        <SettingsOutlinedIcon sx={{width: '30px', height: '30px',}} />
-       </IconButton>
+      <div className={styles.chatInfo}>
+        <CustomAvatar chat={chat} mr={2} user={user} width={50} height={50}  />
+        {user?.fullName || chat?.name}
+      </div>
+      <IconButton
+        onClick={() => setSettingOpen(true)}
+        color={"warning"}
+        sx={{ mr: "20px" }}
+      >
+        <SettingsOutlinedIcon sx={{ width: "30px", height: "30px" }} />
+      </IconButton>
     </div>
-  )
-}
+  );
+};
 
-export default ChatHeader
+export default ChatHeader;

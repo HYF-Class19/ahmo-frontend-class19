@@ -1,15 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Grid, colors } from "@mui/material";
 import MainLayout from "@/layouts/MainLayout";
 import { NextPage } from "next";
-import ProfileAvatar from "@/components/profile/avatar";
 import ProfileInfo from "@/components/profile/ProfileInfo";
 import ChangePasswordForm , { ChangePasswordFormData} from "@/components/profile/ChangePasswordForm";
 import SideMenuButton from "@/components/profile/SideMenuButton";
 import MainContent from "@/components/profile/mainContent";
+import { useAppSelector } from "@/hooks/useAppHooks";
+import { selectUserData } from "@/store/slices/userSlice";
+import CustomAvatar from "@/components/shared/CustomAvatar";
 
 const Profile: NextPage = () => {
-  const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
+  const userData = useAppSelector(selectUserData)
+  const [showChangePasswordForm, setShowChangePasswordForm] = useState(false)
+  const [bio, setBio] = useState("Software Developer");
+  const [phoneNumber, setPhoneNumber] = useState("123-456-7890");
+  const [email, setEmail] = useState("john.doe@example.com");
+  const [image_url, setImage_url] = useState(userData?.image_url || '')
+
   const handleButtonClick = () => {
     setShowChangePasswordForm(!showChangePasswordForm);
   };
@@ -18,9 +26,7 @@ const Profile: NextPage = () => {
     console.log(data);
   };
 
-  const [bio, setBio] = useState("Software Developer");
-  const [phoneNumber, setPhoneNumber] = useState("123-456-7890");
-  const [email, setEmail] = useState("john.doe@example.com");
+  if(!userData) return null;
 
   return (
     <MainLayout>
@@ -56,15 +62,17 @@ const Profile: NextPage = () => {
                       marginTop: 5,
                     }}
                   >
-                    <ProfileAvatar src={""} />
+                    <CustomAvatar user={userData} width={180} height={180} />
                     <ProfileInfo
-                      name="John Doe"
+                      name={userData.fullName}
                       bio={bio}
                       setBio={setBio}
                       phoneNumber={phoneNumber}
                       setPhoneNumber={setPhoneNumber}
                       email={email}
                       setEmail={setEmail}
+                      setImage_url={setImage_url}
+                      image_url={image_url}
                     />
                   </Box>
                 </>

@@ -4,7 +4,6 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
 import SendIcon from "@mui/icons-material/Send";
 import { IconButton, ListItemIcon } from "@mui/material";
 import {
@@ -15,6 +14,7 @@ import { IChat } from "@/models/IChat";
 import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
 import { setActiveChat, setGameChat } from "@/store/slices/chatSlice";
 import { selectUserData } from "@/store/slices/userSlice";
+import CustomAvatar from "../CustomAvatar";
 
 interface SeacrhResultProps {
   users?: IUser[];
@@ -99,7 +99,7 @@ const SearchResult: React.FC<SeacrhResultProps> = ({
                 }
               >
                 <ListItemAvatar>
-                  <Avatar>{user.fullName![0]}</Avatar>
+                 <CustomAvatar user={user} />
                 </ListItemAvatar>
                 <ListItemText primary={user.fullName} secondary={user.email} />
               </ListItem>
@@ -135,7 +135,7 @@ const SearchResult: React.FC<SeacrhResultProps> = ({
                 }
               >
                 <ListItemAvatar>
-                  <Avatar>{chat.name && chat.name[0]}</Avatar>
+                  <CustomAvatar chat={chat} />
                 </ListItemAvatar>
                 <ListItemText
                   primary={chat.name}

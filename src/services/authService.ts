@@ -58,8 +58,15 @@ export const authApi = api.injectEndpoints({
             query: ({query, type}) => ({
                 url: type === 'direct' ? `/users?query=${query}` : `/chats?query=${query}&type=${type}` ,
             })
+        }),
+        updateUser: builder.mutation<void, {userId: number, body: {image_url?: string, fullName?: string}}>({
+            query: ({userId, body}) => ({
+                url: `/users/${userId}`,
+                method: 'PATCH',
+                body
+            })
         })
     }),
 });
 
-export const {useLoginUserMutation, useRegisterUserMutation, useGetUserQuery, useSearchUsersQuery} = authApi;
+export const {useLoginUserMutation, useRegisterUserMutation, useGetUserQuery, useSearchUsersQuery, useUpdateUserMutation} = authApi;
