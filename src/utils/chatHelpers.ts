@@ -1,8 +1,13 @@
 import {IMember} from "@/models/IChat";
 import { IMessage } from "@/models/IMessage";
+import { IUser } from "@/models/IUser";
 
 export const getReceivers = (myId: number, members?: IMember[], ) => {
  return members?.filter((member: IMember) => member.user.id !== myId).map((member: IMember) => member.user.id) || []
+}
+
+export const getDirectName = (myId: number, members: IMember[]): IUser => {
+    return members.find(member => member.user.id !== myId)!.user
 }
 
 export const isAvatarUnvisible = (myId: number, message: IMessage, messages: IMessage[], idx: number) => {

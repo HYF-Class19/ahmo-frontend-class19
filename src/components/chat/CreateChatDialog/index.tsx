@@ -83,10 +83,8 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
         if(chat) {
             alert('direct chat with that user already exist')
         } else {
-            const chatName = data?.find(user => user.id === directMember)?.fullName
             await createGroup({
                 type: "direct",
-                name: chatName,
                 members: [directMember, userData?.id].join(","),
               });
               if (chatsResult.data) {

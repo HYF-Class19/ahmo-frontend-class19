@@ -4,7 +4,7 @@ import {IMove, IRound} from "@/models/IGame";
 
 export type IChat = {
     id: number;
-    name: string;
+    name?: string;
     type: "game" | "group" | "direct";
     admin: IUser;
     members: IMember[];

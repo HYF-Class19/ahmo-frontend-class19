@@ -1,11 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {HYDRATE} from "next-redux-wrapper";
 import {IUser} from "@/models/IUser";
 import {IChat, IMember} from "@/models/IChat";
-import {IMessage} from "@/models/IMessage";
-import {io} from "socket.io-client";
-import {IGame, IMove, IRound} from "@/models/IGame";
-import { RootState } from "..";
+import {IRound} from "@/models/IGame"
 
 interface chatState {
     activeChat: number | null;
@@ -35,7 +31,7 @@ export const chatSlice = createSlice({
             state.members = action.payload.members
             state.admin = action.payload.admin
             state.type = action.payload.type;
-            state.name = action.payload.name;
+            state.name = action.payload.name || null;
         },
         setGameChat: (state, action: PayloadAction<IChat>) => {
             state.activeChat = action.payload.id
@@ -44,7 +40,7 @@ export const chatSlice = createSlice({
             state.type = action.payload.type
             state.rounds = action.payload.rounds || []
             state.game = action.payload.game
-            state.name = action.payload.name;
+            state.name = action.payload.name || null;
         },
         addRound: (state, action: PayloadAction<any>) => {
             state.rounds.push(action.payload)

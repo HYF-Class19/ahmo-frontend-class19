@@ -47,12 +47,15 @@ const GameBox: React.FC<GameBoxProps> = () => {
         }
     }, [])
 
+    const getAlertContent = (content: string) => {
+        if(!alertContent){
+            setAlertContent(content)
+        }
+    }
+
     useEffect(() => {
         setSeverity('info')
         setOpen(true)
-        if(activeRound?.id && userData && game?.game){
-            setAlertContent(getStatusForCurrentUser(activeRound, userData, game.game))
-        }
     }, [selectedGame.activeChat])
 
 
@@ -69,7 +72,7 @@ const GameBox: React.FC<GameBoxProps> = () => {
             dispatch(setRound(game.rounds[roundIdx]));
           }
         }
-      }, [selectedGame.activeChat, game?.rounds]);
+      }, [selectedGame.activeChat, game]);
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -85,25 +88,27 @@ const GameBox: React.FC<GameBoxProps> = () => {
         <div className={styles.chatBoxWrapper}>
             {game?.game && userData && selectedGame?.members.length > 1 ? (
                 <>
-                <div className={clsx(styles.alertWrapper, open && styles.alertOpen)}>
-                <div className={styles.alert}>
-                    <GameAlert open={open} setOpen={setOpen} severity={severity}>
-                      {alertContent}
-                    </GameAlert>
-                 </div>
-                </div>
+                {alertContent && (
+                     <div className={clsx(styles.alertWrapper, open && styles.alertOpen)}>
+                     <div className={styles.alert}>
+                         <GameAlert setAlertContent={setAlertContent} open={open} setOpen={setOpen} severity={severity}>
+                           {alertContent}
+                         </GameAlert>
+                      </div>
+                     </div>
+                )}
                 <GameHeader />
-                {game.game !== 'words' && <RoundData gameType={game.game} count={game.rounds.length}/>}
+                {game.game !== 'words' && <RoundData getAlertContent={getAlertContent} gameType={game.game} count={game.rounds.length}/>}
                 <div ref={boxRef} style={{overflowY: 'auto', overflowX: 'hidden'}} className={styles.box}>
-                    {game.rounds && game.rounds.map((round: IRound, index: number) => (
+                    {game.rounds && game.rounds.map((round: IRound) => (
                         <div key={round.id}>
                             <GameRound scrollRef={scrollRef} activateAlert={activateAlert} gameType={game.game} round={round} />
                         </div>
                     ))}
                 </div>
                  {game.game === 'truth or dare' && <TruthDareField activateAlert={activateAlert} chatId={selectedGame.activeChat} /> }
-                    {game.game === 'guess a word' &&  <GameTextField activateAlert={activateAlert} chatId={selectedGame.activeChat} />}
-                    {game.game === 'words' &&  <WordsTextField activateAlert={activateAlert} chatId={selectedGame.activeChat} />}
+                    {game.game === 'guess a word' &&  <GameTextField nativeRound={game.rounds.find(r => r.round_status === 'active')!} activateAlert={activateAlert} chatId={selectedGame.activeChat} />}
+                    {game.game === 'words' &&  <WordsTextField nativeRound={game?.rounds.find(r => r.round_status === 'active')!} activateAlert={activateAlert} chatId={selectedGame.activeChat} />}
                 </>
             ) : <SelectChatTemplate typeOfChat={'game'} />}
         </div>

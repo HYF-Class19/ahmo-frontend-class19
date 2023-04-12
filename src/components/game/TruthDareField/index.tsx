@@ -18,13 +18,12 @@ import {
 import { selectUserData } from "@/store/slices/userSlice";
 import { disableNotMyTurn } from "@/utils/round-helper";
 import { socket } from "@/utils/socket";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import styles from '../GameTextField/GameTextField.module.scss'
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import GameActions from "../GameActions";
 import GameInput from "../GameInput";
-import SendIcon from "@/components/shared/SendIcon";
 import Image from 'next/image'
 
 interface TruthDareFieldProps {
@@ -82,7 +81,6 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId, activateAlert }
             const newRound = res.data;
             if (newRound) {
               socket.emit("newRound", { round: newRound, receivers });
-              dispatch(setRound(newRound));
             }
           }
         }

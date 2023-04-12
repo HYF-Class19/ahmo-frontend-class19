@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import { HYDRATE } from "next-redux-wrapper";
 import { parseCookies } from "nookies";
 
-// http://localhost:4000
+// http://localhost:4000 
 
 const BASE_URL = 'https://ahmo-api.up.railway.app';
 

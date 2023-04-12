@@ -9,12 +9,20 @@ import styles from "./RoundData.module.scss";
 interface RoundDataProps {
   count: number;
   gameType: string
+  getAlertContent: (content: string) => void
 }
 
-const RoundData: React.FC<RoundDataProps> = ({ count, gameType }) => {
+const RoundData: React.FC<RoundDataProps> = ({ count, gameType, getAlertContent}) => {
   const userData = useAppSelector(selectUserData);
   const activeRound = useAppSelector(selectActiveRound);
   const members = useAppSelector(selectMembers)
+
+  useEffect(() => {
+    if(activeRound.id && userData) {
+      const content = getStatusForCurrentUser(activeRound, userData, gameType)
+      getAlertContent(content)
+    }
+  }, [userData, activeRound.id])
 
   return (
     <div className={styles.wrapper}>

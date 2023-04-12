@@ -32,7 +32,6 @@ const GameRound: React.FC<GameRoundProps> = ({ round, gameType, activateAlert, s
   const [isSubmitted, setIsSubmitted] = useState(false);
   const userData = useAppSelector(selectUserData);
   const [updateRound, result] = useUpdateRoundDataMutation();
-  const dispatch = useAppDispatch();
   const members = useAppSelector(selectMembers);
   const activeRound = useAppSelector(selectActiveRound);
 
@@ -68,8 +67,7 @@ const GameRound: React.FC<GameRoundProps> = ({ round, gameType, activateAlert, s
                 <RoundMove my={userData.id === move?.player?.id} move={move} />
               </div>
             ))}
-            {activeRound.round_winner ||
-              (round.id !== activeRound?.id && (
+            {round.round_winner && (
                 <div className={styles.winner}>
                   <hr />
                   <p>
@@ -78,13 +76,12 @@ const GameRound: React.FC<GameRoundProps> = ({ round, gameType, activateAlert, s
                     {
                       members.find(
                         (m: any) =>
-                          m.user.id === round.round_winner ||
-                          m.user.id === activeRound.round_winner
+                          m.user.id === round.round_winner
                       )?.user.fullName
                     }
                   </p>
                 </div>
-              ))}
+              )}
           </>
         ) : (
           <div className={styles.submitArea}>
