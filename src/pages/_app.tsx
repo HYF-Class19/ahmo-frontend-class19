@@ -11,6 +11,7 @@ import createCache from '@emotion/cache';
 import { useEffect } from 'react';
 import { useGetUserQuery } from '@/services/authService';
 import { theme } from '@/styles/theme';
+import { ThemeProvider } from '@emotion/react';
 
 
 const cache = createCache({ key: 'myapp' });
