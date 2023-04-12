@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app'
 import {setUserData} from "@/store/slices/userSlice";
 
 /*import custom pallette*/
+
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { Provider } from 'react-redux';
 import { CacheProvider,} from '@emotion/react';
