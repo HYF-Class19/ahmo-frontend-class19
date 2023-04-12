@@ -3,7 +3,7 @@ import MainLayout from "@/layouts/MainLayout";
 import styles from "../styles/Main.module.scss";
 import ActionAreaCard from "@/components/shared/home-page/card";
 import WelcomeText from "@/components/shared/home-page/welcome-text";
-import { Box, createTheme } from "@mui/material";
+import { Box, Container, createTheme } from "@mui/material";
 import Footer from "@/components/shared/home-page/Footer";
 import Header from "@/components/shared/home-page/Header";
 
@@ -17,12 +17,14 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MainLayout>
-        <Box sx={{ bgcolor: "#120428" }}>
+        
+        <Box minHeight="100vh" sx={{ bgcolor: "primary.main" }}>
           <Header />
           <WelcomeText />
           <ActionAreaCard />
           <Footer />
         </Box>
+        
       </MainLayout>
     </>
   );
