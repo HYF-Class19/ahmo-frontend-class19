@@ -3,8 +3,6 @@ import {HYDRATE} from "next-redux-wrapper";
 import {IUser} from "@/models/IUser";
 import {IChat, IMember, IMenuItem} from "@/models/IChat";
 import {IMessage} from "@/models/IMessage";
-import {io} from "socket.io-client";
-import {IGame, IMove, IRound} from "@/models/IGame";
 
 interface menuState {
     chats: IMenuItem[]
