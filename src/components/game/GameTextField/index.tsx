@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, IconButton, TextField } from "@mui/material";
 import {
   useCreateMoveMutation,
@@ -68,10 +68,13 @@ const GameTextField: React.FC<GameTextFieldProps> = ({nativeRound, chatId, activ
           (move.correct || immediateAttempts >= 3) &&
           activeRound?.riddler
         ) {
+          let winner;
           if (move.correct) {
+            winner = move.player.id
             dispatch(addScore({ winner: move.player.id }));
             activateAlert('success', 'You won this round!')
           } else {
+            winner = activeRound.riddler.id
             dispatch(addScore({ winner: activeRound.riddler.id }));
             activateAlert('warning', 'You lost this round(')
           }
@@ -86,8 +89,7 @@ const GameTextField: React.FC<GameTextFieldProps> = ({nativeRound, chatId, activ
             // @ts-ignore
             const newRound = res.data;
             if (newRound) {
-              socket.emit("newRound", { round: newRound, receivers });
-              dispatch(setRound(newRound));
+              socket.emit("newRound", {previousWinner: winner,previousId: activeRound.id, round: newRound, receivers });
             }
           }
         }
@@ -109,6 +111,7 @@ const GameTextField: React.FC<GameTextFieldProps> = ({nativeRound, chatId, activ
           player: userData,
           receivers,
           round_data: roundData,
+          gameId: activeGame.activeChat,
           roundId: activeRound.id,
         });
       }

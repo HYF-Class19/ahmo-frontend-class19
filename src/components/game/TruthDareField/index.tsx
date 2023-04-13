@@ -62,10 +62,13 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId, activateAlert }
           .map((m: IMember) => m.user.id);
         socket.emit("sendMove", { ...move, chatId, receivers });
         if (answer && activeRound?.riddler) {
+          let winner;
           if (move.correct) {
+            winner = move.player.id
             dispatch(addScore({ winner: move.player.id }));
             activateAlert('success', 'You won this round')
           } else {
+            winner = activeRound.riddler.id
             dispatch(addScore({ winner: activeRound.riddler.id }));
             activateAlert('warning', 'You lost this round')
           }
@@ -80,7 +83,7 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId, activateAlert }
             // @ts-ignore
             const newRound = res.data;
             if (newRound) {
-              socket.emit("newRound", { round: newRound, receivers });
+              socket.emit("newRound", {previousWinner: winner, previousId: activeRound.id, round: newRound, receivers });
             }
           }
         }
@@ -97,12 +100,12 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId, activateAlert }
       if (!error) {
         dispatch(addRoundData(roundData));
         const receivers = members
-          .filter((m: IMember) => m.user.id !== userData?.id)
           .map((m: IMember) => m.user.id);
         socket.emit("updateWord", {
           player: userData,
           receivers,
           round_data: roundData,
+          gameId: activeGame.activeChat,
           roundId: activeRound.id
         });
       }

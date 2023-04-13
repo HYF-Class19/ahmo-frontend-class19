@@ -37,9 +37,8 @@ const GameBox: React.FC<GameBoxProps> = () => {
     const scrollRef = useRef<any>()
 
     useEffect(() => {
-        socket.on('getNewRound', (round: IRound) => {
-            dispatch(api.util.invalidateTags(['Game', 'Round']))
-            dispatch(setRound(round))
+       socket.on('getNewRound', (data: {round: IRound}) => {
+            dispatch(setRound(data.round))
         })
 
         return () => {
@@ -67,6 +66,7 @@ const GameBox: React.FC<GameBoxProps> = () => {
 
     useEffect(() => {
         if (game?.rounds) {
+            console.log('it works')
             const roundIdx = game.rounds.findIndex(round => round.round_status === 'active')
           if (roundIdx + 1) {
             dispatch(setRound(game.rounds[roundIdx]));
