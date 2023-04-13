@@ -1,8 +1,8 @@
+import CustomAvatar from "@/components/shared/CustomAvatar";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import { IconButton } from "@mui/material";
 import React from "react";
 import styles from "./ChatHeader.module.scss";
-import { Avatar, IconButton } from "@mui/material";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import CustomAvatar from "@/components/shared/CustomAvatar";
 
 interface ChatHeaderProps {
   setSettingOpen: Function;
@@ -13,12 +13,12 @@ interface ChatHeaderProps {
 const ChatHeader: React.FC<ChatHeaderProps> = ({
   setSettingOpen,
   chat,
-  user
+  user,
 }) => {
   return (
     <div className={styles.header}>
       <div className={styles.chatInfo}>
-        <CustomAvatar chat={chat} mr={2} user={user} width={50} height={50}  />
+        <CustomAvatar chat={chat} mr={2} user={user} width={50} height={50} />
         {user?.fullName || chat?.name}
       </div>
       <IconButton

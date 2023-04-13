@@ -1,20 +1,21 @@
 export type IUser = {
-    id: number;
-    email: string;
-    fullName: string;
-    image_url?: string;
-    token: string;
-}
+  id: number;
+  email: string;
+  fullName: string;
+  image_url?: string;
+  token: string;
+  bio: string;
+};
 
-export type ResponseUser = IUser
+export type ResponseUser = IUser;
 
 export type LoginUserDto = {
-    email: string;
-    password: string;
-}
+  email: string;
+  password: string;
+};
 
 export type CreateUserDto = {
-    email: string;
-    fullName: Date;
-    password: string;
-}
+  email: string;
+  fullName: Date;
+  password: string;
+};

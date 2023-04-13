@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import styles from "./Header.module.scss";
-import Link from "next/link";
-import { useSelector } from "react-redux";
-import { deleteUserData, selectUserData } from "@/store/slices/userSlice";
 import { useAppDispatch } from "@/hooks/useAppHooks";
-import { destroyCookie } from "nookies";
-import { useRouter } from "next/router";
-import { Box, Avatar, Typography, IconButton } from "@mui/material";
+import { deleteUserData, selectUserData } from "@/store/slices/userSlice";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import HeaderMenu from "../HeaderMenu";
+import { Box, IconButton, Typography } from "@mui/material";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { destroyCookie } from "nookies";
+import React from "react";
+import { useSelector } from "react-redux";
 import CustomAvatar from "../CustomAvatar";
+import HeaderMenu from "../HeaderMenu";
+import styles from "./Header.module.scss";
 
 const Header = () => {
   const userData = useSelector(selectUserData);
@@ -21,7 +21,6 @@ const Header = () => {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
 
   const logout = async () => {
     await router.push("/auth/login");
@@ -50,7 +49,7 @@ const Header = () => {
             </ul>
             <ul>
               <li className={pathname === "/profile" ? styles.active : ""}>
-                <Link href={"/profile"}>
+                <Link href={`/profile/${userData.id}`}>
                   <Box
                     sx={{
                       display: "flex",
@@ -59,25 +58,31 @@ const Header = () => {
                     }}
                   >
                     <CustomAvatar user={userData} />
-                    <Typography variant={'h6'} style={{ marginLeft: "15px" }}>
+                    <Typography variant={"h6"} style={{ marginLeft: "15px" }}>
                       {userData.fullName}
                     </Typography>
                   </Box>
                 </Link>
               </li>
               <li>
-                <Link href={pathname}>
-                  <IconButton  onClick={handleClick}
-                    sx={{ ml: 2 }}
-                    aria-controls={open ? 'account-menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? 'true' : undefined} color={"warning"}>
-                    <SettingsOutlinedIcon
-                      sx={{ width: "30px", height: "30px" }}
-                    />
-                  </IconButton>
-                </Link>
-                <HeaderMenu logout={logout} anchorEl={anchorEl} setAnchorEl={setAnchorEl} handleClick={handleClick} />
+                <IconButton
+                  onClick={handleClick}
+                  sx={{ ml: 2 }}
+                  aria-controls={open ? "account-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                  color={"warning"}
+                >
+                  <SettingsOutlinedIcon
+                    sx={{ width: "30px", height: "30px" }}
+                  />
+                </IconButton>
+                <HeaderMenu
+                  logout={logout}
+                  anchorEl={anchorEl}
+                  setAnchorEl={setAnchorEl}
+                  handleClick={handleClick}
+                />
               </li>
             </ul>
           </>
