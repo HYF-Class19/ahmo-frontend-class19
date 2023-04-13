@@ -37,9 +37,8 @@ const GameBox: React.FC<GameBoxProps> = () => {
     const scrollRef = useRef<any>()
 
     useEffect(() => {
-        socket.on('getNewRound', (round: IRound) => {
-            dispatch(api.util.invalidateTags(['Game', 'Round']))
-            dispatch(setRound(round))
+       socket.on('getNewRound', (data: {round: IRound}) => {
+            dispatch(setRound(data.round))
         })
 
         return () => {

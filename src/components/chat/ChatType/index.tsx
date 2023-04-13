@@ -18,9 +18,10 @@ const ChatType: React.FC<ChatTypeProps> = ({chats, type, setIsSearchActive, isSe
         <div className={styles.wrapper}>
             <SearchBar placeholder='search...' isActive={isSearchActive} setActive={setIsSearchActive} searchType={type} />
             {!isSearchActive ? chats.length > 0 ?
-                chats.map((chat: IChat) => <Conversation key={chat.id} chat={chat} />)
-                 : <div>You have no {type} chats, maybe create one?</div> : null
-            }
+               <div style={{overflowY: 'auto'}}>
+                { chats.map((chat: IChat) => <Conversation key={chat.id} chat={chat} />)}
+               </div>
+            : <div>You have no {type} chats, maybe create one?</div> : null}
         </div>
     );
 };
