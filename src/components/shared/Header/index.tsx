@@ -1,7 +1,11 @@
-import { useAppDispatch } from "@/hooks/useAppHooks";
-import { deleteUserData, selectUserData } from "@/store/slices/userSlice";
+import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
+import {
+  deleteUserData,
+  selectIsAuth,
+  selectUserData,
+} from "@/store/slices/userSlice";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Skeleton, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { destroyCookie } from "nookies";
@@ -13,6 +17,7 @@ import styles from "./Header.module.scss";
 
 const Header = () => {
   const userData = useSelector(selectUserData);
+  const isAuth = useAppSelector(selectIsAuth);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const pathname = router.pathname;
@@ -21,7 +26,6 @@ const Header = () => {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
   const logout = async () => {
     await router.push("/auth/login");
     destroyCookie(null, "authToken");
@@ -34,7 +38,7 @@ const Header = () => {
         <img src="/ahmo-logo.png" alt="logo" />
       </div>
       <nav>
-        {userData ? (
+        {isAuth !== false ? (
           <>
             <ul>
               <li className={pathname === "/" ? styles.active : ""}>
@@ -49,7 +53,22 @@ const Header = () => {
             </ul>
             <ul>
               <li className={pathname === "/profile" ? styles.active : ""}>
-                <Link href={`/profile/${userData.id}`}>
+                {userData ? (
+                  <Link href={`/profile/${userData.id}`}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <CustomAvatar user={userData} />
+                      <Typography variant={"h6"} style={{ marginLeft: "15px" }}>
+                        {userData.fullName}
+                      </Typography>
+                    </Box>
+                  </Link>
+                ) : (
                   <Box
                     sx={{
                       display: "flex",
@@ -57,12 +76,13 @@ const Header = () => {
                       alignItems: "center",
                     }}
                   >
-                    <CustomAvatar user={userData} />
-                    <Typography variant={"h6"} style={{ marginLeft: "15px" }}>
-                      {userData.fullName}
-                    </Typography>
+                    <Skeleton variant="circular" width={40} height={40} />
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: "1rem", ml: "15px", width: "60px" }}
+                    />
                   </Box>
-                </Link>
+                )}
               </li>
               <li>
                 <IconButton

@@ -6,20 +6,26 @@ import { HYDRATE } from "next-redux-wrapper";
 
 export interface UserState {
   data?: IUser | null;
+  isAuth: boolean | null;
 }
 const initialState: UserState = {
   data: null,
+  isAuth: null,
 };
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    setIsAuth: (state, action: PayloadAction<boolean>) => {
+      state.isAuth = action.payload;
+    },
     setUserData: (state, action: PayloadAction<IUser>) => {
       state.data = action.payload;
     },
     deleteUserData: (state) => {
       state.data = null;
+      state.isAuth = false;
     },
     updateUserData: (
       state,
@@ -51,9 +57,10 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUserData, deleteUserData, updateUserData } =
+export const { setUserData, deleteUserData, updateUserData, setIsAuth } =
   userSlice.actions;
 
 export const selectUserData = (state: RootState) => state.user.data;
+export const selectIsAuth = (state: RootState) => state.user.isAuth;
 
 export const userReducer = userSlice.reducer;

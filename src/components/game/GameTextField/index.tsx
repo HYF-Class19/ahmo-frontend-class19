@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Button, IconButton, TextField } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
+import { IMember } from "@/models/IChat";
+import { IRound } from "@/models/IGame";
 import {
   useCreateMoveMutation,
   useCreateRoundMutation,
   useUpdateRoundDataMutation,
 } from "@/services/roundServive";
-import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
 import {
   addScore,
   selectActiveChat,
@@ -15,25 +15,27 @@ import {
   addAttempt,
   addRoundData,
   selectActiveRound,
-  setRound,
 } from "@/store/slices/roundSlice";
 import { selectUserData } from "@/store/slices/userSlice";
-import { IMember } from "@/models/IChat";
-import { socket } from "@/utils/socket";
-import styles from "./GameTextField.module.scss";
 import { disableNotMyTurn } from "@/utils/round-helper";
+import { socket } from "@/utils/socket";
+import { Button, CircularProgress, IconButton } from "@mui/material";
 import Image from "next/image";
-import SendIcon from "@/components/shared/SendIcon";
+import React, { useState } from "react";
 import GameInput from "../GameInput";
-import { IRound } from "@/models/IGame";
+import styles from "./GameTextField.module.scss";
 
 interface GameTextFieldProps {
   chatId: number;
   activateAlert: Function;
-  nativeRound: IRound
+  nativeRound: IRound;
 }
 
-const GameTextField: React.FC<GameTextFieldProps> = ({nativeRound, chatId, activateAlert }) => {
+const GameTextField: React.FC<GameTextFieldProps> = ({
+  nativeRound,
+  chatId,
+  activateAlert,
+}) => {
   const [moveData, setMoveData] = useState<string>("");
   const [moveType, setMoveType] = useState<string>("question");
   const [roundData, setRoundData] = useState<string>("");
@@ -57,26 +59,22 @@ const GameTextField: React.FC<GameTextFieldProps> = ({nativeRound, chatId, activ
       const move = result.data;
       if (move) {
         let immediateAttempts = activeRound.attempt;
-        if(moveType === 'statement') {
-          dispatch(addAttempt())
-          immediateAttempts++
+        if (moveType === "statement") {
+          dispatch(addAttempt());
+          immediateAttempts++;
         }
-        const receivers = activeGame.members
-          .map((m: IMember) => m.user.id);
+        const receivers = activeGame.members.map((m: IMember) => m.user.id);
         socket.emit("sendMove", { ...move, chatId, receivers });
-        if (
-          (move.correct || immediateAttempts >= 3) &&
-          activeRound?.riddler
-        ) {
+        if ((move.correct || immediateAttempts >= 3) && activeRound?.riddler) {
           let winner;
           if (move.correct) {
-            winner = move.player.id
+            winner = move.player.id;
             dispatch(addScore({ winner: move.player.id }));
-            activateAlert('success', 'You won this round!')
+            activateAlert("success", "You won this round!");
           } else {
-            winner = activeRound.riddler.id
+            winner = activeRound.riddler.id;
             dispatch(addScore({ winner: activeRound.riddler.id }));
-            activateAlert('warning', 'You lost this round(')
+            activateAlert("warning", "You lost this round(");
           }
           const newRiddler = members.find(
             (m: IMember) => m.user.id !== activeRound?.riddler?.id
@@ -89,7 +87,12 @@ const GameTextField: React.FC<GameTextFieldProps> = ({nativeRound, chatId, activ
             // @ts-ignore
             const newRound = res.data;
             if (newRound) {
-              socket.emit("newRound", {previousWinner: winner,gameId: activeGame.activeChat, round: newRound, receivers });
+              socket.emit("newRound", {
+                previousWinner: winner,
+                gameId: activeGame.activeChat,
+                round: newRound,
+                receivers,
+              });
             }
           }
         }
@@ -105,8 +108,7 @@ const GameTextField: React.FC<GameTextFieldProps> = ({nativeRound, chatId, activ
       await updateRoundData({ id: activeRound.id!, round_data: roundData });
       if (!error) {
         dispatch(addRoundData(roundData));
-        const receivers = members
-          .map((m: IMember) => m.user.id);
+        const receivers = members.map((m: IMember) => m.user.id);
         socket.emit("updateWord", {
           player: userData,
           receivers,
@@ -129,24 +131,30 @@ const GameTextField: React.FC<GameTextFieldProps> = ({nativeRound, chatId, activ
         activeRound?.riddler?.id === userData.id ? (
           activeRound.round_data ? (
             <div className={styles.buttons}>
-              <Button
-                onClick={() => sendResponse("yes")}
-                className={styles.boolBtn}
-                variant="contained"
-                color="warning"
-                disabled={isLoading || disableNotMyTurn(activeRound, userData)}
-              >
-                YES
-              </Button>
-              <Button
-                className={styles.boolBtn}
-                onClick={() => sendResponse("no")}
-                variant="outlined"
-                color="warning"
-                disabled={isLoading || disableNotMyTurn(activeRound, userData)}
-              >
-                NO
-              </Button>
+              {!isLoading ? (
+                <>
+                  <Button
+                    onClick={() => sendResponse("yes")}
+                    className={styles.boolBtn}
+                    variant="contained"
+                    color="warning"
+                    disabled={disableNotMyTurn(activeRound, userData)}
+                  >
+                    YES
+                  </Button>
+                  <Button
+                    className={styles.boolBtn}
+                    onClick={() => sendResponse("no")}
+                    variant="outlined"
+                    color="warning"
+                    disabled={disableNotMyTurn(activeRound, userData)}
+                  >
+                    NO
+                  </Button>
+                </>
+              ) : (
+                <CircularProgress color="warning" />
+              )}
             </div>
           ) : (
             <div className={styles.textfield}>
@@ -156,15 +164,23 @@ const GameTextField: React.FC<GameTextFieldProps> = ({nativeRound, chatId, activ
                 name={"round data"}
                 label={"Riddle a word"}
               />
-              <div onClick={() => updateWord()} className={styles.btnSection}>
-              <IconButton
-                    disabled={
-                      isLoading || disableNotMyTurn(activeRound, userData)
-                    }
+
+              {!isLoading ? (
+                <div onClick={() => updateWord()} className={styles.btnSection}>
+                  <IconButton
+                    disabled={disableNotMyTurn(activeRound, userData)}
                   >
-                  <Image src='/img/send.svg' width="30" height='30' alt={'Send icon'} />
-                </IconButton>
-              </div>
+                    <Image
+                      src="/img/send.svg"
+                      width="30"
+                      height="30"
+                      alt={"Send icon"}
+                    />
+                  </IconButton>
+                </div>
+              ) : (
+                <CircularProgress color="warning" />
+              )}
             </div>
           )
         ) : (
@@ -190,11 +206,19 @@ const GameTextField: React.FC<GameTextFieldProps> = ({nativeRound, chatId, activ
                 <option value={"statement"}>Statement</option>
               </select>
             </div>
-            {!isLoading && !disableNotMyTurn(activeRound, userData) && <div onClick={() => sendResponse()} className={styles.btnSection}>
-            <IconButton>
-                  <Image src='/img/send.svg' width="30" height='30' alt={'Send icon'} />
+            {!isLoading && !disableNotMyTurn(activeRound, userData) && (
+              <div onClick={() => sendResponse()} className={styles.btnSection}>
+                <IconButton>
+                  <Image
+                    src="/img/send.svg"
+                    width="30"
+                    height="30"
+                    alt={"Send icon"}
+                  />
                 </IconButton>
-            </div>}
+              </div>
+            )}
+            {isLoading && <CircularProgress color="warning" />}
           </div>
         )
       ) : (

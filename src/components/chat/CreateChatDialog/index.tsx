@@ -1,22 +1,23 @@
-import * as React from "react";
+import CreateItem from "@/components/shared/CreateItem";
+import { useAppSelector } from "@/hooks/useAppHooks";
+import { IChat } from "@/models/IChat";
+import { IUser } from "@/models/IUser";
+import { useSearchUsersQuery } from "@/services/authService";
+import {
+  useCreateGroupMutation,
+  useGetChatByTypeQuery,
+} from "@/services/chatService";
+import { useCreateGameMutation } from "@/services/gameService";
+import { selectUserData } from "@/store/slices/userSlice";
+import SearchIcon from "@mui/icons-material/Search";
+import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import * as React from "react";
 import { useState } from "react";
-import { TextField } from "@mui/material";
 import styles from "./CreateChatDialog.module.scss";
-import { useSearchUsersQuery } from "@/services/authService";
-import { useCreateGroupMutation, useGetChatByTypeQuery } from "@/services/chatService";
-import { useAppSelector } from "@/hooks/useAppHooks";
-import { selectUserData } from "@/store/slices/userSlice";
-import { IChat } from "@/models/IChat";
-import SearchIcon from "@mui/icons-material/Search";
-import CreateItem from "@/components/shared/CreateItem";
-import { useCreateGameMutation } from "@/services/gameService";
-import { IUser } from "@/models/IUser";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 interface FormDialogProps {
   open: boolean;
@@ -34,11 +35,15 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
   const userData = useAppSelector(selectUserData)!;
   const [name, setName] = useState<string>("");
   const [query, setQuery] = useState<string>("");
-  const [members, setMembers] = useState<number[]>([userData.id]);
+  const [members, setMembers] = useState<number[]>([userData?.id]);
   const [directMember, setDirectMember] = useState<number>();
-  const [chosenGame, setChosenGame] = useState<string>('');
+  const [chosenGame, setChosenGame] = useState<string>("");
   const [chatType, setChatType] = useState<"group" | "direct" | "game">();
-  const {data: directChats, isLoading: isDirectChatsLoading, error: directError } = useGetChatByTypeQuery('direct')
+  const {
+    data: directChats,
+    isLoading: isDirectChatsLoading,
+    error: directError,
+  } = useGetChatByTypeQuery("direct");
   const { data, isLoading, error } = useSearchUsersQuery({
     query,
     type: "direct",
@@ -63,7 +68,7 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
       } else {
         setActiveStep(activeStep + 1);
       }
-    } else{
+    } else {
       if (chatType === "game") {
         await createGame({
           members: members.join(","),
@@ -72,24 +77,28 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
           name,
         });
         if (gameResult.data) {
-            setChats((prev: IChat[]) => [...prev, chatsResult.data]);
-          }
+          setChats((prev: IChat[]) => [...prev, chatsResult.data]);
+        }
       } else if (chatType === "direct") {
-        let chat
-        if(directChats) {
-            chat = directChats.find(chat => chat.members.find(m => m.user.id !== userData?.id)?.user.id === directMember)
+        let chat;
+        if (directChats) {
+          chat = directChats.find(
+            (chat) =>
+              chat.members.find((m) => m.user.id !== userData?.id)?.user.id ===
+              directMember
+          );
         }
 
-        if(chat) {
-            alert('direct chat with that user already exist')
+        if (chat) {
+          alert("direct chat with that user already exist");
         } else {
-            await createGroup({
-                type: "direct",
-                members: [directMember, userData?.id].join(","),
-              });
-              if (chatsResult.data) {
-                setChats((prev: IChat[]) => [...prev, chatsResult.data]);
-              }
+          await createGroup({
+            type: "direct",
+            members: [directMember, userData?.id].join(","),
+          });
+          if (chatsResult.data) {
+            setChats((prev: IChat[]) => [...prev, chatsResult.data]);
+          }
         }
       } else {
         await createGroup({
@@ -161,7 +170,7 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
         {chatType === "game" && activeStep === 2 && (
           <>
             <h2 className={styles.cardTitle}>Choose a game</h2>
-            {["guess a word", 'truth or dare', 'words'].map((game, i) => (
+            {["guess a word", "truth or dare", "words"].map((game, i) => (
               <div key={i}>
                 <CreateItem
                   value={game}
