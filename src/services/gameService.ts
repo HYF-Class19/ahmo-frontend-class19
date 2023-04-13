@@ -20,12 +20,12 @@ export const gameService = api.injectEndpoints({
           await cacheDataLoaded;
           socket.on(
             "getNewRound",
-            (data: { previousWinner: number; previousId: number, round: IRound }) => {
+            (data: { previousWinner: number, round: IRound, gameId: number }) => {
               updateCachedData((draft) => {
-                if (draft && data.round) {
+                if (draft && data.round && draft.id === data.gameId) {
                   if (draft.rounds) {
                     const activeRound = draft.rounds.find(
-                      (r) => r.id === data.previousId
+                      (r) => r.round_status === 'active'
                     );
                     if (activeRound) {
                       activeRound.round_status = "finished";
@@ -73,6 +73,7 @@ export const gameService = api.injectEndpoints({
               gameId: number;
             }) => {
               updateCachedData((draft) => {
+                if (draft && draft.id === data.gameId) {
                   const roundIdx = draft?.rounds?.findIndex(
                     (round) => round.round_status === "active"
                   );
@@ -80,6 +81,7 @@ export const gameService = api.injectEndpoints({
                   if (roundIdx + 1) {
                     draft.rounds[roundIdx].round_data = data.round_data;
                   }
+                }
               });
             }
           );

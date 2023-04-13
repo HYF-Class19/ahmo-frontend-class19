@@ -83,7 +83,7 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId, activateAlert }
             // @ts-ignore
             const newRound = res.data;
             if (newRound) {
-              socket.emit("newRound", {previousWinner: winner, previousId: activeRound.id, round: newRound, receivers });
+              socket.emit("newRound", {previousWinner: winner, gameId: activeGame.activeChat, round: newRound, receivers });
             }
           }
         }

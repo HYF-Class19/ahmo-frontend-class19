@@ -66,7 +66,6 @@ const GameBox: React.FC<GameBoxProps> = () => {
 
     useEffect(() => {
         if (game?.rounds) {
-            console.log('it works')
             const roundIdx = game.rounds.findIndex(round => round.round_status === 'active')
           if (roundIdx + 1) {
             dispatch(setRound(game.rounds[roundIdx]));

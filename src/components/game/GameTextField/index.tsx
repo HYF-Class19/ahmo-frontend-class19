@@ -89,7 +89,7 @@ const GameTextField: React.FC<GameTextFieldProps> = ({nativeRound, chatId, activ
             // @ts-ignore
             const newRound = res.data;
             if (newRound) {
-              socket.emit("newRound", {previousWinner: winner,previousId: activeRound.id, round: newRound, receivers });
+              socket.emit("newRound", {previousWinner: winner,gameId: activeGame.activeChat, round: newRound, receivers });
             }
           }
         }
