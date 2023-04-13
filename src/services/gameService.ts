@@ -1,8 +1,8 @@
-import { api } from "@/services/api";
-import { CreateChatDto, IGame, IMove, IRound } from "@/models/IGame";
 import { IChat } from "@/models/IChat";
-import { socket } from "@/utils/socket";
+import { CreateChatDto, IGame, IMove, IRound } from "@/models/IGame";
 import { IUser } from "@/models/IUser";
+import { api } from "@/services/api";
+import { socket } from "@/utils/socket";
 
 export const gameService = api.injectEndpoints({
   endpoints: (build) => ({
@@ -20,19 +20,22 @@ export const gameService = api.injectEndpoints({
           await cacheDataLoaded;
           socket.on(
             "getNewRound",
-            (data: { previousWinner: number, round: IRound, gameId: number }) => {
+            (data: {
+              previousWinner: number;
+              round: IRound;
+              gameId: number;
+            }) => {
               updateCachedData((draft) => {
                 if (draft && data.round && draft.id === data.gameId) {
                   if (draft.rounds) {
                     const activeRound = draft.rounds.find(
-                      (r) => r.round_status === 'active'
+                      (r) => r.round_status === "active"
                     );
                     if (activeRound) {
                       activeRound.round_status = "finished";
                       activeRound.round_winner = data.previousWinner;
                     }
                     draft.rounds.push(data.round);
-                    console.log("i have got new round");
                   }
                 }
               });
@@ -77,7 +80,6 @@ export const gameService = api.injectEndpoints({
                   const roundIdx = draft?.rounds?.findIndex(
                     (round) => round.round_status === "active"
                   );
-                  console.log(roundIdx);
                   if (roundIdx + 1) {
                     draft.rounds[roundIdx].round_data = data.round_data;
                   }
@@ -85,7 +87,6 @@ export const gameService = api.injectEndpoints({
               });
             }
           );
-
           await cacheEntryRemoved;
           socket.off("getMove");
           socket.off("getSubmitRound");

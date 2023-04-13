@@ -1,8 +1,21 @@
-import * as React from "react";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import Paper, { PaperProps } from "@mui/material/Paper";
-import Draggable from "react-draggable";
+import CustomAvatar from "@/components/shared/CustomAvatar";
+import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
+import { IChat, IMember } from "@/models/IChat";
+import {
+  useDeleteChatMutation,
+  useRemoveMemberMutation,
+} from "@/services/chatService";
+import { removeActiveChat } from "@/store/slices/chatSlice";
+import { selectUserData } from "@/store/slices/userSlice";
+import { getDirectName } from "@/utils/chatHelpers";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import LogoutIcon from "@mui/icons-material/Logout";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PeopleIcon from "@mui/icons-material/People";
+import PersonIcon from "@mui/icons-material/Person";
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import {
   AppBar,
   Avatar,
@@ -17,29 +30,16 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import CloseIcon from "@mui/icons-material/Close";
+import Paper, { PaperProps } from "@mui/material/Paper";
 import { blue } from "@mui/material/colors";
-import PersonIcon from "@mui/icons-material/Person";
-import AddIcon from "@mui/icons-material/Add";
-import PeopleIcon from "@mui/icons-material/People";
-import { Title } from "@mui/icons-material";
-import { IChat, IMember } from "@/models/IChat";
-import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
-import { selectUserData } from "@/store/slices/userSlice";
-import LogoutIcon from "@mui/icons-material/Logout";
-import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { useRouter } from "next/router";
+import * as React from "react";
+import Draggable from "react-draggable";
 import AlertDialog from "../AlertDialog";
-import {
-  useDeleteChatMutation,
-  useRemoveMemberMutation,
-} from "@/services/chatService";
-import { removeActiveChat } from "@/store/slices/chatSlice";
-import { getDirectName, getReceivers } from "@/utils/chatHelpers";
-import CustomAvatar from "@/components/shared/CustomAvatar";
 
 function PaperComponent(props: PaperProps) {
   return (
@@ -77,6 +77,7 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
   const userData = useAppSelector(selectUserData);
   const openAnchor = Boolean(anchorEl);
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const handleClickAnchor = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -175,7 +176,14 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
               width: "100%",
             }}
           >
-            <CustomAvatar chat={chat.type === 'group' ? chat : null} user={chat.type === 'direct' ? getDirectName(userData!.id, chat.members) : null} />
+            <CustomAvatar
+              chat={chat.type === "group" ? chat : null}
+              user={
+                chat.type === "direct"
+                  ? getDirectName(userData!.id, chat.members)
+                  : null
+              }
+            />
             <Typography gutterBottom variant="h5" component="div">
               {chat.name || getDirectName(userData!.id, chat.members).fullName}
             </Typography>
@@ -246,7 +254,9 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
                   disableGutters
                 >
                   <ListItemButton>
-                    <ListItemAvatar>
+                    <ListItemAvatar
+                      onClick={() => router.push(`profile/${member.user.id}`)}
+                    >
                       {member.user.image_url ? (
                         <Avatar src={member.user.image_url} />
                       ) : (
