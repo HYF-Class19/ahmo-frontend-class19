@@ -7,7 +7,7 @@ import { useAppSelector } from "@/hooks/useAppHooks";
 import MainLayout from "@/layouts/MainLayout";
 import { useGetProfileQuery } from "@/services/authService";
 import { selectUserData } from "@/store/slices/userSlice";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Skeleton } from "@mui/material";
 import { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
 
@@ -27,53 +27,50 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ id }) => {
     <MainLayout>
       <Box sx={{ bgcolor: "#120428" }}>
         <Grid container>
-          {isLoading && <h3>Loading...</h3>}
-          {user && (
-            <>
-              <Grid item xs={1}>
+          <Grid item xs={1}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100vh",
+              }}
+            >
+              <SideMenuButton
+                showForm={showChangePasswordForm}
+                onClick={handleButtonClick}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={11}>
+            <MainContent>
+              {!showChangePasswordForm && (
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    height: "100vh",
+                    alignContent: "center",
+                    justifyContent: "space-evenly",
+                    flexDirection: "row",
+                    marginTop: 5,
                   }}
                 >
-                  <SideMenuButton
-                    showForm={showChangePasswordForm}
-                    onClick={handleButtonClick}
-                  />
+                  {user ? (
+                    <CustomAvatar user={user} width={180} height={180} />
+                  ) : (
+                    <Skeleton variant="circular" width={180} height={180} />
+                  )}
+                  <ProfileInfo user={user} />
                 </Box>
-              </Grid>
-              <Grid item xs={11}>
-                <MainContent>
-                  {!showChangePasswordForm && (
-                    <>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          alignContent: "center",
-                          justifyContent: "space-evenly",
-                          flexDirection: "row",
-                          marginTop: 5,
-                        }}
-                      >
-                        <CustomAvatar user={user} width={180} height={180} />
-                        <ProfileInfo user={user} />
-                      </Box>
-                    </>
-                  )}
-                  {showChangePasswordForm && (
-                    <ChangePasswordForm
-                      setShowChangePasswordForm={setShowChangePasswordForm}
-                      user={userData}
-                    />
-                  )}
-                </MainContent>
-              </Grid>
-            </>
-          )}
+              )}
+              {showChangePasswordForm && (
+                <ChangePasswordForm
+                  setShowChangePasswordForm={setShowChangePasswordForm}
+                  user={userData}
+                />
+              )}
+            </MainContent>
+          </Grid>
         </Grid>
       </Box>
     </MainLayout>
