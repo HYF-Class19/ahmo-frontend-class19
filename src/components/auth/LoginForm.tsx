@@ -1,7 +1,7 @@
 import { FormField } from "@/components/shared/FormField";
 import { useAppDispatch } from "@/hooks/useAppHooks";
 import { useLoginUserMutation } from "@/services/authService";
-import { setUserData } from "@/store/slices/userSlice";
+import { setIsAuth, setUserData } from "@/store/slices/userSlice";
 import { LoginFormSchema } from "@/utils/FormSchemas";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -52,6 +52,7 @@ const Form: React.FC<FormProps> = () => {
 
       if (res) {
         dispatch(setUserData(res));
+        dispatch(setIsAuth(true));
       }
       await router.push("/");
     } catch (err: any) {
