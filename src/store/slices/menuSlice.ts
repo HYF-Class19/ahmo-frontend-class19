@@ -1,18 +1,31 @@
 import { IMenuItem } from "@/models/IChat";
 import { IMessage } from "@/models/IMessage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "..";
+
+export enum menuType {
+  all = "all",
+  group = "group",
+  direct = "direct",
+  game = "game",
+}
 
 interface menuState {
   chats: IMenuItem[] | null;
+  menuType: menuType;
 }
 
 const initialState: menuState = {
   chats: null,
+  menuType: menuType.all,
 };
 export const menuSlice = createSlice({
   name: "menu",
   initialState,
   reducers: {
+    setType: (state, action: PayloadAction<menuType>) => {
+      state.menuType = action.payload;
+    },
     setMenu: (state, action: PayloadAction<IMenuItem[]>) => {
       state.chats = action.payload;
     },
@@ -31,8 +44,9 @@ export const menuSlice = createSlice({
   },
 });
 
-export const { setMenu, messageAdded } = menuSlice.actions;
+export const { setMenu, messageAdded, setType } = menuSlice.actions;
 
 export const selectMenu = (state: any) => state.menu.chats;
+export const selectMenuType = (state: RootState) => state.menu.menuType;
 
 export const menuReducer = menuSlice.reducer;

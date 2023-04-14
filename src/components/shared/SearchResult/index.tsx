@@ -1,19 +1,19 @@
+import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
+import { IChat } from "@/models/IChat";
 import { IUser } from "@/models/IUser";
-import React, { useEffect, useState } from "react";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import SendIcon from "@mui/icons-material/Send";
-import { IconButton, ListItemIcon } from "@mui/material";
 import {
   useCreateGroupMutation,
   useFetchChatsQuery,
 } from "@/services/chatService";
-import { IChat } from "@/models/IChat";
-import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
-import { setActiveChat, setGameChat } from "@/store/slices/chatSlice";
+import { setActiveChat } from "@/store/slices/chatSlice";
 import { selectUserData } from "@/store/slices/userSlice";
+import SendIcon from "@mui/icons-material/Send";
+import { IconButton } from "@mui/material";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemText from "@mui/material/ListItemText";
+import React, { useEffect, useState } from "react";
 import CustomAvatar from "../CustomAvatar";
 
 interface SeacrhResultProps {
@@ -42,33 +42,37 @@ const SearchResult: React.FC<SeacrhResultProps> = ({
     }
   }, [data]);
 
-  const openChat = async (data: {user?: IUser, chat?: IChat}) => {
-   if(data.user && directChats) {
-    try {
-      const directChat = directChats.find((chat) =>
-        chat.members.find((m) => m.user.id === data.user?.id)
-      );
+  const openChat = async (data: { user?: IUser; chat?: IChat }) => {
+    if (data.user && directChats) {
+      try {
+        const directChat = directChats.find((chat) =>
+          chat.members.find((m) => m.user.id === data.user?.id)
+        );
 
-      if (directChat) {
-        dispatch(setActiveChat(directChat));
-        setActive(false);
-      } else {
-        const members = [userData?.id, data.user.id].join(",");
-        const res = await createGroup({ type: "direct", name: data.user.fullName, members });
-         // @ts-ignore
-        const newChat = res.data
-        if(newChat) {
-          dispatch(setActiveChat(newChat))
+        if (directChat) {
+          dispatch(setActiveChat(directChat));
           setActive(false);
+        } else {
+          const members = [userData?.id, data.user.id].join(",");
+          const res = await createGroup({
+            type: "direct",
+            name: data.user.fullName,
+            members,
+          });
+          // @ts-ignore
+          const newChat = res.data;
+          if (newChat) {
+            dispatch(setActiveChat(newChat));
+            setActive(false);
+          }
         }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    } else if (data.chat) {
+      dispatch(setActiveChat(data.chat));
+      setActive(false);
     }
-   } else if (data.chat) {
-    dispatch(setActiveChat(data.chat));
-    setActive(false);
-   }
   };
 
   return (
@@ -93,13 +97,13 @@ const SearchResult: React.FC<SeacrhResultProps> = ({
               <ListItem
                 key={user.id}
                 secondaryAction={
-                  <IconButton onClick={() => openChat({user})} edge="end">
+                  <IconButton onClick={() => openChat({ user })} edge="end">
                     <SendIcon />
                   </IconButton>
                 }
               >
                 <ListItemAvatar>
-                 <CustomAvatar user={user} />
+                  <CustomAvatar user={user} />
                 </ListItemAvatar>
                 <ListItemText primary={user.fullName} secondary={user.email} />
               </ListItem>
@@ -129,7 +133,7 @@ const SearchResult: React.FC<SeacrhResultProps> = ({
               <ListItem
                 key={chat.id}
                 secondaryAction={
-                  <IconButton onClick={() => openChat({chat})} edge="end">
+                  <IconButton onClick={() => openChat({ chat })} edge="end">
                     <SendIcon />
                   </IconButton>
                 }

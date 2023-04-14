@@ -1,4 +1,4 @@
-@import '~@mui/material/styles';
+// @import '~@mui/material/styles';
 
 .card-container {
   display: flex;
@@ -32,6 +32,35 @@
       &:hover {
         opacity: 1;
       }
+    }
+  }
+}
+
+.rootCard {
+  position: relative;
+  &:hover .overlay {
+    visibility: visible;
+    transform: translateY(0) scaleY(1);
+  }
+  .overlay {
+    visibility: hidden;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    transform: translateY(50%) scaleY(0);
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 20px;
+    border-radius: 3px;
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    h3 {
+      font-size: 24px;
     }
   }
 }

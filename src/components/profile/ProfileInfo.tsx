@@ -3,12 +3,12 @@ import useUpdateUserData from "@/hooks/useUpdateUser";
 import { IUser } from "@/models/IUser";
 import { selectUserData } from "@/store/slices/userSlice";
 import { EmailOutlined, PhoneIphone } from "@mui/icons-material";
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, Skeleton, TextField, Typography } from "@mui/material";
 import React from "react";
 import EditableText from "./EditableText";
 
 interface ProfileInfoProps {
-  user: IUser;
+  user?: IUser;
 }
 
 const ProfileInfo: React.FC<ProfileInfoProps> = ({ user }) => {
@@ -33,7 +33,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ user }) => {
     });
   };
 
-  return (
+  return user ? (
     <div>
       <Typography variant="h2">{user.fullName}</Typography>
       <TextField
@@ -149,6 +149,19 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ user }) => {
         />
       </Box>
     </div>
+  ) : (
+    <Box>
+      <Typography sx={{ mb: 4 }} variant="h2">
+        <Skeleton />
+      </Typography>
+      <Skeleton variant="rectangular" width={200} height={100} />
+      <Box sx={{ mt: 4 }}>
+        <Skeleton variant="rounded" width={300} height={40} />
+        <Skeleton variant="rounded" width={300} height={40} />
+        <Skeleton variant="rounded" width={300} height={40} />
+        <Skeleton variant="rounded" width={300} height={40} />
+      </Box>
+    </Box>
   );
 };
 

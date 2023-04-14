@@ -8,6 +8,7 @@ import MainLayout from "@/layouts/MainLayout";
 import { IChat } from "@/models/IChat";
 import { useFetchChatsQuery } from "@/services/chatService";
 import { selectActiveChat } from "@/store/slices/chatSlice";
+import { selectMenuType } from "@/store/slices/menuSlice";
 import { selectUserData } from "@/store/slices/userSlice";
 import { redirect } from "@/utils/redirect";
 import { socket } from "@/utils/socket";
@@ -22,15 +23,13 @@ interface ChatProps {
 }
 
 const Chat: NextPage<ChatProps> = ({ isAuth }) => {
-  const [selectedType, setSelectedType] = useState<
-    "game" | "group" | "group" | "all"
-  >("all");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [chats, setChats] = useState<IChat[]>([]);
   const { data, error, isLoading } = useFetchChatsQuery();
   const userData = useAppSelector(selectUserData);
   const activeChat = useAppSelector(selectActiveChat);
   const router = useRouter();
+  const selectedType = useAppSelector(selectMenuType);
 
   if (!isAuth) {
     router.push("/404");
@@ -55,14 +54,10 @@ const Chat: NextPage<ChatProps> = ({ isAuth }) => {
       ) : (
         <>
           <div className={styles.chat}>
-            <ChatTabs
-              setSelectedType={setSelectedType}
-              setIsActive={setIsOpen}
-              selectedType={selectedType}
-            />
+            <ChatTabs setIsActive={setIsOpen} />
             <div className={styles.chatWrapper}>
               <div className={styles.chatMenu}>
-                <ChatMenu selected={selectedType} chats={data} />
+                <ChatMenu chats={data} />
               </div>
               {selectedType === "game" || activeChat.type === "game" ? (
                 <GameBox />
