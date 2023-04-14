@@ -16,7 +16,8 @@ import { disableNotMyTurn } from "@/utils/round-helper";
 import { socket } from "@/utils/socket";
 import React, { useState } from "react";
 
-import { IconButton } from "@mui/material";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import { Box, IconButton } from "@mui/material";
 import Image from "next/image";
 import GameActions from "../GameActions";
 import GameInput from "../GameInput";
@@ -42,6 +43,7 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({
   const [updateRoundData, { error, isLoading: isRoundDataLoading }] =
     useUpdateRoundDataMutation();
   const dispatch = useAppDispatch();
+  const isMobile = useIsMobile();
 
   const sendResponse = async (answer?: string) => {
     if (!activeRound.round_data) {
@@ -121,27 +123,29 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({
         activeRound?.riddler?.id === userData.id ? (
           !activeRound.round_data && (
             <div className={styles.textfield}>
-              <div className={styles.inputfield}>
-                <GameInput
-                  value={moveData}
-                  onChange={(e: any) => setMoveData(e.target.value)}
-                  id="move_data"
-                  placeholder={"place your move data here"}
-                />
-              </div>
-              <div className={styles.selectItem}>
-                <label id="input-type">Type of propose</label>
-                <select
-                  id="input-type"
-                  value={roundData}
-                  onChange={(e) => {
-                    setRoundData(e.target.value);
-                  }}
-                >
-                  <option value={"truth"}>Truth</option>
-                  <option value={"dare"}>Dare</option>
-                </select>
-              </div>
+              <Box sx={{ display: "flex", width: "90%", flexWrap: "wrap" }}>
+                <div className={styles.inputfield}>
+                  <GameInput
+                    value={moveData}
+                    onChange={(e: any) => setMoveData(e.target.value)}
+                    id="move_data"
+                    placeholder={"place your move data here"}
+                  />
+                </div>
+                <div className={styles.selectItem}>
+                  {!isMobile && <label id="input-type">Type of propose</label>}
+                  <select
+                    id="input-type"
+                    value={roundData}
+                    onChange={(e) => {
+                      setRoundData(e.target.value);
+                    }}
+                  >
+                    <option value={"truth"}>Truth</option>
+                    <option value={"dare"}>Dare</option>
+                  </select>
+                </div>
+              </Box>
               {!isLoading && !disableNotMyTurn(activeRound, userData) && (
                 <div
                   onClick={() => sendResponse()}

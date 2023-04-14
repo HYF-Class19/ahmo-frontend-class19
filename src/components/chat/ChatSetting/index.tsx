@@ -43,13 +43,20 @@ import * as React from "react";
 import Draggable from "react-draggable";
 import AlertDialog from "../AlertDialog";
 
-function PaperComponent(props: PaperProps) {
+interface DraggablePaperProps extends PaperProps {}
+
+function DraggablePaper(props: DraggablePaperProps) {
+  const paperRef = React.useRef<HTMLDivElement>(null);
+
   return (
     <Draggable
       handle="#draggable-dialog-title"
       cancel={'[class*="MuiDialogContent-root"]'}
+      nodeRef={paperRef}
     >
-      <Paper {...props} />
+      <div ref={paperRef}>
+        <Paper {...props} />
+      </div>
     </Draggable>
   );
 }
@@ -161,7 +168,7 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
       <Dialog
         open={open}
         onClose={handleClose}
-        PaperComponent={PaperComponent}
+        PaperComponent={DraggablePaper}
         aria-labelledby="draggable-dialog-title"
       >
         <AppBar
@@ -170,7 +177,11 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
           sx={{ position: "relative" }}
         >
           <Toolbar>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h5" component="div">
+            <Typography
+              sx={{ ml: 2, flex: 1, textTransform: "capitalize" }}
+              variant="h5"
+              component="div"
+            >
               {chat.type} info
             </Typography>
             <IconButton
@@ -194,13 +205,20 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
           >
             <CustomAvatar
               chat={chat.type === "group" ? chat : null}
+              width={50}
+              height={50}
               user={
                 chat.type === "direct"
                   ? getDirectName(userData!.id, chat.members)
                   : null
               }
             />
-            <Typography gutterBottom variant="h5" component="div">
+            <Typography
+              sx={{ ml: 3, mb: 0 }}
+              gutterBottom
+              variant="h5"
+              component="div"
+            >
               {chat.name || getDirectName(userData!.id, chat.members)?.fullName}
             </Typography>
             <Box sx={{ ml: "auto" }}>
@@ -252,7 +270,8 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
                         <Typography sx={{ color: "gray" }}>admin</Typography>
                       )}
                       {userData?.id === chat.admin.id &&
-                        member.user?.id !== chat.admin.id && (
+                        member.user?.id !== chat.admin.id &&
+                        chat.members.length > 2 && (
                           <IconButton
                             onClick={() => {
                               openConfirmation("remove");
@@ -288,7 +307,7 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
                   </ListItemButton>
                 </ListItem>
               ))}
-              {userData?.id === chat.admin.id && (
+              {userData?.id === chat.admin.id && chat.type !== "direct" && (
                 <ListItem disableGutters>
                   <ListItemButton autoFocus>
                     <ListItemAvatar>

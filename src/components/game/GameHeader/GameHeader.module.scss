@@ -3,7 +3,7 @@
   z-index: 10;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 1.2rem;
   background-color: #000;
   border-radius: 20px 20px 0 0;
   color: #fff;
@@ -11,15 +11,15 @@
     display: flex;
     align-items: center;
     h3 {
-        margin: 0;
-        font-size: 24px;
-        font-weight: 700;
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
     }
     h2 {
-        margin: 0;
-        font-size: 32px;
-        font-weight: 700;
-        text-transform: capitalize;
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+      text-transform: capitalize;
     }
   }
   .status {
@@ -28,15 +28,27 @@
     justify-content: space-between;
     width: 33%;
     img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
     }
     .score {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+@media screen and (max-width: 789px) {
+  .header {
+    border-radius: 0;
+    flex-wrap: wrap;
+    .chatName {
+      h2 {
+        font-size: 1.5rem;
+      }
     }
   }
 }

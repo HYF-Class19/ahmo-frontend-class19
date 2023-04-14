@@ -7,6 +7,10 @@
   font-family: "Quicksand", sans-serif;
 }
 
+body {
+  font-size: 16px;
+}
+
 .wrapper {
   height: 100%;
 }
@@ -51,5 +55,17 @@
       color: #23b1d0;
       text-decoration: none;
     }
+  }
+}
+
+@media screen and (max-width: 789px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  body {
+    font-size: 12px;
   }
 }
