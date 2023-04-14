@@ -1,44 +1,43 @@
 .wrapper {
+  display: flex;
+  flex-direction: column;
+  &.submitted {
+    margin-bottom: 2.4rem;
+  }
+  .riddler {
     display: flex;
-    flex-direction: column;
-    &.submitted {
-        margin-bottom: 40px;
+    width: 100%;
+    justify-content: flex-start;
+    margin: 0.8rem 1.2rem;
+    color: white;
+    p {
+      font-size: 2rem;
     }
-    .riddler {
-        display: flex;
-        width: 100%;
-        justify-content: flex-start;
-        margin: 10px 20px;
-        color: white;
-        p {
-            font-size: 24px;
-        }
+  }
+  .winner {
+    position: relative;
+    width: 100%;
+    padding: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    p {
+      font-size: 1.5rem;
+      color: #f3fb8c;
+      position: absolute;
     }
-    .winner {
-        position: relative;
-        width: 100%;
-        padding: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        p {
-            font-size: 24px;
-            color: #F3FB8C;
-            position: absolute;
-            
-        }
+  }
+  .submitArea {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    width: 100%;
+    padding: 1.2rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    transform: translateX(-50%);
+    h4 {
+      color: white;
     }
-    .submitArea {
-        position: absolute;
-        bottom: 0px;
-        left: 50%;
-        width: 100%;
-        padding: 20px;
-        background-color: rgba(0, 0, 0, 0.5);
-        transform: translateX(-50%);
-        h4 {
-            color: white;
-        }
-    }
+  }
 }

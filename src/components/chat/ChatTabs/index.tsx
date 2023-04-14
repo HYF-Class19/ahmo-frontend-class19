@@ -6,9 +6,10 @@ import styles from "./ChatTabs.module.scss";
 
 interface ChatTabsProps {
   setIsActive: (isActive: boolean) => void;
+  ref?: any;
 }
 
-const ChatTabs: React.FC<ChatTabsProps> = ({ setIsActive }) => {
+const ChatTabs: React.FC<ChatTabsProps> = ({ setIsActive, ref }) => {
   const dispatch = useAppDispatch();
   const selectedType = useAppSelector(selectMenuType);
 

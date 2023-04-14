@@ -94,7 +94,7 @@ const GameBox: React.FC<GameBoxProps> = () => {
       selectedGame?.members.length > 1 &&
       selectedGame.type === "game" ? (
         <>
-          {alertContent && (
+          {alertContent && open && (
             <div
               className={clsx(styles.alertWrapper, open && styles.alertOpen)}
             >

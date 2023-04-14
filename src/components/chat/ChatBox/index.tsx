@@ -2,6 +2,7 @@ import ChatTextarea from "@/components/chat/ChatTextarea";
 import Message from "@/components/chat/Message";
 import SelectChatTemplate from "@/components/shared/SelectChatTemplate";
 import { useAppSelector } from "@/hooks/useAppHooks";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { IMessage } from "@/models/IMessage";
 import { IUser } from "@/models/IUser";
 import { useFetchChatWithMessagesQuery } from "@/services/chatService";
@@ -13,6 +14,7 @@ import {
   isAvatarUnvisible,
 } from "@/utils/chatHelpers";
 import { socket } from "@/utils/socket";
+import { Box, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import ChatHeader from "../ChatHeader";
 import ChatSetting from "../ChatSetting";
@@ -34,6 +36,7 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
   );
   const scrollRef = useRef<any>();
   const boxRef = useRef<any>();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (boxRef.current && oldData?.id !== data?.id) {
@@ -106,9 +109,25 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
                     </div>
                   ))
                 ) : (
-                  <div className={styles.noMessages}>
-                    <h3>No messages yet</h3>
-                  </div>
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: "40%",
+                      left: "50%",
+                      transform: "translate(-50%)",
+                    }}
+                  >
+                    <Typography
+                      variant="h3"
+                      sx={{
+                        color: "lightgrey",
+                        p: 4,
+                        bgcolor: "rgba(0,0,0,0.5)",
+                      }}
+                    >
+                      No messages yet
+                    </Typography>
+                  </Box>
                 )
               ) : (
                 Array.from(new Array(10)).map((item, i) => (

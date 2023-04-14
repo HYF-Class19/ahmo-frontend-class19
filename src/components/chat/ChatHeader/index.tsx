@@ -1,4 +1,8 @@
 import CustomAvatar from "@/components/shared/CustomAvatar";
+import { useAppDispatch } from "@/hooks/useAppHooks";
+import { useIsLaptop } from "@/hooks/useIsMobile";
+import { removeActiveChat } from "@/store/slices/chatSlice";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { IconButton, Skeleton } from "@mui/material";
 import React from "react";
@@ -15,6 +19,13 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   chat,
   user,
 }) => {
+  const isLaptop = useIsLaptop();
+  const dispatch = useAppDispatch();
+
+  const back = () => {
+    dispatch(removeActiveChat());
+  };
+
   return (
     <div className={styles.header}>
       <div className={styles.chatInfo}>
@@ -38,6 +49,13 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
           </>
         ) : (
           <>
+            {isLaptop && (
+              <ArrowBackIosIcon
+                onClick={back}
+                color={"warning"}
+                sx={{ mr: 2 }}
+              />
+            )}
             <CustomAvatar
               chat={chat}
               mr={2}

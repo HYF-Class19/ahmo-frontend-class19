@@ -1,4 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { IMember } from "@/models/IChat";
 import { IRound } from "@/models/IGame";
 import {
@@ -19,7 +20,7 @@ import {
 import { selectUserData } from "@/store/slices/userSlice";
 import { disableNotMyTurn } from "@/utils/round-helper";
 import { socket } from "@/utils/socket";
-import { Button, CircularProgress, IconButton } from "@mui/material";
+import { Box, Button, CircularProgress, IconButton } from "@mui/material";
 import Image from "next/image";
 import React, { useState } from "react";
 import GameInput from "../GameInput";
@@ -47,6 +48,7 @@ const GameTextField: React.FC<GameTextFieldProps> = ({
   const [createRound] = useCreateRoundMutation();
   const [updateRoundData, { error }] = useUpdateRoundDataMutation();
   const dispatch = useAppDispatch();
+  const isMobile = useIsMobile();
 
   const sendResponse = async (answer?: string) => {
     if ((answer || moveData) && (moveType || answer) && activeRound) {
@@ -185,27 +187,29 @@ const GameTextField: React.FC<GameTextFieldProps> = ({
           )
         ) : (
           <div className={styles.textfield}>
-            <div className={styles.inputfield}>
-              <GameInput
-                value={moveData}
-                onChange={(e: any) => setMoveData(e.target.value)}
-                name={"move"}
-                label={"Move data"}
-              />
-            </div>
-            <div className={styles.selectItem}>
-              <label id="input-type">Type of propose</label>
-              <select
-                id="input-type"
-                value={moveType}
-                onChange={(e) => {
-                  setMoveType(e.target.value);
-                }}
-              >
-                <option value={"question"}>Question</option>
-                <option value={"statement"}>Statement</option>
-              </select>
-            </div>
+            <Box sx={{ display: "flex", width: "90%", flexWrap: "wrap" }}>
+              <div className={styles.inputfield}>
+                <GameInput
+                  value={moveData}
+                  onChange={(e: any) => setMoveData(e.target.value)}
+                  name={"move"}
+                  label={"Move data"}
+                />
+              </div>
+              <div className={styles.selectItem}>
+                {!isMobile && <label id="input-type">Type of propose</label>}
+                <select
+                  id="input-type"
+                  value={moveType}
+                  onChange={(e) => {
+                    setMoveType(e.target.value);
+                  }}
+                >
+                  <option value={"question"}>Question</option>
+                  <option value={"statement"}>Statement</option>
+                </select>
+              </div>
+            </Box>
             {!isLoading && !disableNotMyTurn(activeRound, userData) && (
               <div onClick={() => sendResponse()} className={styles.btnSection}>
                 <IconButton>
