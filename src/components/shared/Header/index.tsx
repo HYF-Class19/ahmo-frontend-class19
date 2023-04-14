@@ -6,6 +6,7 @@ import {
 } from "@/store/slices/userSlice";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { Box, IconButton, Skeleton, Typography } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { destroyCookie } from "nookies";
@@ -35,7 +36,7 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles.logoWrapper}>
-        <img src="/ahmo-logo.png" alt="logo" />
+        <Image src="/ahmo-logo.png" alt="logo" width={65} height={65} />
       </div>
       <nav>
         {isAuth !== false ? (

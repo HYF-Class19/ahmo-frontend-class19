@@ -71,7 +71,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   useEffect(() => {
     setActive(searchValue.length > 0);
-  }, [searchValue]);
+  }, [searchValue, setActive]);
 
   useEffect(() => {
     if (!isActive) {

@@ -27,7 +27,7 @@ const RoundData: React.FC<RoundDataProps> = ({
       const content = getStatusForCurrentUser(activeRound, userData, gameType);
       getAlertContent(content);
     }
-  }, [userData, activeRound.id]);
+  }, [userData, activeRound, gameType, getAlertContent]);
 
   return (
     <div className={styles.wrapper}>

@@ -26,7 +26,12 @@ export const gameService = api.injectEndpoints({
               gameId: number;
             }) => {
               updateCachedData((draft) => {
-                console.log(!!draft, !!data.round, draft.id === data.gameId);
+                console.log(
+                  "getting mew round",
+                  !!draft,
+                  !!data.round,
+                  draft.id === data.gameId
+                );
                 if (draft && data.round && draft.id === data.gameId) {
                   if (draft.rounds) {
                     const activeRound = draft.rounds.find(
@@ -44,7 +49,9 @@ export const gameService = api.injectEndpoints({
           );
 
           socket.on("getMove", (move: any) => {
+            console.log("getting before move");
             updateCachedData((draft) => {
+              console.log("getting move", move, draft.id === move.chatId);
               if (draft.id === move.chatId) {
                 const roundIdx = draft?.rounds?.findIndex(
                   (round) => round.id === move?.round?.id
@@ -61,6 +68,7 @@ export const gameService = api.injectEndpoints({
 
           socket.on("getSubmitRound", ({ gameId: number }) => {
             updateCachedData((draft) => {
+              console.log("sumbitting got");
               const roundIdx = draft?.rounds?.findIndex(
                 (round) => round.round_status === "active"
               );
@@ -79,6 +87,7 @@ export const gameService = api.injectEndpoints({
               gameId: number;
             }) => {
               updateCachedData((draft) => {
+                console.log("getting updated word", draft.id === data.gameId);
                 if (draft && draft.id === data.gameId) {
                   const roundIdx = draft?.rounds?.findIndex(
                     (round) => round.round_status === "active"
