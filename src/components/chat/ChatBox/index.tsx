@@ -40,7 +40,7 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
       boxRef.current.scrollTop = boxRef.current.scrollHeight;
     }
     setOldData(data);
-  }, [data]);
+  }, [data, oldData?.id]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -55,7 +55,12 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
     socket.on("getStopTyping", () => {
       setSomeoneTyping(null);
     });
-  }, []);
+
+    return () => {
+      socket.off("getTyping");
+      socket.off("getStopTyping");
+    };
+  }, [userData?.id]);
 
   return (
     <div className={styles.chatBoxWrapper}>

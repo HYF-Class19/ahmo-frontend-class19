@@ -12,7 +12,7 @@ import { selectUserData } from "@/store/slices/userSlice";
 import { socket } from "@/utils/socket";
 import { AlertColor, CircularProgress } from "@mui/material";
 import clsx from "clsx";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import RoundData from "../RoundData";
 import TruthDareField from "../TruthDareField";
 import WordsTextField from "../WordsTextField";
@@ -45,13 +45,16 @@ const GameBox: React.FC<GameBoxProps> = () => {
     return () => {
       socket.off("getNewRound");
     };
-  }, []);
+  }, [dispatch, selectedGame.activeChat]);
 
-  const getAlertContent = (content: string) => {
-    if (!alertContent) {
-      setAlertContent(content);
-    }
-  };
+  const getAlertContent = useCallback(
+    (content: string) => {
+      if (!alertContent) {
+        setAlertContent(content);
+      }
+    },
+    [alertContent]
+  );
 
   useEffect(() => {
     setSeverity("info");
@@ -62,18 +65,18 @@ const GameBox: React.FC<GameBoxProps> = () => {
     if (game) {
       dispatch(setGameChat(game));
     }
-  }, [game]);
+  }, [game, dispatch]);
 
   useEffect(() => {
     if (game?.rounds) {
       const roundIdx = game.rounds.findIndex(
-        (round) => round.round_status === "active"
+        (round: IRound) => round.round_status === "active"
       );
       if (roundIdx + 1 && game.id === selectedGame.activeChat) {
         dispatch(setRound(game.rounds[roundIdx]));
       }
     }
-  }, [selectedGame.activeChat, game]);
+  }, [selectedGame.activeChat, game, dispatch]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });

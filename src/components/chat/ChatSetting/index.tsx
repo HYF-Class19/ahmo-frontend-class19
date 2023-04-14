@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import CustomAvatar from "@/components/shared/CustomAvatar";
 import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
 import { IChat, IMember } from "@/models/IChat";
@@ -82,12 +84,12 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
   const handleClickAnchor = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleCloseAnchor = () => {
+  const handleCloseAnchor = useCallback(() => {
     setConfirm(null);
     setAnchorEl(null);
-  };
+  }, []);
 
-  const leaveGroup = async () => {
+  const leaveGroup = useCallback(async () => {
     if (userData?.id) {
       const member = chat.members.find((m) => m.user.id === userData.id);
       if (member) {
@@ -97,9 +99,16 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
       setOpen(false);
     }
     handleCloseAnchor();
-  };
+  }, [
+    userData?.id,
+    chat.members,
+    removeMember,
+    dispatch,
+    setOpen,
+    handleCloseAnchor,
+  ]);
 
-  const deleteGroup = async () => {
+  const deleteGroup = useCallback(async () => {
     try {
       await deleteChat(chat.id);
       dispatch(removeActiveChat());
@@ -108,14 +117,14 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
       console.log(error);
     }
     handleCloseAnchor();
-  };
+  }, [dispatch, setOpen, handleCloseAnchor, chat.id, deleteChat]);
 
-  const deletePerson = async () => {
+  const deletePerson = useCallback(async () => {
     if (memberId) {
       await removeMember(memberId);
     }
     setConfirm(null);
-  };
+  }, [setConfirm, memberId, removeMember]);
 
   const openConfirmation = (action: string) => {
     setTypeOfConfirm(action);
@@ -134,7 +143,14 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
     } else {
       handleCloseAnchor();
     }
-  }, [confirm]);
+  }, [
+    confirm,
+    typeOfConfirm,
+    leaveGroup,
+    deleteGroup,
+    deletePerson,
+    handleCloseAnchor,
+  ]);
 
   const handleClose = () => {
     setOpen(false);
@@ -185,7 +201,7 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
               }
             />
             <Typography gutterBottom variant="h5" component="div">
-              {chat.name || getDirectName(userData!.id, chat.members).fullName}
+              {chat.name || getDirectName(userData!.id, chat.members)?.fullName}
             </Typography>
             <Box sx={{ ml: "auto" }}>
               <IconButton

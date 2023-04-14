@@ -20,7 +20,7 @@ const ChatMenu: React.FC<ChatMenuProps> = ({ chats }) => {
       // @ts-ignore
       dispatch(setMenu(chats));
     }
-  }, [chats]);
+  }, [chats, dispatch]);
 
   return (
     <div className={styles.menu} onClick={() => setIsSearchActive(false)}>

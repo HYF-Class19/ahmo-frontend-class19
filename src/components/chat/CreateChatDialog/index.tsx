@@ -161,7 +161,6 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
                   textAlign: "center",
                   outline: "none",
                 },
-                disableUnderline: true,
                 placeholder: "Type group name...",
               }}
             />
