@@ -36,8 +36,10 @@ const GameBox: React.FC<GameBoxProps> = () => {
   const scrollRef = useRef<any>();
 
   useEffect(() => {
-    socket.on("getNewRound", (data: { round: IRound }) => {
-      dispatch(setRound(data.round));
+    socket.on("getNewRound", (data: { round: IRound; gameId: number }) => {
+      if (selectedGame.activeChat === data.gameId) {
+        dispatch(setRound(data.round));
+      }
     });
 
     return () => {
@@ -67,7 +69,7 @@ const GameBox: React.FC<GameBoxProps> = () => {
       const roundIdx = game.rounds.findIndex(
         (round) => round.round_status === "active"
       );
-      if (roundIdx + 1) {
+      if (roundIdx + 1 && game.id === selectedGame.activeChat) {
         dispatch(setRound(game.rounds[roundIdx]));
       }
     }
@@ -85,7 +87,9 @@ const GameBox: React.FC<GameBoxProps> = () => {
 
   return (
     <div className={styles.chatBoxWrapper}>
-      {userData && selectedGame?.members.length > 1 ? (
+      {userData &&
+      selectedGame?.members.length > 1 &&
+      selectedGame.type === "game" ? (
         <>
           {alertContent && (
             <div

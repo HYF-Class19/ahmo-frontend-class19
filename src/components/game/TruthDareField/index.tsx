@@ -6,32 +6,31 @@ import {
   useUpdateRoundDataMutation,
 } from "@/services/roundServive";
 import {
-  selectMembers,
-  selectActiveChat,
   addScore,
+  selectActiveChat,
+  selectMembers,
 } from "@/store/slices/chatSlice";
-import {
-  addRoundData,
-  selectActiveRound,
-  setRound,
-} from "@/store/slices/roundSlice";
+import { addRoundData, selectActiveRound } from "@/store/slices/roundSlice";
 import { selectUserData } from "@/store/slices/userSlice";
 import { disableNotMyTurn } from "@/utils/round-helper";
 import { socket } from "@/utils/socket";
 import React, { useState } from "react";
 
-import styles from '../GameTextField/GameTextField.module.scss'
 import { IconButton } from "@mui/material";
+import Image from "next/image";
 import GameActions from "../GameActions";
 import GameInput from "../GameInput";
-import Image from 'next/image'
+import styles from "../GameTextField/GameTextField.module.scss";
 
 interface TruthDareFieldProps {
   chatId: number;
-  activateAlert: Function
+  activateAlert: Function;
 }
-const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId, activateAlert }) => {
-  const [moveData, setMoveData] = useState<string>('');
+const TruthDareField: React.FC<TruthDareFieldProps> = ({
+  chatId,
+  activateAlert,
+}) => {
+  const [moveData, setMoveData] = useState<string>("");
   const [moveType, setMoveType] = useState<string>("answer");
   const [roundData, setRoundData] = useState<string>("truth");
   const [createMove, { isLoading }] = useCreateMoveMutation();
@@ -58,19 +57,18 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId, activateAlert }
       // @ts-ignore
       const move = result.data;
       if (move) {
-        const receivers = activeGame.members
-          .map((m: IMember) => m.user.id);
+        const receivers = activeGame.members.map((m: IMember) => m.user.id);
         socket.emit("sendMove", { ...move, chatId, receivers });
         if (answer && activeRound?.riddler) {
           let winner;
           if (move.correct) {
-            winner = move.player.id
+            winner = move.player.id;
             dispatch(addScore({ winner: move.player.id }));
-            activateAlert('success', 'You won this round')
+            activateAlert("success", "You won this round");
           } else {
-            winner = activeRound.riddler.id
+            winner = activeRound.riddler.id;
             dispatch(addScore({ winner: activeRound.riddler.id }));
-            activateAlert('warning', 'You lost this round')
+            activateAlert("warning", "You lost this round");
           }
           const newRiddler = members.find(
             (m: IMember) => m.user.id !== activeRound?.riddler?.id
@@ -83,13 +81,18 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId, activateAlert }
             // @ts-ignore
             const newRound = res.data;
             if (newRound) {
-              socket.emit("newRound", {previousWinner: winner, gameId: activeGame.activeChat, round: newRound, receivers });
+              socket.emit("newRound", {
+                previousWinner: winner,
+                gameId: activeGame.activeChat,
+                round: newRound,
+                receivers,
+              });
             }
           }
         }
       }
     }
-    setMoveType('answer');
+    setMoveType("answer");
     setMoveData("");
     setRoundData("truth");
   };
@@ -99,14 +102,13 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId, activateAlert }
       await updateRoundData({ id: activeRound.id!, round_data: roundData });
       if (!error) {
         dispatch(addRoundData(roundData));
-        const receivers = members
-          .map((m: IMember) => m.user.id);
+        const receivers = members.map((m: IMember) => m.user.id);
         socket.emit("updateWord", {
           player: userData,
           receivers,
           round_data: roundData,
           gameId: activeGame.activeChat,
-          roundId: activeRound.id
+          roundId: activeRound.id,
         });
       }
       setRoundData("");
@@ -115,53 +117,64 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({ chatId, activateAlert }
 
   return (
     <div className={styles.wrapper}>
-        {userData && activeRound 
-        ?  activeRound?.riddler?.id === userData.id ? (
-            !activeRound.round_data && (
-                <div className={styles.textfield}>
-                    <div className={styles.inputfield}><GameInput
-                      value={moveData}
-                      onChange={(e: any) => setMoveData(e.target.value)}
-                      id="move_data"
-                      placeholder={"place your move data here"}
-                    /></div>
-                  <div className={styles.selectItem}>
-                    <label id="input-type">Type of propose</label>
-                    <select
-                      id="input-type"
-                      value={roundData}
-                      onChange={(e) => {
-                        setRoundData(e.target.value);
-                      }}
-                    >
-                      <option value={"truth"}>Truth</option>
-                      <option value={"dare"}>Dare</option>
-                    </select>
-                  </div>
-                  {!isLoading && !disableNotMyTurn(activeRound, userData) &&
-                  <div onClick={() => sendResponse()} className={styles.btnSection}>
+      {userData && activeRound ? (
+        activeRound?.riddler?.id === userData.id ? (
+          !activeRound.round_data && (
+            <div className={styles.textfield}>
+              <div className={styles.inputfield}>
+                <GameInput
+                  value={moveData}
+                  onChange={(e: any) => setMoveData(e.target.value)}
+                  id="move_data"
+                  placeholder={"place your move data here"}
+                />
+              </div>
+              <div className={styles.selectItem}>
+                <label id="input-type">Type of propose</label>
+                <select
+                  id="input-type"
+                  value={roundData}
+                  onChange={(e) => {
+                    setRoundData(e.target.value);
+                  }}
+                >
+                  <option value={"truth"}>Truth</option>
+                  <option value={"dare"}>Dare</option>
+                </select>
+              </div>
+              {!isLoading && !disableNotMyTurn(activeRound, userData) && (
+                <div
+                  onClick={() => sendResponse()}
+                  className={styles.btnSection}
+                >
                   <IconButton>
-                  <Image src='/img/send.svg' width="30" height='30' alt={'Send icon'} />
-                </IconButton>
-                </div>}
-                </div>
-              )
-        ) 
-        : (
-            activeRound.round_data && (
-                <GameActions
-                      isDisabled={
-                        isRoundDataLoading || disableNotMyTurn(activeRound, userData)
-                      }
-                      sendResponse={sendResponse}
-                      values={["truth", "dare"]}
+                    <Image
+                      src="/img/send.svg"
+                      width="30"
+                      height="30"
+                      alt={"Send icon"}
                     />
-        ))
-        : (
-            <h1>unathorized</h1>
-          )}
+                  </IconButton>
+                </div>
+              )}
+            </div>
+          )
+        ) : (
+          activeRound.round_data && (
+            <GameActions
+              isDisabled={
+                isRoundDataLoading || disableNotMyTurn(activeRound, userData)
+              }
+              sendResponse={sendResponse}
+              values={["truth", "dare"]}
+            />
+          )
+        )
+      ) : (
+        <h1>unathorized</h1>
+      )}
     </div>
-    );
+  );
 };
 
 export default TruthDareField;

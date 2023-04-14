@@ -48,7 +48,7 @@ const GameRound: React.FC<GameRoundProps> = ({
       {round &&
         userData &&
         (gameType === "guess a word" ? (
-          round.submiting >= 2 || round.id !== activeRound.id ? (
+          activeRound.submiting >= 2 || round.id !== activeRound.id ? (
             <>
               <div className={styles.riddler}>
                 <p>

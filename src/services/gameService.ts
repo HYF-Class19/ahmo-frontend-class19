@@ -1,5 +1,5 @@
 import { IChat } from "@/models/IChat";
-import { CreateChatDto, IGame, IMove, IRound } from "@/models/IGame";
+import { CreateChatDto, IGame, IRound } from "@/models/IGame";
 import { IUser } from "@/models/IUser";
 import { api } from "@/services/api";
 import { socket } from "@/utils/socket";
@@ -26,6 +26,7 @@ export const gameService = api.injectEndpoints({
               gameId: number;
             }) => {
               updateCachedData((draft) => {
+                console.log(!!draft, !!data.round, draft.id === data.gameId);
                 if (draft && data.round && draft.id === data.gameId) {
                   if (draft.rounds) {
                     const activeRound = draft.rounds.find(
@@ -42,21 +43,23 @@ export const gameService = api.injectEndpoints({
             }
           );
 
-          socket.on("getMove", (move: IMove) => {
+          socket.on("getMove", (move: any) => {
             updateCachedData((draft) => {
-              const roundIdx = draft?.rounds?.findIndex(
-                (round) => round.id === move?.round?.id
-              );
-              if (roundIdx + 1) {
-                draft.rounds[roundIdx].moves?.push(move);
-                if (move.move_type === "statement") {
-                  draft.rounds[roundIdx].attempt++;
+              if (draft.id === move.chatId) {
+                const roundIdx = draft?.rounds?.findIndex(
+                  (round) => round.id === move?.round?.id
+                );
+                if (roundIdx + 1) {
+                  draft.rounds[roundIdx].moves?.push(move);
+                  if (move.move_type === "statement") {
+                    draft.rounds[roundIdx].attempt++;
+                  }
                 }
               }
             });
           });
 
-          socket.on("getSubmitRound", () => {
+          socket.on("getSubmitRound", ({ gameId: number }) => {
             updateCachedData((draft) => {
               const roundIdx = draft?.rounds?.findIndex(
                 (round) => round.round_status === "active"

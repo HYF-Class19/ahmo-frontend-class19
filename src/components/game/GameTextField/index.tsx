@@ -121,7 +121,7 @@ const GameTextField: React.FC<GameTextFieldProps> = ({
     }
   };
 
-  if (nativeRound.submiting < 2) {
+  if (activeRound.submiting < 2) {
     return null;
   }
 

@@ -8,13 +8,20 @@ import MainLayout from "@/layouts/MainLayout";
 import { IChat } from "@/models/IChat";
 import { useFetchChatsQuery } from "@/services/chatService";
 import { selectActiveChat } from "@/store/slices/chatSlice";
-import { selectIsAuth, selectUserData } from "@/store/slices/userSlice";
+import { selectUserData } from "@/store/slices/userSlice";
+import { redirect } from "@/utils/redirect";
 import { socket } from "@/utils/socket";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
+import { useRouter } from "next/router";
+import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
 import styles from "../../styles/Chat.module.scss";
 
-const Chat: NextPage = () => {
+interface ChatProps {
+  isAuth: boolean;
+}
+
+const Chat: NextPage<ChatProps> = ({ isAuth }) => {
   const [selectedType, setSelectedType] = useState<
     "game" | "group" | "group" | "all"
   >("all");
@@ -22,8 +29,12 @@ const Chat: NextPage = () => {
   const [chats, setChats] = useState<IChat[]>([]);
   const { data, error, isLoading } = useFetchChatsQuery();
   const userData = useAppSelector(selectUserData);
-  const isAuth = useAppSelector(selectIsAuth);
   const activeChat = useAppSelector(selectActiveChat);
+  const router = useRouter();
+
+  if (!isAuth) {
+    router.push("/404");
+  }
 
   useEffect(() => {
     if (userData) {
@@ -74,6 +85,27 @@ const Chat: NextPage = () => {
       )}
     </MainLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const cookies = parseCookies(ctx);
+
+  if (!cookies.authToken) {
+    redirect(ctx, "/auth/login");
+  }
+  if (cookies.authToken) {
+    return {
+      props: {
+        isAuth: true,
+      },
+    };
+  } else {
+    return {
+      props: {
+        isAuth: false,
+      },
+    };
+  }
 };
 
 export default Chat;
