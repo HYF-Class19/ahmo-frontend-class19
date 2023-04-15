@@ -111,7 +111,7 @@ const Header = () => {
           <>
             <ul>
               <li className={pathname === "/" ? styles.active : ""}>
-                <Link href={"/"}>Documentation</Link>
+                <Link href={"/"}>Home page</Link>
               </li>
               <li className={pathname === "/learn-more" ? styles.active : ""}>
                 <Link href={"/learn-more"}>Learn more</Link>
