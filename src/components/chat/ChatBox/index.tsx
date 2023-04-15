@@ -2,7 +2,6 @@ import ChatTextarea from "@/components/chat/ChatTextarea";
 import Message from "@/components/chat/Message";
 import SelectChatTemplate from "@/components/shared/SelectChatTemplate";
 import { useAppSelector } from "@/hooks/useAppHooks";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { IMessage } from "@/models/IMessage";
 import { IUser } from "@/models/IUser";
 import { useFetchChatWithMessagesQuery } from "@/services/chatService";
@@ -36,7 +35,6 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
   );
   const scrollRef = useRef<any>();
   const boxRef = useRef<any>();
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (boxRef.current && oldData?.id !== data?.id) {

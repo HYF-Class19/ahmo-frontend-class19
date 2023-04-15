@@ -92,6 +92,14 @@ export const chatApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Chat", "Message"],
     }),
+    updateChat: builder.mutation<void, { chatId: number; image_url?: string }>({
+      query: ({ chatId, image_url }) => ({
+        url: `/chats/${chatId}`,
+        method: "PATCH",
+        body: { image_url },
+      }),
+      invalidatesTags: ["Chat"],
+    }),
   }),
   overrideExisting: true,
 });
@@ -102,5 +110,6 @@ export const {
   useCreateGroupMutation,
   useGetChatByTypeQuery,
   useRemoveMemberMutation,
+  useUpdateChatMutation,
   useDeleteChatMutation,
 } = chatApi;

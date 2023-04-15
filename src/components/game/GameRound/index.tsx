@@ -8,6 +8,7 @@ import { selectUserData } from "@/store/slices/userSlice";
 import React, { useState } from "react";
 
 import { IMember } from "@/models/IChat";
+import { getRoundWinnerMessage } from "@/utils/round-helper";
 import { socket } from "@/utils/socket";
 import { Button } from "@mui/material";
 import clsx from "clsx";
@@ -71,14 +72,7 @@ const GameRound: React.FC<GameRoundProps> = ({
               {round.round_winner && (
                 <div className={styles.winner}>
                   <hr />
-                  <p>
-                    {" "}
-                    winner:{" "}
-                    {
-                      members.find((m: any) => m.user.id === round.round_winner)
-                        ?.user.fullName
-                    }
-                  </p>
+                  <p>{getRoundWinnerMessage(round, members, "guess a word")}</p>
                 </div>
               )}
             </>
@@ -102,6 +96,7 @@ const GameRound: React.FC<GameRoundProps> = ({
         ) : gameType === "truth or dare" ? (
           <TruthDareRound
             round={round}
+            scrollRef={scrollRef}
             userData={userData}
             activeRound={activeRound}
           />

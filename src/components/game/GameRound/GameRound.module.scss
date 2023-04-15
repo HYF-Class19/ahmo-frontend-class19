@@ -36,6 +36,9 @@
     padding: 1.2rem;
     background-color: rgba(0, 0, 0, 0.5);
     transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     h4 {
       color: white;
     }

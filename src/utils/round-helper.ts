@@ -95,3 +95,25 @@ export const doesExistsInRounds = (
 ) => {
   return rounds.map((r) => r.id).includes(activeId || 0);
 };
+
+export const getRoundWinnerMessage = (
+  round: IRound,
+  members: IMember[],
+  gameType: string
+) => {
+  if (round.round_winner === round.riddler.id) {
+    const loser = members.find(
+      (m: any) => m.user.id !== round.round_winner
+    )?.user;
+    if (gameType === "guess a word") {
+      return `${loser?.fullName} has spent all attempts, winner: ${round.riddler.fullName}`;
+    } else {
+      return `${loser?.fullName} didn't guess, winner: ${round.riddler.fullName}`;
+    }
+  } else {
+    const winner = members.find(
+      (m: any) => m.user.id === round.round_winner
+    )?.user;
+    return `${winner?.fullName} has guessed`;
+  }
+};
