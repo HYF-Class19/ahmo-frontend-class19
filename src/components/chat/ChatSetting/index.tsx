@@ -6,6 +6,7 @@ import { IChat, IMember } from "@/models/IChat";
 import {
   useDeleteChatMutation,
   useRemoveMemberMutation,
+  useUpdateChatMutation,
 } from "@/services/chatService";
 import { removeActiveChat } from "@/store/slices/chatSlice";
 import { selectUserData } from "@/store/slices/userSlice";
@@ -22,6 +23,9 @@ import {
   AppBar,
   Avatar,
   Box,
+  Button,
+  DialogActions,
+  DialogTitle,
   Divider,
   IconButton,
   List,
@@ -29,6 +33,7 @@ import {
   ListItemAvatar,
   ListItemButton,
   ListItemText,
+  TextField,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -79,9 +84,12 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
   const [confirm, setConfirm] = React.useState<boolean | null>();
   const [typeOfConfirm, setTypeOfConfirm] = React.useState<string>();
   const [memberId, setMemberId] = React.useState<number>();
+  const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
+  const [image_url, setImage_url] = React.useState("");
 
   const [removeMember, result] = useRemoveMemberMutation();
   const [deleteChat, deleteResult] = useDeleteChatMutation();
+  const [updateChat, updateResult] = useUpdateChatMutation();
 
   const userData = useAppSelector(selectUserData);
   const openAnchor = Boolean(anchorEl);
@@ -95,6 +103,11 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
     setConfirm(null);
     setAnchorEl(null);
   }, []);
+
+  const closeImageDialog = () => {
+    setImageDialogOpen(false);
+    setImage_url("");
+  };
 
   const leaveGroup = useCallback(async () => {
     if (userData?.id) {
@@ -136,6 +149,13 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
   const openConfirmation = (action: string) => {
     setTypeOfConfirm(action);
     setOpenAlertDialog(true);
+  };
+
+  const updateImage = async () => {
+    if (image_url.length > 5) {
+      await updateChat({ chatId: chat.id, image_url });
+      closeImageDialog();
+    }
   };
 
   React.useEffect(() => {
@@ -203,16 +223,36 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
               width: "100%",
             }}
           >
-            <CustomAvatar
-              chat={chat.type === "group" ? chat : null}
-              width={50}
-              height={50}
-              user={
-                chat.type === "direct"
-                  ? getDirectName(userData!.id, chat.members)
-                  : null
-              }
-            />
+            <Box
+              onClick={() => chat.type === "group" && setImageDialogOpen(true)}
+              sx={{
+                position: "relative",
+                cursor: "pointer",
+              }}
+            >
+              <CustomAvatar
+                chat={chat.type === "group" ? chat : null}
+                width={50}
+                height={50}
+                user={
+                  chat.type === "direct"
+                    ? getDirectName(userData!.id, chat.members)
+                    : null
+                }
+              />
+              {chat.type === "group" && (
+                <AddIcon
+                  sx={{
+                    position: "absolute",
+                    bottom: "-10px",
+                    right: 0,
+                    width: 30,
+                    height: 30,
+                    "&:hover": { color: "#23B1D0" },
+                  }}
+                />
+              )}
+            </Box>
             <Typography
               sx={{ ml: 3, mb: 0 }}
               gutterBottom
@@ -329,6 +369,26 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
         setOpen={setOpenAlertDialog}
         title={"Are you sure?"}
       />
+      <Dialog open={imageDialogOpen} onClose={closeImageDialog}>
+        <DialogTitle>Change Image</DialogTitle>
+        <DialogContent sx={{ minWidth: "400px" }}>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="image_url"
+            label="Image url"
+            type="link"
+            value={image_url}
+            onChange={(e) => setImage_url(e.target.value)}
+            fullWidth
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeImageDialog}>Cancel</Button>
+          <Button onClick={updateImage}>Add image</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

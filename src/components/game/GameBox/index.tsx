@@ -23,6 +23,7 @@ interface GameBoxProps {}
 const GameBox: React.FC<GameBoxProps> = () => {
   const [open, setOpen] = useState(true);
   const [severity, setSeverity] = useState<AlertColor>("info");
+  const [oldData, setOldData] = useState<any>();
   const [alertContent, setAlertContent] = useState("");
   const selectedGame = useAppSelector(selectActiveChat);
   const userData = useAppSelector(selectUserData);
@@ -82,6 +83,13 @@ const GameBox: React.FC<GameBoxProps> = () => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [selectedGame.rounds]);
 
+  useEffect(() => {
+    if (boxRef.current && oldData?.id !== game?.id) {
+      boxRef.current.scrollTop = boxRef.current.scrollHeight;
+    }
+    setOldData(game);
+  }, [game, oldData?.id]);
+
   const activateAlert = (severity: AlertColor, content: string) => {
     setSeverity(severity);
     setAlertContent(content);
@@ -111,13 +119,15 @@ const GameBox: React.FC<GameBoxProps> = () => {
             </div>
           )}
           <GameHeader />
-          {selectedGame.game !== "words" && (
-            <RoundData
-              getAlertContent={getAlertContent}
-              gameType={game?.game}
-              count={game?.rounds.length}
-            />
-          )}
+          <div ref={boxRef}>
+            {selectedGame.game !== "words" && (
+              <RoundData
+                getAlertContent={getAlertContent}
+                gameType={game?.game}
+                count={game?.rounds.length}
+              />
+            )}
+          </div>
           <div
             ref={boxRef}
             style={{ overflowY: "auto", overflowX: "hidden" }}

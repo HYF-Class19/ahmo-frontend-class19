@@ -30,16 +30,18 @@ const EditableText: React.FC<EditableTextProps> = ({
     <Box sx={{ display: "flex", alignItems: "center", color: "#FFFFFF" }}>
       <Typography sx={{ marginRight: 1 }}>{label}:</Typography>
       <InputBase
-        value={value}
+        value={newValue}
         onChange={(e) => setNewValue(e.target.value)}
         readOnly={!isEditable}
         placeholder={placeholder}
         inputProps={{
           style: {
-            borderBottom: isEditable ? "2px solid blue" : "1px solid #F3FB8C",
+            borderBottom: isEditable
+              ? "2px solid #F3FB8C"
+              : "1px solid #F3FB8C",
           },
         }}
-        sx={{ color: isEditable ? "blue" : "#FFFFFF" }}
+        sx={{ color: isEditable ? "#F3FB8C" : "#FFFFFF" }}
       />
       {!uneditable && (
         <IconButton size="small" onClick={handleIconClick}>

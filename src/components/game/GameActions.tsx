@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
-import styles from "./GameTextField/GameTextField.module.scss";
 import React from "react";
+import styles from "./GameTextField/GameTextField.module.scss";
 
 interface GameActionsProps {
   isDisabled: boolean;
@@ -17,7 +17,7 @@ const GameActions: React.FC<GameActionsProps> = ({
     <div className={styles.buttons}>
       {values.map((value, i) => (
         <Button
-            key={i}
+          key={i}
           onClick={() => sendResponse(value)}
           className={styles.boolBtn}
           variant="contained"

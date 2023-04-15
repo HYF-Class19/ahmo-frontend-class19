@@ -1,9 +1,10 @@
 import { useAppSelector } from "@/hooks/useAppHooks";
+import { useIsLaptop } from "@/hooks/useIsMobile";
 import useUpdateUserData from "@/hooks/useUpdateUser";
 import { IUser } from "@/models/IUser";
 import { selectUserData } from "@/store/slices/userSlice";
 import { EmailOutlined, PhoneIphone } from "@mui/icons-material";
-import { Box, Skeleton, TextField, Typography } from "@mui/material";
+import { Box, Skeleton, Typography } from "@mui/material";
 import React from "react";
 import EditableText from "./EditableText";
 
@@ -13,6 +14,7 @@ interface ProfileInfoProps {
 
 const ProfileInfo: React.FC<ProfileInfoProps> = ({ user }) => {
   const userData = useAppSelector(selectUserData);
+  const isLaptop = useIsLaptop();
   const updateUserData = useUpdateUserData();
 
   const updateName = async (fullName: string) => {
@@ -34,36 +36,19 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ user }) => {
   };
 
   return user ? (
-    <div>
-      <Typography variant="h2">{user.fullName}</Typography>
-      <TextField
-        name="bio"
-        label="Bio"
-        value={user.bio || "add bio..."}
-        multiline
-        rows={4}
-        variant="outlined"
-        sx={{
-          color: "#fffff",
-          margin: 2,
-          width: "100%",
-          "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#fff",
-          },
-          "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#fff",
-          },
-          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#fff",
-          },
-        }}
-      />
+    <Box
+      width={isLaptop ? "100%" : "50%"}
+      sx={{ bgcolor: "#23B1D0", borderRadius: "20px", maxWidth: 500 }}
+    >
+      <Typography variant="h4" textAlign={"center"} sx={{ mt: 2 }}>
+        {userData?.id === user.id ? "Edit Your info" : "Profile info"}
+      </Typography>
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
           marginBottom: "2",
-          justifyContent: "space-between",
+          justifyContent: "center",
         }}
       >
         <PhoneIphone sx={{ margin: 3 }} />
@@ -79,7 +64,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ user }) => {
         sx={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "center",
           marginBottom: "2",
         }}
       >
@@ -100,35 +85,37 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ user }) => {
         />
       </Box>
 
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <EmailOutlined
+      {userData?.id === user.id && (
+        <Box
           sx={{
-            margin: 3,
-            "&:hover .icon": {
-              visibility: "visible",
-              opacity: 1,
-            },
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-        />
-        <EditableText
-          value={user.image_url || ""}
-          label="Image Url"
-          uneditable={user.id !== userData?.id}
-          onSubmit={updateImageUrl}
-          placeholder="Enter an image url..."
-        />
-      </Box>
+        >
+          <EmailOutlined
+            sx={{
+              margin: 3,
+              "&:hover .icon": {
+                visibility: "visible",
+                opacity: 1,
+              },
+            }}
+          />
+          <EditableText
+            value={user.image_url || ""}
+            label="Image Url"
+            uneditable={user.id !== userData?.id}
+            onSubmit={updateImageUrl}
+            placeholder="Enter an image url..."
+          />
+        </Box>
+      )}
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "center",
         }}
       >
         <EmailOutlined
@@ -148,7 +135,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ user }) => {
           placeholder="Enter new name..."
         />
       </Box>
-    </div>
+    </Box>
   ) : (
     <Box>
       <Typography sx={{ mb: 4 }} variant="h2">
