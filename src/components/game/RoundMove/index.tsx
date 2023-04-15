@@ -1,9 +1,9 @@
 import React from "react";
 import { IMove } from "@/models/IGame";
 import styles from "./RoundMove.module.scss";
-import { Avatar } from "@mui/material";
 import { format } from "timeago.js";
 import clsx from "clsx";
+import CustomAvatar from "@/components/shared/CustomAvatar";
 
 interface RoundMoveProps {
   move: IMove;
@@ -14,7 +14,7 @@ const RoundMove: React.FC<RoundMoveProps> = ({ move, my }) => {
   return (
     <div className={clsx(styles.moveWrapper, my && styles.my)}>
       <div className={styles.avatar}>
-        <Avatar>{ move?.player?.fullName && move?.player?.fullName[0] }</Avatar>
+      <CustomAvatar user={move?.player} />
       </div>
       <div className={clsx(styles.moveBox, my && styles.myBox)}>
         <p className={styles.message}>{move.move_data}</p>

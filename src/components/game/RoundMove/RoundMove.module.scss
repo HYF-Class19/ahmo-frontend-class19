@@ -12,19 +12,18 @@
     display: flex;
     background-color: #484153;
     align-items: center;
-    padding: 10px;
-    margin-left: 10px;
+    padding: 0.8rem;
+    margin-left: 0.8rem;
     align-self: start;
-    border-radius: 15px 15px 15px 0;
-    margin-bottom: 20px;
+    border-radius: 1rem 1rem 1rem 0;
+    margin-bottom: 1.2rem;
     position: relative;
     &.myBox {
-      border-radius: 15px 15px 0 15px;
-      background-color: #B885F4;
+      background-color: #b885f4;
     }
     .message {
-      margin: 10px 20px 10px;
-      font-size: 20px;
+      margin: 0.6rem 1rem 0.6rem;
+      font-size: 1.2rem;
     }
     .date {
       align-self: flex-end;

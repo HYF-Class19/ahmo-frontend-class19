@@ -5,7 +5,7 @@ import ActionAreaCard from "@/components/shared/home-page/card";
 import WelcomeText from "@/components/shared/home-page/welcome-text";
 import { Box, Container, createTheme } from "@mui/material";
 import Footer from "@/components/shared/home-page/Footer";
-import Header from "@/components/shared/home-page/Header";
+import Header from "@/components/shared/Header";
 
 export default function Home() {
   return (
@@ -17,9 +17,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MainLayout>
-        
-        <Box minHeight="100vh" sx={{ bgcolor: "primary.main" }}>
-          <Header />
+        <Box sx={{ bgcolor: "primary.main", height: 'calc(100vh - 93px)'}}>
           <WelcomeText />
           <ActionAreaCard />
           <Footer />

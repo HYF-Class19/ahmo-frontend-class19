@@ -1,11 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {HYDRATE} from "next-redux-wrapper";
 import {IUser} from "@/models/IUser";
 import {IChat, IMember} from "@/models/IChat";
-import {IMessage} from "@/models/IMessage";
-import {io} from "socket.io-client";
-import {IGame, IMove, IRound} from "@/models/IGame";
-import { RootState } from "..";
+import {IRound} from "@/models/IGame"
 
 interface chatState {
     activeChat: number | null;
@@ -14,6 +10,7 @@ interface chatState {
     members: IMember[];
     type: "game" | "group" | "direct" | null;
     rounds: IRound[];
+    image_url: string | null;
     game: string | null;
 }
 
@@ -24,6 +21,7 @@ const initialState: chatState = {
     members: [],
     type: null,
     rounds: [],
+    image_url: null,
     game: null,
 }
 export const chatSlice = createSlice({
@@ -35,7 +33,8 @@ export const chatSlice = createSlice({
             state.members = action.payload.members
             state.admin = action.payload.admin
             state.type = action.payload.type;
-            state.name = action.payload.name;
+            state.image_url = action.payload.image_url || null
+            state.name = action.payload.name || null;
         },
         setGameChat: (state, action: PayloadAction<IChat>) => {
             state.activeChat = action.payload.id
@@ -44,7 +43,8 @@ export const chatSlice = createSlice({
             state.type = action.payload.type
             state.rounds = action.payload.rounds || []
             state.game = action.payload.game
-            state.name = action.payload.name;
+            state.name = action.payload.name || null;
+            state.image_url = action.payload.image_url || null
         },
         addRound: (state, action: PayloadAction<any>) => {
             state.rounds.push(action.payload)
@@ -55,11 +55,19 @@ export const chatSlice = createSlice({
                     member.score += 1
                 }
          })
+        },
+        removeActiveChat: (state) => {
+            state.activeChat = null
+            state.members = []
+            state.admin = null
+            state.type = null
+            state.image_url = null
+            state.name = null
         }
     },
 })
 
-export const {setActiveChat, addRound, addScore, setGameChat} = chatSlice.actions
+export const {setActiveChat, addRound, addScore, setGameChat, removeActiveChat} = chatSlice.actions
 
 export const selectActiveChat = (state: any) => state.chat
 export const selectMembers = (state: any) => state.chat.members

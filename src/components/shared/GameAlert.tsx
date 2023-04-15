@@ -1,59 +1,75 @@
-import { Alert, AlertColor, Collapse, IconButton, LinearProgress } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close';
-import React, { ReactNode, useEffect, useState } from 'react'
-
+import CloseIcon from "@mui/icons-material/Close";
+import { Alert, AlertColor, Collapse, IconButton } from "@mui/material";
+import React, { ReactNode, useCallback, useEffect } from "react";
 
 interface GameAlertProps {
-    severity?: AlertColor
-    children: ReactNode
-    open: boolean;
-    setOpen: Function;
+  severity?: AlertColor;
+  children: ReactNode;
+  open: boolean;
+  setOpen: Function;
+  setAlertContent: Function;
 }
 
+const GameAlert: React.FC<GameAlertProps> = ({
+  severity,
+  children,
+  setOpen,
+  open,
+  setAlertContent,
+}) => {
+  const getAlertSx = (): React.CSSProperties => {
+    return {
+      borderRadius: "0.5rem",
+      padding: "1rem",
+      fontWeight: "bold",
+      ...(severity === "error" && {
+        boxShadow: "0px 0px 5px 2px rgba(255, 0, 0, 0.2)",
+      }),
+    };
+  };
 
-const GameAlert: React.FC<GameAlertProps> = ({severity, children, setOpen, open}) => {
-    const [progress, setProgress] = useState(0);
+  const handleCloseAlert = useCallback(() => {
+    setOpen(false);
+    setAlertContent("");
+  }, [setOpen, setAlertContent]);
 
-    const getAlertSx = (): React.CSSProperties => {
-        return {
-          borderRadius: '0.5rem',
-          padding: '1rem',
-          fontWeight: 'bold',
-          ...(severity === 'error' && { boxShadow: '0px 0px 5px 2px rgba(255, 0, 0, 0.2)' }),
-        }
-      };
-
-    useEffect(() => {
+  useEffect(() => {
     let timer: NodeJS.Timeout;
     if (open) {
       timer = setTimeout(() => {
-        setOpen(false);
+        handleCloseAlert();
       }, 3000);
     }
     return () => {
       clearTimeout(timer);
     };
-  }, [open, setOpen]);
+  }, [open, handleCloseAlert]);
 
   return (
     <Collapse in={open}>
-    <Alert severity={severity} onClose={() => {}} action={
-        <IconButton
-          aria-label="close"
-          color="inherit"
-          size="small"
-          onClick={() => {
-            setOpen(false);
-          }}
-        >
-          <CloseIcon fontSize="inherit" />
-        </IconButton>}
+      <Alert
+        severity={severity}
+        onClose={() => {
+          setAlertContent("");
+        }}
+        action={
+          <IconButton
+            aria-label="close"
+            color="inherit"
+            size="small"
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
+            <CloseIcon fontSize="inherit" />
+          </IconButton>
+        }
         sx={getAlertSx()}
       >
         {children}
-        </Alert>
-     </Collapse>
-  )
-}
+      </Alert>
+    </Collapse>
+  );
+};
 
-export default GameAlert
+export default GameAlert;

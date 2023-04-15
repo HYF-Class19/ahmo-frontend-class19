@@ -23,7 +23,6 @@ export const roundService = api.injectEndpoints({
         method: "POST",
         body: dto,
       }),
-      invalidatesTags: ["Game"],
     }),
     updateRoundData: build.mutation({
       query: (dto: {

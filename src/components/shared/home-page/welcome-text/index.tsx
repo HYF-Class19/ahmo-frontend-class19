@@ -15,7 +15,7 @@ export default function WelcomeText() {
           textTransform: "uppercase",
           fontFamily: "Quicksand",
           color: "secondary.light",
-          m: 2,
+          p: 2,
         }}
       >
         {" "}

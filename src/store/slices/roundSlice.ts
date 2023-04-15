@@ -52,11 +52,14 @@ export const roundSlice = createSlice({
         },
         addSubmitting: (state) => {
             state.submiting++
+        },
+        addAttempt: (state) => {
+            state.attempt++;
         }
     }
 })
 
-export const {setRound, addRoundData, updateRoundStatus, addMove, addSubmitting} = roundSlice.actions
+export const {setRound, addRoundData, updateRoundStatus, addMove, addSubmitting, addAttempt} = roundSlice.actions
 
 export const selectActiveRound = (state: RootState) => state.round
 

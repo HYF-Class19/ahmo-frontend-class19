@@ -7,11 +7,23 @@
   ul {
     list-style: none;
     li {
-     button {
-      margin: 0.5rem 0;
-      width: 100%;
-      text-align: left;
-     }
+      button {
+        margin: 0.5rem 0;
+        width: 100%;
+        text-align: left;
+      }
     }
+  }
+}
+
+@media screen and (max-width: 789px) {
+  .tabs {
+    width: 30%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .tabs {
+    width: 100%;
   }
 }

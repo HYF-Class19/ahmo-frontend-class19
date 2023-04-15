@@ -1,34 +1,46 @@
-import React, { useEffect, useRef, useState } from 'react';
-import styles from './ChatMenu.module.scss'
 import ChatType from "@/components/chat/ChatType";
-import {IChat} from "@/models/IChat";
-import { useAppDispatch, useAppSelector } from '@/hooks/useAppHooks';
-import { selectMenu, setMenu } from '@/store/slices/menuSlice';
+import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
+import { IChat } from "@/models/IChat";
+import { selectMenu, selectMenuType, setMenu } from "@/store/slices/menuSlice";
+import React, { useEffect, useState } from "react";
+import styles from "./ChatMenu.module.scss";
 
 interface ChatMenuProps {
-    chats: IChat[]
-    selected: 'game' | 'direct' | 'group' | 'all'
+  chats?: IChat[];
 }
 
-const ChatMenu: React.FC<ChatMenuProps> = ({chats, selected}) => {
-    const [isSearchActive, setIsSearchActive] = useState(false)
-    const menu = useAppSelector(selectMenu)
-    const dispatch = useAppDispatch()
+const ChatMenu: React.FC<ChatMenuProps> = ({ chats }) => {
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const menu = useAppSelector(selectMenu);
+  const menuType = useAppSelector(selectMenuType);
+  const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        dispatch(setMenu(chats))
-    }, [chats])
+  useEffect(() => {
+    if (chats) {
+      // @ts-ignore
+      dispatch(setMenu(chats));
+    }
+  }, [chats, dispatch]);
 
-    return (
-        <div className={styles.menu} onClick={() => setIsSearchActive(false)}>
-            {selected === 'all' ? <ChatType isSearchActive={isSearchActive} setIsSearchActive={setIsSearchActive} chats={menu} type={selected} />
-                :
-                (
-                    <ChatType isSearchActive={isSearchActive} setIsSearchActive={setIsSearchActive} chats={menu.filter((item: any) => item.type === selected)} type={selected} />
-                )
-           }
-        </div>
-    );
+  return (
+    <div className={styles.menu} onClick={() => setIsSearchActive(false)}>
+      {menuType === "all" ? (
+        <ChatType
+          isSearchActive={isSearchActive}
+          setIsSearchActive={setIsSearchActive}
+          chats={menu}
+          type={menuType}
+        />
+      ) : (
+        <ChatType
+          isSearchActive={isSearchActive}
+          setIsSearchActive={setIsSearchActive}
+          chats={menu?.filter((item: any) => item.type === menuType)}
+          type={menuType}
+        />
+      )}
+    </div>
+  );
 };
 
 export default ChatMenu;

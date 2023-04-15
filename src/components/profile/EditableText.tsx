@@ -1,25 +1,27 @@
-import React, { useState } from "react";
+import { Check, Edit } from "@mui/icons-material";
 import { Box, IconButton, InputBase, Typography } from "@mui/material";
-import { Edit, Check } from "@mui/icons-material";
+import React, { useState } from "react";
 
 interface EditableTextProps {
   label: string;
-  onSubmit: (value: string) => void;
+  onSubmit?: (value: string) => void;
   placeholder: string;
+  value: string;
+  uneditable?: boolean;
 }
-
 const EditableText: React.FC<EditableTextProps> = ({
   label,
- 
   onSubmit,
   placeholder,
+  value,
+  uneditable,
 }) => {
-  const [value, setValue] = useState("");
+  const [newValue, setNewValue] = useState(value);
   const [isEditable, setIsEditable] = useState(false);
 
   const handleIconClick = () => {
-    if (isEditable) {
-      onSubmit(value);
+    if (isEditable && onSubmit) {
+      onSubmit(newValue);
     }
     setIsEditable(!isEditable);
   };
@@ -29,16 +31,21 @@ const EditableText: React.FC<EditableTextProps> = ({
       <Typography sx={{ marginRight: 1 }}>{label}:</Typography>
       <InputBase
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => setNewValue(e.target.value)}
         readOnly={!isEditable}
-        multiline
         placeholder={placeholder}
-        inputProps={{ style: { borderBottom: isEditable ? "2px solid blue" : "1px solid #F3FB8C"  } }}
-        sx= { {color: isEditable ? "blue" : "#FFFFFF"  } }
+        inputProps={{
+          style: {
+            borderBottom: isEditable ? "2px solid blue" : "1px solid #F3FB8C",
+          },
+        }}
+        sx={{ color: isEditable ? "blue" : "#FFFFFF" }}
       />
-      <IconButton size="small" onClick={handleIconClick}>
-        {isEditable ? <Check /> : <Edit />}
-      </IconButton>
+      {!uneditable && (
+        <IconButton size="small" onClick={handleIconClick}>
+          {isEditable ? <Check /> : <Edit />}
+        </IconButton>
+      )}
     </Box>
   );
 };
