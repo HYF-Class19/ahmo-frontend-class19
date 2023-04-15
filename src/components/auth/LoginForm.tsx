@@ -96,7 +96,7 @@ const Form: React.FC<FormProps> = () => {
         <Button
           type="submit"
           fullWidth
-          disabled={!form.formState.isValid || form.formState.isSubmitting}
+          // disabled={!form.formState.isValid || form.formState.isSubmitting}
           variant="contained"
           sx={{ mt: 3, mb: 2, color: "#000" }}
           color="secondary"
