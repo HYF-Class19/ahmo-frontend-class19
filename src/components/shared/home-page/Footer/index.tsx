@@ -1,14 +1,15 @@
-import React from "react";
+import { useIsLaptop } from "@/hooks/useIsMobile";
+import { AccountCircle, Chat, Lock, Mail } from "@mui/icons-material";
 import { Box, Grid, Typography } from "@mui/material";
-import { AccountCircle, Mail, Lock, Chat } from "@mui/icons-material";
 
 const Footer = () => {
+  const isLaptop = useIsLaptop();
   return (
     <Box
       position="fixed"
       bottom={0}
       width="100%"
-      height="60px"
+      height={isLaptop ? "auto" : "60px"}
       bgcolor="primary.main"
       display="flex"
       justifyContent="center"

@@ -18,7 +18,7 @@ export const FormField: React.FC<FormFieldProps> = ({ name, label, type }) => {
       className={styles.textField}
       variant="filled"
       name={name}
-      color="secondary"
+      color="warning"
       margin="normal"
       size="small"
       label={type !== "date" ? label : ""}

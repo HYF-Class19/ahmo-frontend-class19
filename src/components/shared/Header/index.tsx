@@ -104,32 +104,39 @@ const Header = () => {
                     setAnchorEl={setAnchorEl}
                     handleClick={handleClick}
                   />
-                </li>
-              </ul>
-            </>
-          ) : (
-            <>
-              <ul>
-                <li className={pathname === "/" ? styles.active : ""}>
-                  <Link href={"/"}>Documentation</Link>
-                </li>
-                <li className={pathname === "/learn-more" ? styles.active : ""}>
-                  <Link href={"/learn-more"}>Learn more</Link>
-                </li>
-              </ul>
-              <ul>
-                <li className={pathname === "/auth/login" ? styles.active : ""}>
-                  <Link href={"/auth/login"}>Login</Link>
-                </li>
-                <li
-                  className={pathname === "/auth/register" ? styles.active : ""}
-                >
-                  <Link href={"/auth/register"}>Register</Link>
-                </li>
-              </ul>
-            </>
-          )}
-        </nav>
+                </IconButton>
+                <HeaderMenu
+                  logout={logout}
+                  anchorEl={anchorEl}
+                  setAnchorEl={setAnchorEl}
+                  handleClick={handleClick}
+                />
+              </li>
+            </ul>
+          </>
+        ) : (
+          <>
+            <ul>
+              <li className={pathname === "/" ? styles.active : ""}>
+                <Link href={"/"}>Home page</Link>
+              </li>
+              <li className={pathname === "/learn-more" ? styles.active : ""}>
+                <Link href={"/learn-more"}>Learn more</Link>
+              </li>
+            </ul>
+            <ul>
+              <li className={pathname === "/auth/login" ? styles.active : ""}>
+                <Link href={"/auth/login"}>Login</Link>
+              </li>
+              <li
+                className={pathname === "/auth/register" ? styles.active : ""}
+              >
+                <Link href={"/auth/register"}>Register</Link>
+              </li>
+            </ul>
+          </>
+        )}
+      </nav>
     </header>
   );
 };

@@ -18,7 +18,14 @@ export default function ActionAreaCard() {
 
   return (
     <Grid container spacing={2} justifyContent="center">
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        md={3}
+        sx={{ display: "flex" }}
+        justifyContent={"center"}
+      >
         <Card
           onClick={() => handleRedirect(menuType.direct)}
           className={styles.rootCard}
@@ -26,6 +33,7 @@ export default function ActionAreaCard() {
             maxWidth: 400,
             border: "10px solid #810984",
             borderRadius: 3,
+            display: "flex",
           }}
         >
           <CardActionArea>
@@ -42,7 +50,14 @@ export default function ActionAreaCard() {
         </Card>
       </Grid>
 
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        md={3}
+        sx={{ display: "flex" }}
+        justifyContent={"center"}
+      >
         <Card
           onClick={() => handleRedirect(menuType.game)}
           className={styles.rootCard}
@@ -67,7 +82,14 @@ export default function ActionAreaCard() {
         </Card>
       </Grid>
 
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        md={3}
+        sx={{ display: "flex" }}
+        justifyContent={"center"}
+      >
         <Card
           onClick={() => handleRedirect(menuType.group)}
           className={styles.rootCard}
