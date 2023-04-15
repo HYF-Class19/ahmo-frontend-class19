@@ -5,15 +5,15 @@ import type { AppProps } from "next/app";
 
 /*import custom pallette*/
 
+import { ThemeProvider } from '@mui/material/styles'
+import { Provider } from 'react-redux';
+import { CacheProvider,} from '@emotion/react';
+import createCache from '@emotion/cache';
+import { useCallback, useEffect } from 'react';
+import { useGetUserQuery } from '@/services/authService';
+import { CustomTheme } from '@/styles/theme';
 import { IUser } from "@/models/IUser";
-import { useGetUserQuery } from "@/services/authService";
-import { CustomTheme } from "@/styles/theme";
-import createCache from "@emotion/cache";
-import { CacheProvider } from "@emotion/react";
-import { ThemeProvider } from "@mui/material/styles";
 import { parseCookies } from "nookies";
-import { useCallback, useEffect } from "react";
-import { Provider } from "react-redux";
 
 const cache = createCache({ key: "myapp" });
 
