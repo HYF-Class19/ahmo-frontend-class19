@@ -53,9 +53,7 @@ const Form: React.FC<FormProps> = () => {
   const formControlLabelStyle = {
     "& .MuiFormControlLabel-label": {
       fontSize: "14px",
-      width: 300,
-      backgroundColor: "rgba(0,0,0,0.1)",
-      accentcolor: "#9b59b6",
+      width: 95
     },
   };
 
@@ -103,7 +101,7 @@ const Form: React.FC<FormProps> = () => {
           sx={{ mt: 3, mb: 2, color: "#000" }}
           color="secondary"
         >
-          Sign In
+          Sign UP
         </Button>
         <Grid container className={styles.bottomLink} sx={{ mt: 2, mb: 1 }}>
           <Grid item>
