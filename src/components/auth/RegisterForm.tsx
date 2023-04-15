@@ -101,7 +101,7 @@ const Form: React.FC<FormProps> = () => {
           sx={{ mt: 3, mb: 2, color: "#000" }}
           color="secondary"
         >
-          Sign In
+          Sign UP
         </Button>
         <Grid container className={styles.bottomLink} sx={{ mt: 2, mb: 1 }}>
           <Grid item>

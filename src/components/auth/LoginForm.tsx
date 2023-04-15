@@ -96,12 +96,11 @@ const Form: React.FC<FormProps> = () => {
         <Button
           type="submit"
           fullWidth
-          disabled={!form.formState.isValid || form.formState.isSubmitting}
           variant="contained"
           sx={{ mt: 3, mb: 2, color: "#000" }}
           color="secondary"
         >
-          Sign In
+          Sign IN
         </Button>
         <Grid container className={styles.bottomLink} sx={{ mt: 2, mb: 1 }}>
           <Grid item>
