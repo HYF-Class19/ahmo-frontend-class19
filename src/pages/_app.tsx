@@ -5,7 +5,7 @@ import type { AppProps } from "next/app";
 
 /*import custom pallette*/
 
-import { ThemeProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles';
 import { Provider } from 'react-redux';
 import { CacheProvider,} from '@emotion/react';
 import createCache from '@emotion/cache';
