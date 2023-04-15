@@ -38,24 +38,38 @@ const Header = () => {
       <div className={styles.logoWrapper}>
         <Image src="/ahmo-logo.png" alt="logo" width={65} height={65} />
       </div>
-      <nav>
-        {isAuth !== false ? (
-          <>
-            <ul>
-              <li className={pathname === "/" ? styles.active : ""}>
-                <Link href={"/"}>Home</Link>
-              </li>
-              <li className={pathname === "/chat" ? styles.active : ""}>
-                <Link href={"/chat"}>Chat</Link>
-              </li>
-              <li className={pathname === "/learn-more" ? styles.active : ""}>
-                <Link href={"/learn-more"}>Learn more</Link>
-              </li>
-            </ul>
-            <ul>
-              <li className={pathname === "/profile" ? styles.active : ""}>
-                {userData ? (
-                  <Link href={`/profile/${userData.id}`}>
+        <nav>
+          {isAuth !== false ? (
+            <>
+              <ul>
+                <li className={pathname === "/" ? styles.active : ""}>
+                  <Link href={"/"}>Home</Link>
+                </li>
+                <li className={pathname === "/chat" ? styles.active : ""}>
+                  <Link href={"/chat"}>Chat</Link>
+                </li>
+                <li className={pathname === "/learn-more" ? styles.active : ""}>
+                  <Link href={"/learn-more"}>Learn more</Link>
+                </li>
+              </ul>
+              <ul>
+                <li className={pathname === "/profile" ? styles.active : ""}>
+                  {userData ? (
+                    <Link href={`/profile/${userData.id}`}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <CustomAvatar user={userData} />
+                        <Typography variant={"h6"} style={{ marginLeft: "15px" }}>
+                          {userData.fullName}
+                        </Typography>
+                      </Box>
+                    </Link>
+                  ) : (
                     <Box
                       sx={{
                         display: "flex",
@@ -63,73 +77,59 @@ const Header = () => {
                         alignItems: "center",
                       }}
                     >
-                      <CustomAvatar user={userData} />
-                      <Typography variant={"h6"} style={{ marginLeft: "15px" }}>
-                        {userData.fullName}
-                      </Typography>
+                      <Skeleton variant="circular" width={40} height={40} />
+                      <Skeleton
+                        variant="text"
+                        sx={{ fontSize: "1rem", ml: "15px", width: "60px" }}
+                      />
                     </Box>
-                  </Link>
-                ) : (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
+                  )}
+                </li>
+                <li>
+                  <IconButton
+                    onClick={handleClick}
+                    sx={{ ml: 2 }}
+                    aria-controls={open ? "account-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    color={"warning"}
                   >
-                    <Skeleton variant="circular" width={40} height={40} />
-                    <Skeleton
-                      variant="text"
-                      sx={{ fontSize: "1rem", ml: "15px", width: "60px" }}
+                    <SettingsOutlinedIcon
+                      sx={{ width: "30px", height: "30px" }}
                     />
-                  </Box>
-                )}
-              </li>
-              <li>
-                <IconButton
-                  onClick={handleClick}
-                  sx={{ ml: 2 }}
-                  aria-controls={open ? "account-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  color={"warning"}
-                >
-                  <SettingsOutlinedIcon
-                    sx={{ width: "30px", height: "30px" }}
+                  </IconButton>
+                  <HeaderMenu
+                    logout={logout}
+                    anchorEl={anchorEl}
+                    setAnchorEl={setAnchorEl}
+                    handleClick={handleClick}
                   />
-                </IconButton>
-                <HeaderMenu
-                  logout={logout}
-                  anchorEl={anchorEl}
-                  setAnchorEl={setAnchorEl}
-                  handleClick={handleClick}
-                />
-              </li>
-            </ul>
-          </>
-        ) : (
-          <>
-            <ul>
-              <li className={pathname === "/" ? styles.active : ""}>
-                <Link href={"/"}>Documentation</Link>
-              </li>
-              <li className={pathname === "/learn-more" ? styles.active : ""}>
-                <Link href={"/learn-more"}>Learn more</Link>
-              </li>
-            </ul>
-            <ul>
-              <li className={pathname === "/auth/login" ? styles.active : ""}>
-                <Link href={"/auth/login"}>Login</Link>
-              </li>
-              <li
-                className={pathname === "/auth/register" ? styles.active : ""}
-              >
-                <Link href={"/auth/register"}>Register</Link>
-              </li>
-            </ul>
-          </>
-        )}
-      </nav>
+                </li>
+              </ul>
+            </>
+          ) : (
+            <>
+              <ul>
+                <li className={pathname === "/" ? styles.active : ""}>
+                  <Link href={"/"}>Documentation</Link>
+                </li>
+                <li className={pathname === "/learn-more" ? styles.active : ""}>
+                  <Link href={"/learn-more"}>Learn more</Link>
+                </li>
+              </ul>
+              <ul>
+                <li className={pathname === "/auth/login" ? styles.active : ""}>
+                  <Link href={"/auth/login"}>Login</Link>
+                </li>
+                <li
+                  className={pathname === "/auth/register" ? styles.active : ""}
+                >
+                  <Link href={"/auth/register"}>Register</Link>
+                </li>
+              </ul>
+            </>
+          )}
+        </nav>
     </header>
   );
 };
