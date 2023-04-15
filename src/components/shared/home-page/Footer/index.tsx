@@ -16,8 +16,21 @@ const Footer = () => {
       padding="21px 15px"
       color="white"
     >
-      <Grid container justifyContent="center" alignItems="center" spacing={8}>
-        {/* Footer content */}
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        spacing={8}
+        color="secondary.main"
+        sx={{
+          "& > div": {
+            "&:hover": {
+              color: "secondary.light",
+              cursor: "pointer",
+            },
+          },
+        }}
+      >
         <Grid item>
           <Box display="flex" alignItems="center">
             <AccountCircle fontSize="small" />
@@ -56,7 +69,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
-
-
-
