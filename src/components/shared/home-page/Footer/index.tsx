@@ -1,73 +1,71 @@
-import * as React from "react";
-import BottomNavigation from "@mui/material/BottomNavigation";
-import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import AlternateEmailOutlinedIcon from "@mui/icons-material/AlternateEmailOutlined";
-import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
-import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
-import { Box } from "@mui/material";
+import React from "react";
+import { Box, Grid, Typography } from "@mui/material";
+import { AccountCircle, Mail, Lock, Chat } from "@mui/icons-material";
 
-export default function LabelBottomNavigation() {
-  const [value, setValue] = React.useState("about-us");
-
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
-
+const Footer = () => {
   return (
     <Box
       position="fixed"
       bottom={0}
       width="100%"
+      height="60px"
       bgcolor="primary.main"
-      
-      
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      padding="21px 15px"
+      color="white"
     >
-      <BottomNavigation
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        spacing={8}
+        color="secondary.main"
         sx={{
-          width: 50,
-          margin: "0 auto",
-          backgroundColor: "primary.main",
-          "& .MuiBottomNavigationAction-label": {
-            color: "secondary.main",
-          },
-          "& .MuiBottomNavigationAction-icon": {
-            color: "secondary.light",
-          },
-          "& .MuiBottomNavigationAction-root": {
-            "&.Mui-selected": {
-              backgroundColor: "primary.light",
+          "& > div": {
+            "&:hover": {
+              color: "secondary.light",
+              cursor: "pointer",
             },
           },
         }}
-        value={value}
-        onChange={handleChange}
       >
-        <BottomNavigationAction
-          label="About Us"
-          value="about-us"
-          icon={<InfoOutlinedIcon />}
-          sx={{ color: "secondary.light" }}
-        />
-        <BottomNavigationAction
-          label="Contact Us"
-          value="contact-us"
-          icon={<AlternateEmailOutlinedIcon />}
-          sx={{ color: "secondary.light" }}
-        />
-        <BottomNavigationAction
-          label="Log In"
-          value="log-in"
-          icon={<LoginOutlinedIcon />}
-          sx={{ color: "secondary.light" }}
-        />
-        <BottomNavigationAction
-          label="Folder"
-          value="folder"
-          icon={<TextsmsOutlinedIcon />}
-          sx={{ color: "secondary.light" }}
-        />
-      </BottomNavigation>
+        <Grid item>
+          <Box display="flex" alignItems="center">
+            <AccountCircle fontSize="small" />
+            <Typography variant="body1" style={{ marginLeft: "8px" }}>
+              About Us
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item>
+          <Box display="flex" alignItems="center">
+            <Mail fontSize="small" />
+            <Typography variant="body1" style={{ marginLeft: "8px" }}>
+              Contact Us
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item>
+          <Box display="flex" alignItems="center">
+            <Lock fontSize="small" />
+            <Typography variant="body1" style={{ marginLeft: "8px" }}>
+              Log In
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item>
+          <Box display="flex" alignItems="center">
+            <Chat fontSize="small" />
+            <Typography variant="body1" style={{ marginLeft: "8px" }}>
+              Chats
+            </Typography>
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
-}
+};
+
+export default Footer;
