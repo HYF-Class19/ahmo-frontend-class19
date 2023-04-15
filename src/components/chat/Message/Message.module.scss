@@ -17,24 +17,21 @@
     max-width: 500px;
     color: black;
     position: relative;
-  
+
     &.my {
-      background-color: #B885F4;
+      background-color: #b885f4;
     }
-  
+
     .messageText {
       font-size: 1rem;
       line-height: 1.5;
       word-wrap: break-word;
-      max-width: calc(100% - 80px);
     }
-  
+
     .messageMeta {
       display: flex;
       justify-content: flex-end;
       align-self: flex-end;
-      min-width: 80px;
-      width: 100%;
       .timeAgo {
         font-size: 0.8rem;
         color: gray;

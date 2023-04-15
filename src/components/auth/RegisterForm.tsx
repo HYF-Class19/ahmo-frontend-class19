@@ -1,117 +1,120 @@
-import { FormField } from '@/components/shared/FormField';
-import {Alert, Box, Button, Checkbox, FormControlLabel, Grid} from '@mui/material';
-import {yupResolver} from "@hookform/resolvers/yup";
-import React, {useEffect, useState} from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { RegisterSchema} from '@/utils/FormSchemas';
+import { FormField } from "@/components/shared/FormField";
+import { useAppDispatch } from "@/hooks/useAppHooks";
+import { useRegisterUserMutation } from "@/services/authService";
+import { setIsAuth, setUserData } from "@/store/slices/userSlice";
+import { RegisterSchema } from "@/utils/FormSchemas";
+import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  Alert,
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+} from "@mui/material";
 import Link from "next/link";
-import {useRouter} from "next/router";
-import {setUserData} from "@/store/slices/userSlice";
-import {useAppDispatch} from "@/hooks/useAppHooks";
-import {useRegisterUserMutation} from "@/services/authService";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 /*Styles*/
-import styles from "./loginRegister.module.scss"
-import { red } from '@mui/material/colors';
+import styles from "./loginRegister.module.scss";
 
-interface FormProps {
-}
+interface FormProps {}
 
 const Form: React.FC<FormProps> = () => {
-    const [errorMessage, setErrorMessage] = useState('');
-    const router = useRouter()
-    const [registerUser, {error, isLoading}] = useRegisterUserMutation()
-    const dispatch = useAppDispatch()
+  const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
+  const [registerUser, { error, isLoading }] = useRegisterUserMutation();
+  const dispatch = useAppDispatch();
 
-    const form = useForm({
-        mode: 'onChange',
-        resolver: yupResolver(RegisterSchema),
-    });
+  const form = useForm({
+    mode: "onChange",
+    resolver: yupResolver(RegisterSchema),
+  });
 
-    useEffect(() => {
-        // @ts-ignore
-        setErrorMessage(error?.data?.message || '')
-    }, [error])
+  useEffect(() => {
+    // @ts-ignore
+    setErrorMessage(error?.data?.message || "");
+  }, [error]);
 
-    const onSubmit = async (dto: any) => {
-        try {
-
-            const user: any = await registerUser(dto).unwrap()
-            if(user) {
-                dispatch(setUserData(user));
-            }
-            router.push('/')
-        } catch (err: any) {
-            console.log(err)
-        }
+  const onSubmit = async (dto: any) => {
+    try {
+      const user: any = await registerUser(dto).unwrap();
+      if (user) {
+        dispatch(setUserData(user));
+        dispatch(setIsAuth(true));
+      }
+      router.push("/");
+    } catch (err: any) {
+      console.log(err);
     }
-    
-    const formControlLabelStyle = {
-        "& .MuiFormControlLabel-label": {
-          fontSize: "14px",
-          width: 300,
-          backgroundColor: 'rgba(0,0,0,0.1)',
-          accentcolor: '#9b59b6'
-        }
-    }
+  };
 
-    return (
-        <FormProvider {...form}>
-            <Box component="form" onSubmit={form.handleSubmit(onSubmit)} sx={{ border: 1, borderColor: '#B885F4', borderRadius: '10px', p: 4, mt: 5}} bgcolor="#1A1E28">
-                <h1 className={styles.loginTitle}>Join the Game, join the Chat!</h1>
-                <Grid item xs={12} color="secondary">
-                    <FormField
-                        name="fullName"
-                        label="User Name"
-                        type="text"
-                    />
-                </Grid>
-                <Grid item xs={12} color="secondary">
-                    <FormField
-                        name="email"
-                        label="Email"
-                        type="email"
-                    />
-                </Grid>
-                <Grid item xs={12} color="secondary">
-                    <FormField
-                        name="password"
-                        label="Password"
-                        type="password"
+  const formControlLabelStyle = {
+    "& .MuiFormControlLabel-label": {
+      fontSize: "14px",
+      width: 300,
+      backgroundColor: "rgba(0,0,0,0.1)",
+      accentcolor: "#9b59b6",
+    },
+  };
 
-                    />
-                </Grid>
-                <Grid item xs={12} color="secondary">
-                    {error && (
-                        <Alert severity="error" className="mb-20">
-                            {errorMessage}
-                        </Alert>
-                    )}
-                </Grid>
-                <FormControlLabel
-                    sx={{ color: '#F3FB8C', ...formControlLabelStyle }}
-                    control={<Checkbox value="remember" style ={{color: "#F3FB8C",}}/>}
-                    label="Remember me"
-                />
-                <Button
-                    type="submit"
-                    fullWidth
-                    // disabled={!form.formState.isValid || form.formState.isSubmitting}
-                    variant="contained"
-                    sx={{mt: 3, mb: 2, color:'#000'}}
-                    color="secondary"
-                >
-                    Sign In
-                </Button>
-                <Grid container className={styles.bottomLink} sx={{ mt: 2, mb: 1 }}>
-                    <Grid item>
-                        <Link href="/auth/login" className={styles.registerLink}>
-                            {"Already a member? Log in now"}
-                        </Link>
-                    </Grid>
-                </Grid>
-            </Box>
-        </FormProvider>
-    );
+  return (
+    <FormProvider {...form}>
+      <Box
+        component="form"
+        onSubmit={form.handleSubmit(onSubmit)}
+        sx={{
+          border: 1,
+          borderColor: "#B885F4",
+          borderRadius: "10px",
+          p: 4,
+          mt: 5,
+        }}
+        bgcolor="#1A1E28"
+      >
+        <h1 className={styles.loginTitle}>Join the Game, join the Chat!</h1>
+        <Grid item xs={12} color="secondary">
+          <FormField name="fullName" label="User Name" type="text" />
+        </Grid>
+        <Grid item xs={12} color="secondary">
+          <FormField name="email" label="Email" type="email" />
+        </Grid>
+        <Grid item xs={12} color="secondary">
+          <FormField name="password" label="Password" type="password" />
+        </Grid>
+        <Grid item xs={12} color="secondary">
+          {error && (
+            <Alert severity="error" className="mb-20">
+              {errorMessage}
+            </Alert>
+          )}
+        </Grid>
+        <FormControlLabel
+          sx={{ color: "#F3FB8C", ...formControlLabelStyle }}
+          control={<Checkbox value="remember" style={{ color: "#F3FB8C" }} />}
+          label="Remember me"
+        />
+        <Button
+          type="submit"
+          fullWidth
+          // disabled={!form.formState.isValid || form.formState.isSubmitting}
+          variant="contained"
+          sx={{ mt: 3, mb: 2, color: "#000" }}
+          color="secondary"
+        >
+          Sign In
+        </Button>
+        <Grid container className={styles.bottomLink} sx={{ mt: 2, mb: 1 }}>
+          <Grid item>
+            <Link href="/auth/login" className={styles.registerLink}>
+              {"Already a member? Log in now"}
+            </Link>
+          </Grid>
+        </Grid>
+      </Box>
+    </FormProvider>
+  );
 };
 
 export default Form;

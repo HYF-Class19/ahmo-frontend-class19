@@ -1,65 +1,45 @@
-import React, { useState } from "react";
-import { Box, TextField, Typography } from "@mui/material";
-import { PersonOutline, PhoneIphone, EmailOutlined } from "@mui/icons-material";
+import { useAppSelector } from "@/hooks/useAppHooks";
+import useUpdateUserData from "@/hooks/useUpdateUser";
+import { IUser } from "@/models/IUser";
+import { selectUserData } from "@/store/slices/userSlice";
+import { EmailOutlined, PhoneIphone } from "@mui/icons-material";
+import { Box, Skeleton, TextField, Typography } from "@mui/material";
+import React from "react";
 import EditableText from "./EditableText";
-import { FormField } from "../shared/FormField";
-import { useUpdateUserMutation } from "@/services/authService";
-import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
-import { selectUserData, updateUserData } from "@/store/slices/userSlice";
 
 interface ProfileInfoProps {
-  name: string;
-  bio: string;
-  setBio: (bio: string) => void;
-  phoneNumber: string;
-  setPhoneNumber: (phoneNumber: string) => void;
-  email: string;
-  setEmail: (email: string) => void;
-  setImage_url: (imageUrl: string) => void;
-  image_url: string
+  user?: IUser;
 }
 
-const ProfileInfo: React.FC<ProfileInfoProps> = ({
-  name,
-  bio,
-  setBio,
-  phoneNumber,
-  setPhoneNumber,
-  email,
-  setEmail,
-  setImage_url,
-  image_url
-}) => {
-  const userData = useAppSelector(selectUserData)!
-  const [updateUser, result] = useUpdateUserMutation()
-  const dispatch = useAppDispatch()
+const ProfileInfo: React.FC<ProfileInfoProps> = ({ user }) => {
+  const userData = useAppSelector(selectUserData);
+  const updateUserData = useUpdateUserData();
 
   const updateName = async (fullName: string) => {
-    if(userData && fullName !== userData?.fullName && fullName.length >= 2) {
-      await updateUser({userId: userData.id, body:{fullName}})
-      if(!result.error) {
-        dispatch(updateUserData({fullName}))
-      }
-    }
-  }
+    await updateUserData({
+      fullName,
+    });
+  };
 
   const updateImageUrl = async (image_url: string) => {
-    if(userData && image_url !== userData?.image_url && image_url.length >= 6) {
-      await updateUser({userId: userData.id, body:{image_url}})
-      if(!result.error) {
-        dispatch(updateUserData({image_url}))
-      }
-    }
-  }
+    await updateUserData({
+      image_url,
+    });
+  };
 
-  return (
+  const updateBio = async (bio: string) => {
+    await updateUserData({
+      bio,
+    });
+  };
+
+  return user ? (
     <div>
-      <Typography variant="h2">{name}</Typography>
+      <Typography variant="h2">{user.fullName}</Typography>
       <TextField
         name="bio"
         label="Bio"
-        value={bio}
-        onChange={(e) => setBio(e.target.value)}
+        value={user.bio || "add bio..."}
         multiline
         rows={4}
         variant="outlined"
@@ -68,66 +48,120 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
           margin: 2,
           width: "100%",
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "transparent",
+            borderColor: "#fff",
           },
           "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: "transparent",
+            borderColor: "#fff",
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "transparent",
+            borderColor: "#fff",
           },
         }}
       />
-      <Box sx={{ display: "flex", alignItems: "center" , marginBottom: "2", justifyContent: "space-between"}}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          marginBottom: "2",
+          justifyContent: "space-between",
+        }}
+      >
         <PhoneIphone sx={{ margin: 3 }} />
         <EditableText
           label="Phone"
           value={"0686886853"}
-          onSubmit={(value) => setPhoneNumber(value)}
+          uneditable={user.id !== userData?.id}
           placeholder="Enter your phone number..."
         />
       </Box>
-      
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between",  marginBottom: "2"}}>
-        <EmailOutlined sx={{ margin: 3 ,  "&:hover .icon": {
-          visibility: "visible",
-          opacity: 1,
-        }}} />
+
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "2",
+        }}
+      >
+        <EmailOutlined
+          sx={{
+            margin: 3,
+            "&:hover .icon": {
+              visibility: "visible",
+              opacity: 1,
+            },
+          }}
+        />
         <EditableText
-          value={userData.email}
+          value={user.email}
           label="Email"
-          onSubmit={(value) => setEmail(value)}
+          uneditable={user.id !== userData?.id}
           placeholder="Enter your email..."
         />
       </Box>
 
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-        <EmailOutlined sx={{ margin: 3 ,  "&:hover .icon": {
-          visibility: "visible",
-          opacity: 1,
-        }}} />
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <EmailOutlined
+          sx={{
+            margin: 3,
+            "&:hover .icon": {
+              visibility: "visible",
+              opacity: 1,
+            },
+          }}
+        />
         <EditableText
-          value={userData.image_url || ''}
+          value={user.image_url || ""}
           label="Image Url"
+          uneditable={user.id !== userData?.id}
           onSubmit={updateImageUrl}
           placeholder="Enter an image url..."
         />
       </Box>
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-        <EmailOutlined sx={{ margin: 3 ,  "&:hover .icon": {
-          visibility: "visible",
-          opacity: 1,
-        }}} />
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <EmailOutlined
+          sx={{
+            margin: 3,
+            "&:hover .icon": {
+              visibility: "visible",
+              opacity: 1,
+            },
+          }}
+        />
         <EditableText
-          value={userData.fullName}
+          value={user.fullName}
           label="Name"
+          uneditable={user.id !== userData?.id}
           onSubmit={updateName}
           placeholder="Enter new name..."
         />
       </Box>
-    
-
     </div>
+  ) : (
+    <Box>
+      <Typography sx={{ mb: 4 }} variant="h2">
+        <Skeleton />
+      </Typography>
+      <Skeleton variant="rectangular" width={200} height={100} />
+      <Box sx={{ mt: 4 }}>
+        <Skeleton variant="rounded" width={300} height={40} />
+        <Skeleton variant="rounded" width={300} height={40} />
+        <Skeleton variant="rounded" width={300} height={40} />
+        <Skeleton variant="rounded" width={300} height={40} />
+      </Box>
+    </Box>
   );
 };
 
