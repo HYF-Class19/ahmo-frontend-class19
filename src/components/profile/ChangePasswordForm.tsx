@@ -1,5 +1,4 @@
 import { FormField } from "@/components/shared/FormField";
-import { useIsLaptop } from "@/hooks/useIsMobile";
 import { IUser } from "@/models/IUser";
 import { useUpdateUserPasswordMutation } from "@/services/authService";
 import { ChangePasswordSchema } from "@/utils/FormSchemas";
@@ -27,8 +26,6 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [updateUserPassword, { isLoading, error }] =
     useUpdateUserPasswordMutation();
-
-  const isLaptop = useIsLaptop();
 
   const methods = useForm<ChangePasswordFormData>({
     mode: "onChange",

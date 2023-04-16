@@ -58,7 +58,10 @@ const CustomDrawer: React.FC<CustomDrawer> = ({ open, setOpen }) => {
       {isAuth !== false ? (
         <>
           {userData ? (
-            <Link href={`/profile/${userData.id}`}>
+            <Link
+              style={{ textDecoration: "none" }}
+              href={`/profile/${userData.id}`}
+            >
               <Box
                 sx={{
                   display: "flex",
@@ -70,10 +73,14 @@ const CustomDrawer: React.FC<CustomDrawer> = ({ open, setOpen }) => {
                 <CustomAvatar user={userData} />
                 <Typography
                   variant={"h6"}
-                  style={{
+                  sx={{
                     marginLeft: "15px",
-                    color: "white",
-                    textDecoration: "none",
+                    color: router.asPath.startsWith("/profile")
+                      ? "gold"
+                      : "white",
+                    "&:hover": {
+                      color: "#b885f4",
+                    },
                   }}
                 >
                   {userData.fullName}

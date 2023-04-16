@@ -11,7 +11,10 @@
     margin: 0.8rem 1.2rem;
     color: white;
     p {
-      font-size: 2rem;
+      font-size: 1.2rem;
+      span {
+        color: #f3fb8c;
+      }
     }
   }
   .winner {
@@ -23,7 +26,7 @@
     align-items: center;
     color: white;
     p {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       color: #f3fb8c;
       position: absolute;
     }
