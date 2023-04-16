@@ -1,5 +1,6 @@
-import { useAppDispatch } from "@/hooks/useAppHooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/useAppHooks";
 import { menuType, setType } from "@/store/slices/menuSlice";
+import { selectIsAuth } from "@/store/slices/userSlice";
 import { CardActionArea } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
@@ -10,10 +11,15 @@ import styles from "./Card.module.scss";
 export default function ActionAreaCard() {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const isAuth = useAppSelector(selectIsAuth);
 
   const handleRedirect = async (type: menuType) => {
-    dispatch(setType(type));
-    await router.push("/chat");
+    if (isAuth) {
+      dispatch(setType(type));
+      await router.push("/chat");
+    } else {
+      await router.push("/auth/login");
+    }
   };
 
   return (
