@@ -92,8 +92,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           inputProps={{ "aria-label": "search" }}
         />
       </Search>
-      {(isFetching || isLoading) && <h3>Fetching...</h3>}
-      {searchValue && !isFetching ? (
+      {searchValue ? (
         searchType === "group" || searchType === "game" ? (
           <SearchResult
             setActive={setActive}

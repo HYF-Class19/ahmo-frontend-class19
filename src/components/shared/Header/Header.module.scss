@@ -9,7 +9,6 @@
   left: 0;
   right: 0;
   z-index: 100;
-  border-bottom: 1px solid #B885F4;
   .logoWrapper {
     display: flex;
     align-items: center;
@@ -40,16 +39,15 @@
           font-size: 18px;
           font-weight: 600;
           &:hover {
-            color: #B885F4;
-            text-decoration: underline;
-
+            color: #b885f4;
+            text-decoration: none;
           }
         }
         &.active {
           a {
-            color: #F3FB8C;
+            color: #f3fb8c;
             font-size: 18px;
-            font-weight:600;
+            font-weight: 600;
           }
         }
       }
