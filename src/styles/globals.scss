@@ -25,7 +25,7 @@ body {
 }
 
 .auth-box {
-  background: url("/emoji-img.png") no-repeat bottom center/cover;
+  background: url("/emoji-img.png") no-repeat center/cover fixed;
   height: calc(100vh - 93px);
   width: 100%;
 }
