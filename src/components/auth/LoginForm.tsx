@@ -4,14 +4,7 @@ import { useLoginUserMutation } from "@/services/authService";
 import { setIsAuth, setUserData } from "@/store/slices/userSlice";
 import { LoginFormSchema } from "@/utils/FormSchemas";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Alert,
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-} from "@mui/material";
+import { Alert, Box, Button, Grid } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -87,12 +80,6 @@ const Form: React.FC<FormProps> = () => {
             </Alert>
           )}
         </Grid>
-        <FormControlLabel
-          sx={{ color: "#F3FB8C", ...formControlLabelStyle }}
-          className={styles.hello}
-          control={<Checkbox value="remember" style={{ color: "#F3FB8C" }} />}
-          label="Remember me"
-        />
         <Button
           type="submit"
           fullWidth

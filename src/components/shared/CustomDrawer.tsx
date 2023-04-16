@@ -19,7 +19,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { destroyCookie } from "nookies";
+import { destroyCookie, setCookie } from "nookies";
 import * as React from "react";
 import CustomAvatar from "./CustomAvatar";
 
@@ -38,6 +38,10 @@ const CustomDrawer: React.FC<CustomDrawer> = ({ open, setOpen }) => {
 
   const logout = async () => {
     destroyCookie(null, "authToken");
+    setCookie(null, "authToken", "", {
+      maxAge: -1,
+      path: "/",
+    });
     dispatch(deleteUserData());
   };
 

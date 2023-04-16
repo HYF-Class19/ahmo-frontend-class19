@@ -9,7 +9,7 @@ import { Box, IconButton, Skeleton, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { destroyCookie } from "nookies";
+import { destroyCookie, setCookie } from "nookies";
 import React from "react";
 import { useSelector } from "react-redux";
 import CustomAvatar from "../CustomAvatar";
@@ -28,9 +28,13 @@ const Header = () => {
     setAnchorEl(event.currentTarget);
   };
   const logout = async () => {
-    await router.push("/auth/login");
     destroyCookie(null, "authToken");
+    setCookie(null, "authToken", "", {
+      maxAge: -1,
+      path: "/",
+    });
     dispatch(deleteUserData());
+    await router.push("/auth/login");
   };
 
   return (

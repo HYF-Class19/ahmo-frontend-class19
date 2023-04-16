@@ -4,14 +4,7 @@ import { useRegisterUserMutation } from "@/services/authService";
 import { setIsAuth, setUserData } from "@/store/slices/userSlice";
 import { RegisterSchema } from "@/utils/FormSchemas";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Alert,
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-} from "@mui/material";
+import { Alert, Box, Button, Grid } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -53,7 +46,7 @@ const Form: React.FC<FormProps> = () => {
   const formControlLabelStyle = {
     "& .MuiFormControlLabel-label": {
       fontSize: "14px",
-      width: 95
+      width: 95,
     },
   };
 
@@ -88,15 +81,10 @@ const Form: React.FC<FormProps> = () => {
             </Alert>
           )}
         </Grid>
-        <FormControlLabel
-          sx={{ color: "#F3FB8C", ...formControlLabelStyle }}
-          control={<Checkbox value="remember" style={{ color: "#F3FB8C" }} />}
-          label="Remember me"
-        />
         <Button
           type="submit"
           fullWidth
-          // disabled={!form.formState.isValid || form.formState.isSubmitting}
+          disabled={!form.formState.isValid || form.formState.isSubmitting}
           variant="contained"
           sx={{ mt: 3, mb: 2, color: "#000" }}
           color="secondary"
