@@ -16,7 +16,8 @@ const BurgerMenu: React.FC = () => {
           top: 0,
           left: 0,
           width: "100%",
-          padding: 2,
+          padding: 1.4,
+          height: "80px",
           bgcolor: "#120428",
           zIndex: 10,
         }}
