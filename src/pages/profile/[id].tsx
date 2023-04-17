@@ -26,7 +26,10 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ id }) => {
     setShowChangePasswordForm(!showChangePasswordForm);
   };
   return (
-    <MainLayout>
+    <MainLayout
+      title={`AHMO - ${user ? user.fullName : ""} profile`}
+      description={user?.fullName + " profile page"}
+    >
       <Box sx={{ bgcolor: "#120428", minHeight: isLaptop ? "100vh" : "auto" }}>
         <Grid container>
           <Grid item xs={isLaptop ? 12 : 1}>

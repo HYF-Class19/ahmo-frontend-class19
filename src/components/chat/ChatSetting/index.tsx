@@ -347,18 +347,6 @@ const ChatSetting: React.FC<ChatSettingProps> = ({
                   </ListItemButton>
                 </ListItem>
               ))}
-              {userData?.id === chat.admin.id && chat.type !== "direct" && (
-                <ListItem disableGutters>
-                  <ListItemButton autoFocus>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <AddIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="Add member" />
-                  </ListItemButton>
-                </ListItem>
-              )}
             </List>
           </Box>
         </DialogContent>

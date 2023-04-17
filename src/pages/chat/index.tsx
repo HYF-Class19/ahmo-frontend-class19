@@ -56,7 +56,8 @@ const Chat: NextPage<ChatProps> = ({ isAuth }) => {
   }, [data]);
 
   return (
-    <MainLayout>
+    <>
+    <MainLayout title={'AHMO - chat page'} description={'ahmo chat page'}>
       {isAuth === false ? (
         "AUTHORIZE"
       ) : (
@@ -114,6 +115,7 @@ const Chat: NextPage<ChatProps> = ({ isAuth }) => {
         </>
       )}
     </MainLayout>
+    </>
   );
 };
 
