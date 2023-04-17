@@ -14,13 +14,14 @@ const learnMorePage = () => {
           <p>
             Guess a word is a classic word guessing game where one player thinks
             of a secret word and the other player(s) try to guess the word by
-            asking questions that can be answered with a "yes" or "no". The game
-            typically starts with the word chooser selecting a secret word and
-            telling the guessers how many letters the word contains. Then, the
-            guessers take turns asking questions until they correctly guess the
-            word or run out of guesses. It's a fun and engaging game that can be
-            played in groups or one-on-one, and it helps to improve vocabulary,
-            deduction skills, and critical thinking
+            asking questions that can be answered with a &quot;yes&quot; or
+            &quot;no&quot;. The game typically starts with the word chooser
+            selecting a secret word and telling the guessers how many letters
+            the word contains. Then, the guessers take turns asking questions
+            until they correctly guess the word or run out of guesses. It&apos;s
+            a fun and engaging game that can be played in groups or one-on-one,
+            and it helps to improve vocabulary, deduction skills, and critical
+            thinking
           </p>
 
           <div>
