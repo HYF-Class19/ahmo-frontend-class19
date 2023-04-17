@@ -1,20 +1,19 @@
-import React from 'react';
-import {NextPage} from "next";
+import FormWrapper from "@/components/auth/FormWrapper";
 import LoginForm from "@/components/auth/LoginForm";
 import MainLayout from "@/layouts/MainLayout";
-import FormWrapper from "@/components/auth/FormWrapper";
-import { Box } from '@mui/material';
-// 
+import { Box } from "@mui/material";
+import { NextPage } from "next";
+
 const Login: NextPage = () => {
-    return (
-        <MainLayout>
-            <Box className='auth-box'>
-            <FormWrapper mode={'login'}>
-                <LoginForm />
-            </FormWrapper>
-            </Box>
-        </MainLayout>
-    );
+  return (
+    <MainLayout title={"AHMO - login"}>
+      <Box className="auth-box">
+        <FormWrapper mode={"login"}>
+          <LoginForm />
+        </FormWrapper>
+      </Box>
+    </MainLayout>
+  );
 };
 
 export default Login;

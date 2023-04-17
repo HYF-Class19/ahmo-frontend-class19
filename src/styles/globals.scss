@@ -16,7 +16,7 @@ body {
 }
 
 .content {
-  margin-top: 93px;
+  margin-top: 80px;
   height: 100%;
 }
 
@@ -25,15 +25,15 @@ body {
 }
 
 .auth-box {
-  background: url("/emoji-img.png") no-repeat bottom center/cover;
-  height: calc(100vh - 93px);
+  background: url("/emoji-img.png") no-repeat center center/cover;
+  height: calc(100vh - 80px);
   width: 100%;
 }
 
 .errorWrapper {
   display: flex;
   width: 100%;
-  height: calc(100vh - 93px);
+  height: calc(100vh - 80px);
   justify-content: center;
   align-items: center;
   background-color: #120428;

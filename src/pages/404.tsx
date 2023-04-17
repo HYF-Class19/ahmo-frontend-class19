@@ -4,7 +4,10 @@ import Link from "next/link";
 
 const Custom404 = () => {
   return (
-    <MainLayout>
+    <MainLayout
+      title={"AHMO - not found"}
+      description="AHMO chat. Page in not found"
+    >
       <div className="errorWrapper">
         <div className="errorMessage">
           <WarningAmberIcon

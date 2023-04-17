@@ -1,7 +1,6 @@
 import { useAppSelector } from "@/hooks/useAppHooks";
 import { selectUserData } from "@/store/slices/userSlice";
 import Logout from "@mui/icons-material/Logout";
-import Settings from "@mui/icons-material/Settings";
 import Divider from "@mui/material/Divider";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
@@ -71,12 +70,6 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({
         <CustomAvatar user={userData} /> Profile
       </MenuItem>
       <Divider />
-      <MenuItem onClick={handleClick}>
-        <ListItemIcon>
-          <Settings fontSize="small" />
-        </ListItemIcon>
-        Settings
-      </MenuItem>
       <MenuItem onClick={logout}>
         <ListItemIcon>
           <Logout fontSize="small" />
