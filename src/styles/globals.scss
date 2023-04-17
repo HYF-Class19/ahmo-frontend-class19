@@ -30,31 +30,26 @@ body {
   width: 100%;
 }
 
-.learnMoreWrapper {
+.errorWrapper {
   display: flex;
   width: 100%;
-  height: calc(100vh - 90px);
+  height: calc(100vh - 80px);
   justify-content: center;
   align-items: center;
   background-color: #120428;
-  .learnMoreTextWrapper {
+  .errorMessage {
     display: flex;
     align-items: center;
-    flex-direction: column;
 
     h1 {
       font-size: 32px;
       color: #ffc700;
       margin-bottom: 20px;
-      text-align: center;
     }
     p {
       color: white;
       width: 100%;
-      font-size: 16px;
-      margin-bottom: 100px;
-      max-width: 1000px;
-      word-wrap: break-word;
+      margin-bottom: 10px;
     }
     a {
       color: #23b1d0;
