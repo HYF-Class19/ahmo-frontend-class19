@@ -35,7 +35,7 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
   const userData = useAppSelector(selectUserData)!;
   const [name, setName] = useState<string>("");
   const [query, setQuery] = useState<string>("");
-  const [members, setMembers] = useState<number[]>([userData?.id]);
+  const [members, setMembers] = useState<number[]>([]);
   const [directMember, setDirectMember] = useState<number>();
   const [chosenGame, setChosenGame] = useState<string>("");
   const [chatType, setChatType] = useState<"group" | "direct" | "game">();
@@ -55,7 +55,7 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
     setActiveStep(0);
     setName("");
     setQuery("");
-    setMembers([userData.id]);
+    setMembers([]);
     setOpen(false);
   };
 
@@ -70,8 +70,9 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
       }
     } else {
       if (chatType === "game") {
+        if (!chosenGame || members.length < 1 || !name) return;
         await createGame({
-          members: members.join(","),
+          members: [userData?.id, ...members].join(","),
           game: chosenGame,
           type: "game",
           name,
@@ -101,10 +102,11 @@ const CreateChatDialog: React.FC<FormDialogProps> = ({
           }
         }
       } else {
+        if (members.length < 1 || !name) return;
         await createGroup({
           type: "group",
           name,
-          members: members.join(","),
+          members: [userData?.id, ...members].join(","),
         });
         if (chatsResult.data) {
           setChats((prev: IChat[]) => [...prev, chatsResult.data]);
