@@ -60,7 +60,17 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({
       const move = result.data;
       if (move) {
         const receivers = activeGame.members.map((m: IMember) => m.user.id);
-        socket.emit("sendMove", { ...move, chatId, receivers });
+        socket.emit("sendMove", {
+          id: move.id,
+          move_data: move.move_data,
+          move_type: move.move_type,
+          createdAt: move.createdAt,
+          correct: move.correct,
+          roundId: move.round.id,
+          player: move.player,
+          chatId,
+          receivers,
+        });
         if (answer && activeRound?.riddler) {
           let winner;
           if (move.correct) {
@@ -81,8 +91,9 @@ const TruthDareField: React.FC<TruthDareFieldProps> = ({
               chatId: activeGame.activeChat,
             });
             // @ts-ignore
-            const newRound = res.data;
+            let newRound = res.data;
             if (newRound) {
+              newRound = { ...newRound, game: null };
               socket.emit("newRound", {
                 previousWinner: winner,
                 gameId: activeGame.activeChat,
