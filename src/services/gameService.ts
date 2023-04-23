@@ -46,7 +46,7 @@ export const gameService = api.injectEndpoints({
             updateCachedData((draft) => {
               if (draft?.id === move.chatId) {
                 const roundIdx = draft?.rounds?.findIndex(
-                  (round) => round.id === move?.round?.id
+                  (round) => round.id === move?.roundId
                 );
                 if (roundIdx + 1) {
                   draft.rounds[roundIdx].moves?.push(move);
